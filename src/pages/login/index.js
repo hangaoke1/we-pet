@@ -3,6 +3,7 @@ import { View, Text, OpenData } from '@tarojs/components'
 import { AtButton } from 'taro-ui'
 import apiUser from '@/api/user'
 import token from '@/lib/token'
+import _ from '@/lib/lodash'
 
 import './index.less'
 
@@ -27,10 +28,8 @@ class index extends Component {
       apiUser.login({
         wechatCode,
         userInfo: e.detail.userInfo
-      }).then(res => {
-        // TODO: 本地写入token
-        console.log('>>> 登录成功', res)
-        token.set('123456')
+      }).then(data => {
+        token.set(_.get(data, 'result', ''))
         Taro.navigateBack()
       }).catch(error => {
         console.log('>>> 接口请求异常', error)
@@ -58,7 +57,6 @@ class index extends Component {
 
     return (
       <View className={prefixCls}>
-        {/* <Image className="u-logo"></Image> */}
         <OpenData className="u-logo" type="userAvatarUrl"></OpenData>
         <View className="u-tip">登录后即注册为小黄兜会员</View>
         <AtButton className='u-login-wechat' type='primary' openType='getUserInfo' onGetUserInfo={this.getUserInfo}>

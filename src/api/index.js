@@ -8,7 +8,7 @@ const requestInterceptors = (opts) => {
   if (!/http/.test(opts.url)) {
     opts.url = apiPrefix + opts.url
   }
-  opts.headers = {
+  opts.header = {
     Authorization: token.get()
   }
   return opts
@@ -21,7 +21,7 @@ export default function axios (opts) {
     const data = res.data
     // 成功
     if (data.code === 200) {
-      return data
+      return data.data
     }
     // 业务异常
     if (data.code === 999) {
@@ -30,6 +30,7 @@ export default function axios (opts) {
     // 登录状态过期
     if (data.code === 900) {
       // TODO: 清除本地token
+      token.clear()
       return Promise.reject(data)
     }
     return Promise.reject(data)

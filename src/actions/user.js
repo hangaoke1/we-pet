@@ -1,5 +1,7 @@
+import apiUser from '@/api/user'
 import gc from '@/global_config'
 import { SET_LOGIN, SET_USERINFO } from '@/constants/user'
+import _ from '@/lib/lodash';
 
 export const setLogin = function (login) {
   const dispatch = gc.get('store').dispatch
@@ -17,4 +19,11 @@ export const setUserInfo = function(userInfo) {
   })
 }
 
-export const getUserInfo = async function() {}
+export const getUserInfo = async function() {
+  const dispatch = gc.get('store').dispatch
+  const data = await apiUser.getUserInfo()
+  dispatch({
+    type: SET_USERINFO,
+    value: _.get(data, 'result', {})
+  })
+}

@@ -2,6 +2,7 @@ import Taro, { Component } from '@tarojs/taro'
 import { connect } from '@tarojs/redux'
 import { View, Image, Block, OpenData } from '@tarojs/components'
 import gotoLogin from '@/lib/gotoLogin'
+import { getUserInfo } from '@/actions/user'
 
 import './index.less'
 
@@ -22,7 +23,9 @@ class index extends Component {
   componentDidMount () {}
 
   componentDidShow () {
-    console.log('>>> TODO: 更新用户信息')
+    if (this.props.user.isLogin) {
+      getUserInfo()
+    }
   }
 
   login = () => {
@@ -33,6 +36,7 @@ class index extends Component {
     const prefixCls = 'u-user'
     const { user } = this.props
     const isLogin = user.isLogin
+    const userInfo = user.userInfo
     return (
       <View className={prefixCls}>
         <View className='u-header'>
@@ -43,13 +47,13 @@ class index extends Component {
               <Image
                 className='u-avatar'
                 onClick={this.login}
-                src='https://hgkcdn.oss-cn-shanghai.aliyuncs.com/pet/portrait.png'
+                src={userInfo.wechatAvatar}
               />
             )}
             <View className='u-info'>
               {isLogin ? (
                 <Block>
-                  <View className='u-name'>米捞次</View>
+                  <View className='u-name'>{userInfo.nickName}</View>
                   <View className='u-edit'>查看编辑个人信息</View>
                 </Block>
               ) : (

@@ -29,7 +29,7 @@ class index extends Component {
         wechatCode,
         userInfo: e.detail.userInfo
       }).then(data => {
-        token.set(_.get(data, 'result', ''))
+        token.set(data || '')
         Taro.navigateBack()
       }).catch(error => {
         console.log('>>> 接口请求异常', error)

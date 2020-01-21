@@ -17,23 +17,23 @@ const requestInterceptors = (opts) => {
 export default function axios (opts) {
   opts = requestInterceptors(opts)
 
-  return Taro.request(opts).then((res) => {
-    const data = res.data
+  return Taro.request(opts).then((responese) => {
+    const res = responese.data
     // 成功
-    if (data.code === 200) {
-      return data.data
+    if (res.code === 200) {
+      return res.data
     }
     // 业务异常
-    if (data.code === 999) {
-      return Promise.reject(data)
+    if (res.code === 999) {
+      return Promise.reject(res)
     }
     // 登录状态过期
-    if (data.code === 900) {
+    if (res.code === 900) {
       // TODO: 清除本地token
       token.clear()
-      return Promise.reject(data)
+      return Promise.reject(res)
     }
-    return Promise.reject(data)
+    return Promise.reject(res)
   })
 }
 

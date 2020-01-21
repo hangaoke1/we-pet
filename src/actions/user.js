@@ -24,6 +24,6 @@ export const getUserInfo = async function() {
   const data = await apiUser.getUserInfo()
   dispatch({
     type: SET_USERINFO,
-    value: _.get(data, 'result', {})
+    value: data || {}
   })
 }

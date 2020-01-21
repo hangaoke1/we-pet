@@ -1,5 +1,10 @@
 @import '../../styles/var.less';
 
+.u-home {
+  background-color: #f3f5f6;
+  padding-bottom: 100px;
+}
+
 .u-title {
   padding: 40px 0;
   font-size: 40px;
@@ -26,5 +31,109 @@
 }
 
 .u-notice {
-  margin: 30px 0 30px 0;
+  margin-top: 30px;
+  padding: 0 30px;
+}
+
+.u-quick {
+  box-sizing: border-box;
+  width: 690px;
+  padding: 30px;
+  margin: 0 auto;
+  border-radius: 10px;
+  background-color: #fff;
+  &__name {
+    font-weight: 500;
+    font-size: 30px;
+  }
+  &__address {
+    font-size: 24px;
+    color: #ccc;
+  }
+  &__bottom {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 24px;
+  }
+  &__distance {
+    font-weight: 500;
+    color: @themeColor;
+  }
+  &__switch {
+    color: @themeColor;
+  }
+  &__yuyue {
+    padding: 10px 30px;
+    border-radius: 30px;
+    font-weight: 500;
+    background-color: @themeColor;
+    color: #fff;
+  }
+}
+
+.u-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  margin-top: 30px;
+  &__item {
+    position: relative;
+    box-sizing: border-box;
+    width: 330px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+  }
+  &__name {
+    font-size: 26px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  &__tip {
+    font-size: 20px;
+    color: #ccc;
+  }
+  &__icon {
+    position: absolute;
+    right: 30px;
+    bottom: 0;
+  }
+}
+
+.u-subtitle {
+  padding: 30px;
+}
+
+.u-product-list {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0 30px;
+}
+
+.u-product {
+  width: 330px;
+  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 10px;
+  padding-bottom: 20px;
+  &__image {
+    width: 330px;
+    height: 400px;
+  }
+  &__name {
+    padding: 0 20px;
+    font-size: 28px;
+    color: #333;
+    .fn_ellipsis();
+  }
+  &__price {
+    padding: 0 20px;
+    font-size: 24px;
+    color: red;
+  }
 }

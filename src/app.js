@@ -32,7 +32,7 @@ class App extends Component {
   componentDidCatchError () {}
 
   config = {
-    pages: [ 'pages/index/index', 'pages/login/index', 'pages/user/index', 'pages/test/index' ],
+    pages: [ 'pages/index/index', 'pages/login/index', 'pages/user/index', 'pages/test/index', 'pages/shop/index', 'pages/cart/index' ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
@@ -50,10 +50,16 @@ class App extends Component {
           text: '首页'
         },
         {
-          pagePath: 'pages/test/index',
+          pagePath: 'pages/shop/index',
           selectedIconPath: 'images/fjclick@2x.png',
           iconPath: 'images/fjnormal@2x.png',
-          text: '测试'
+          text: '商城'
+        },
+        {
+          pagePath: 'pages/cart/index',
+          selectedIconPath: 'images/fjclick@2x.png',
+          iconPath: 'images/fjnormal@2x.png',
+          text: '购物车'
         },
         {
           pagePath: 'pages/user/index',

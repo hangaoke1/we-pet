@@ -12,7 +12,7 @@ export default class Index extends Component {
     enablePullDownRefresh: true,
     backgroundTextStyle: 'dark',
     onReachBottomDistance: 50,
-    backgroundColor: '#f3f5f6'
+    backgroundColor: '#f3f4f8'
   }
 
   state = {

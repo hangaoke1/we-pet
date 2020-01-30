@@ -6,7 +6,9 @@ import './index.less'
 class index extends Component {
 
   config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '购物车',
+    backgroundTextStyle: 'dark',
+    backgroundColor: '#f3f4f8'
   }
 
   componentWillMount () { }
@@ -14,11 +16,14 @@ class index extends Component {
   componentDidMount () { }
 
   render () {
-    const prefixCls = 'ehome-index'
+    const prefixCls = 'u-cart'
 
     return (
       <View className={prefixCls}>
-        购物车
+        <View className='u-header'>
+          <View>购物车</View>
+          <View>管理</View>
+        </View>
       </View>
     )
   }

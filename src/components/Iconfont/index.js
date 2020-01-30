@@ -9,7 +9,7 @@ export default function Iconfont (props) {
 
   return (
     <View
-      className={'u-iconfont iconfont ' + props.type}
+      className={'my-class u-iconfont iconfont ' + props.type}
       style={{
         display: 'flex',
         color: color,
@@ -18,3 +18,5 @@ export default function Iconfont (props) {
     />
   )
 }
+
+Iconfont.externalClasses = ['my-class']

@@ -2,7 +2,7 @@
 
 .u-user {
   min-height: 100vh;
-  background-color: #f3f5f6;
+  background-color: #f3f4f8;
 }
 
 .u-header {
@@ -74,7 +74,7 @@
 
 .u-assets {
   width: 700px;
-  height: 200px;
+  padding-bottom: 20px;
   margin: 0 auto;
   margin-top: -50px;
   background: #fff;
@@ -91,7 +91,116 @@
     color: #333;
   }
   &__all {
+    display: flex;
+    align-items: center;
     font-size: 24px;
     color: #ccc;
+  }
+  &__menu {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+  }
+  &__item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    font-size: 24px;
+    color: #666;
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2px;
+      height: 60px;
+      background: #eee;
+    }
+  }
+  &__item:last-of-type {
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2px;
+      height: 60px;
+      background: #fff;
+    }
+  }
+  &__price {
+    color: #000;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+}
+
+
+.u-order {
+  width: 700px;
+  padding-bottom: 20px;
+  margin: 0 auto;
+  margin-top: 20px;
+  background: #fff;
+  border-radius: 10px;
+  &__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  &__my {
+    font-weight: 500;
+    font-size: 28px;
+    color: #333;
+  }
+  &__all {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    color: #ccc;
+  }
+  &__menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 0 100px;
+  }
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 33.33%;
+    font-size: 24px;
+  }
+  &__name {
+    margin-top: 16px;
+  }
+}
+
+.u-tool {
+  width: 700px;
+  padding-bottom: 20px;
+  margin: 0 auto;
+  margin-top: 20px;
+  background: #fff;
+  border-radius: 10px;
+  &__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  &__my {
+    font-weight: 500;
+    font-size: 28px;
+    color: #333;
   }
 }

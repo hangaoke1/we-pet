@@ -32,7 +32,7 @@ class App extends Component {
   componentDidCatchError () {}
 
   config = {
-    pages: [ 'pages/index/index', 'pages/login/index', 'pages/user/index', 'pages/test/index', 'pages/shop/index', 'pages/cart/index' ],
+    pages: [ 'pages/user/index', 'pages/shop/index', 'pages/index/index', 'pages/login/index', 'pages/test/index', 'pages/cart/index' ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',

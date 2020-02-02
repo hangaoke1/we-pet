@@ -1,7 +1,6 @@
 import apiUser from '@/api/user'
 import gc from '@/global_config'
 import { SET_LOGIN, SET_USERINFO } from '@/constants/user'
-import _ from '@/lib/lodash';
 
 export const setLogin = function (login) {
   const dispatch = gc.get('store').dispatch

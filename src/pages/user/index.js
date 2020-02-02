@@ -34,6 +34,15 @@ class index extends Component {
     gotoLogin()
   }
 
+  handleToolClick = (item) => {
+    console.log('>>> ', item)
+    if (item.value === '地址管理') {
+      Taro.navigateTo({
+        url: '/pages/address/index'
+      })
+    }
+  }
+
   render () {
     const prefixCls = 'u-user'
     const { user } = this.props
@@ -138,6 +147,7 @@ class index extends Component {
           <AtGrid
             mode='rect'
             hasBorder={false}
+            onClick={this.handleToolClick}
             data={[
               {
                 image:

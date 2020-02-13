@@ -1,10 +1,10 @@
 import Taro, { Component } from '@tarojs/taro'
 import { connect } from '@tarojs/redux'
-import { View, Image, Block, OpenData, Text } from '@tarojs/components'
+import { View, Image, Block, OpenData, Text, Button } from '@tarojs/components'
 import Iconfont from '@/components/Iconfont'
 import gotoLogin from '@/lib/gotoLogin'
 import { getUserInfo } from '@/actions/user'
-import { AtGrid } from 'taro-ui'
+import { AtGrid, AtModal, AtModalContent, AtModalAction, AtActionSheet, AtActionSheetItem } from 'taro-ui'
 
 import './index.less'
 
@@ -18,6 +18,10 @@ class index extends Component {
   config = {
     navigationBarBackgroundColor: '#ffdb47',
     navigationBarTitleText: '个人中心'
+  }
+
+  state = {
+    showModal: false
   }
 
   componentWillMount () {}
@@ -35,7 +39,11 @@ class index extends Component {
   }
 
   handleToolClick = (item) => {
-    console.log('>>> ', item)
+    if (item.value === '联系客服') {
+      this.setState({
+        showModal: true
+      })
+    }
     if (item.value === '地址管理') {
       Taro.navigateTo({
         url: '/pages/address/index'
@@ -48,9 +56,27 @@ class index extends Component {
     }
   }
 
+  showContact = () => {
+    this.setState({
+      showModal: false
+    })
+    setTimeout(() => {
+      Taro.showActionSheet({
+        itemList: ['拨打号码']
+      })
+    }, 300)
+  }
+
+  hideModal = () => {
+    this.setState({
+      showModal: false
+    })
+  }
+
   render () {
     const prefixCls = 'u-user'
     const { user } = this.props
+    const { showModal } = this.state
     const isLogin = user.isLogin
     const userInfo = user.userInfo
     return (
@@ -187,6 +213,18 @@ class index extends Component {
             ]}
           />
         </View>
+
+        <AtModal isOpened={showModal}>
+          <AtModalContent>
+            <View className='u-kefu__title'>联系客服</View>
+            <View className='u-kefu__mobile'>号码：4000088888</View>
+            <View className='u-kefu__time'>时间：10:00 - 20:00</View>
+          </AtModalContent>
+          <AtModalAction>
+            <Button onClick={this.hideModal}>取消</Button>
+            <Button onClick={this.showContact}>确定</Button>
+          </AtModalAction>
+        </AtModal>
       </View>
     )
   }

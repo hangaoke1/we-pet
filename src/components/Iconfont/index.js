@@ -7,6 +7,10 @@ import '../../assets/font.less'
 export default function Iconfont (props) {
   const { size = 28, color = '#ccc' } = props
 
+  function handleClick(e) {
+    props.onClick && props.onClick(e)
+  }
+
   return (
     <View
       className={'my-class u-iconfont iconfont ' + props.type}
@@ -15,6 +19,7 @@ export default function Iconfont (props) {
         color: color,
         fontSize: size + 'px'
       }}
+      onClick={handleClick}
     />
   )
 }

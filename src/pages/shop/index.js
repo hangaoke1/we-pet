@@ -8,6 +8,7 @@ import Iconfont from '@/components/Iconfont'
 import Product from '@/components/Product'
 import ProductPro from '@/components/ProductPro'
 import shopApi from '@/api/shop'
+import { getCart } from '@/actions/cart'
 
 import './index.less'
 
@@ -26,10 +27,10 @@ class index extends Component {
     subList: [],
     // 品牌
     brand: '',
-    brandList: [ '皇家', '渴望', '雪山', '耐威克' ],
+    brandList: [],
     // 产地
     address: '',
-    addrssList: [ '中国', '日本', '美国' ],
+    addressList: [],
     min: '',
     max: '',
     tMin: '',
@@ -63,6 +64,10 @@ class index extends Component {
         }
       )
     })
+  }
+
+  componentDidShow () {
+    getCart()
   }
 
   changeShowType = () => {
@@ -112,7 +117,7 @@ class index extends Component {
         brand: '',
         // brandList: [],
         address: '',
-        // addrssList: [],
+        // addressList: [],
         subType: '',
         subList: [],
         min: '',
@@ -121,6 +126,7 @@ class index extends Component {
         finished: false
       },
       () => {
+        this.getFilter()
         this.loadmore()
       }
     )
@@ -136,9 +142,27 @@ class index extends Component {
         loading: false
       },
       () => {
+        // 查询商品
         this.loadmore()
       }
     )
+  }
+
+  getFilter = () => {
+    const { categoryId, petType } = this.state
+    shopApi
+      .getFilter({
+        categoryId,
+        petType
+      })
+      .then((res) => {
+        // 查询结果
+        console.log('>>> 品牌、地址', res)
+        this.setState({
+          brandList: res.brandList,
+          addressList: res.addressList
+        })
+      })
   }
 
   loadmore = () => {
@@ -159,35 +183,17 @@ class index extends Component {
       min,
       max
     }
-    console.log('>>> 查询参数', params)
-    setTimeout(() => {
-      if (list.length > 20) {
-        return this.setState({
-          pageNo: pageNo + 1,
+    // console.log('>>> 查询参数', params)
+    shopApi.queryProducts(params).then((res) => {
+      console.log('>>> 查询商品结果', res)
+      this.setState((state) => {
+        return {
           loading: false,
-          finished: true
-        })
-      } else {
-        const appendList = [
-          list.length + 1,
-          list.length + 2,
-          list.length + 3,
-          list.length + 4,
-          list.length + 5,
-          list.length + 6,
-          list.length + 7,
-          list.length + 8
-        ]
-        this.setState((state) => {
-          return {
-            pageNo: state.pageNo + 1,
-            list: [ ...state.list, ...appendList ],
-            loading: false,
-            finished: false
-          }
-        })
-      }
-    }, 1000)
+          finished: pageNo * pageSize > res.totalCount ? true : false,
+          list: [ ...state.list, ...res.items ]
+        }
+      })
+    })
   }
 
   selectSubType = (val) => {
@@ -223,7 +229,7 @@ class index extends Component {
   }
 
   changSubType = (type) => {
-    const { subType, brandList, addrssList } = this.state
+    const { subType, brandList, addressList } = this.state
     if (type === subType) {
       this.setState({
         subType: ''
@@ -231,7 +237,7 @@ class index extends Component {
     } else {
       this.setState({
         subType: type,
-        subList: type === 1 ? brandList : addrssList
+        subList: type === 1 ? brandList : addressList
       })
     }
   }
@@ -243,7 +249,7 @@ class index extends Component {
   }
 
   handleShowDrawer = () => {
-    this.setState(state => ({
+    this.setState((state) => ({
       showDrawer: true,
       tMin: state.min,
       tMax: state.max,
@@ -271,24 +277,30 @@ class index extends Component {
   }
 
   resetPrice = () => {
-    this.setState({
-      tMax: '',
-      tMin: '',
-      min: '',
-      max: ''
-    }, () => {
-      this.refresh()
-    })
+    this.setState(
+      {
+        tMax: '',
+        tMin: '',
+        min: '',
+        max: ''
+      },
+      () => {
+        this.refresh()
+      }
+    )
   }
 
   changePrice = () => {
-    this.setState(state => ({
-      max: state.tMax,
-      min: state.tMin,
-      showDrawer: false
-    }), () => {
-      this.refresh()
-    })
+    this.setState(
+      (state) => ({
+        max: state.tMax,
+        min: state.tMin,
+        showDrawer: false
+      }),
+      () => {
+        this.refresh()
+      }
+    )
   }
 
   preventTouchMove = (e) => {
@@ -356,14 +368,15 @@ class index extends Component {
                 className={classNames({
                   'u-category__item': true,
                   'u-category__active': item.categoryId === categoryId
-                })}>
+                })}
+              >
                 {item.categoryName}
               </View>
             ))}
           </View>
 
           <View className='u-info'>
-            <Image className='u-banner' src='https://hgkcdn.oss-cn-shanghai.aliyuncs.com/pet/banner2.jpeg' />
+            <Image className='u-banner' src='https://hgkcdn.oss-cn-shanghai.aliyuncs.com/pet/banner2.jpeg' lazyLoad webp />
 
             <View className='u-filter'>
               <View className='u-filter__left'>
@@ -372,7 +385,8 @@ class index extends Component {
                     'u-filter__brand': true,
                     'u-filter__selected': !!brand
                   })}
-                  onClick={this.changSubType.bind(this, 1)}>
+                  onClick={this.changSubType.bind(this, 1)}
+                >
                   <Text style={{ marginLeft: '10px' }}>品牌</Text>
                   {subType === 1 ? (
                     <Iconfont my-class='u-filter__icon' type='iconwebicon216' size={10} />
@@ -385,7 +399,8 @@ class index extends Component {
                     'u-filter__brand': true,
                     'u-filter__selected': !!address
                   })}
-                  onClick={this.changSubType.bind(this, 2)}>
+                  onClick={this.changSubType.bind(this, 2)}
+                >
                   <Text style={{ marginLeft: '10px' }}>产地</Text>
                   {subType === 2 ? (
                     <Iconfont my-class='u-filter__icon' type='iconwebicon216' size={10} />
@@ -402,9 +417,14 @@ class index extends Component {
                     <Iconfont type='iconshebeizhongleifenbu' size='16' />
                   )}
                 </View>
-                <View className={classNames({
+                <View
+                  className={classNames({
                     'u-filter__selected': !!(min || max)
-                  })} onClick={this.handleShowDrawer}>筛选</View>
+                  })}
+                  onClick={this.handleShowDrawer}
+                >
+                  筛选
+                </View>
               </View>
               {subType && (
                 <View className='u-filter__wrap'>
@@ -418,7 +438,8 @@ class index extends Component {
                             'u-filter__item': true,
                             'u-filter__active': subType === 1 ? item === brand : item === address
                           })}
-                          onClick={this.selectSubType.bind(this, item)}>
+                          onClick={this.selectSubType.bind(this, item)}
+                        >
                           {item}
                         </View>
                       ))}
@@ -430,9 +451,9 @@ class index extends Component {
 
             <ScrollView className='u-list' scrollY style={{ height: '400px' }} onScrollToLower={this.loadmore}>
               {showType === 1 ? (
-                <View className='u-style-one'>{list.map((item) => <Product key={item} />)}</View>
+                <View className='u-style-one'>{list.map((item) => <Product key={item.id} item={item} />)}</View>
               ) : (
-                <View className='u-style-two'>{list.map((item) => <ProductPro key={item} />)}</View>
+                <View className='u-style-two'>{list.map((item) => <ProductPro key={item.id} item={item} />)}</View>
               )}
               <View className='u-tip' onClick={this.loadmore}>
                 <Text>{loadTip}</Text>
@@ -442,15 +463,19 @@ class index extends Component {
         </View>
 
         <AtDrawer show={showDrawer} onClose={this.onDrawerClose} right mask>
-          <View className="u-drawer__title">价格区间(元)</View>
+          <View className='u-drawer__title'>价格区间(元)</View>
           <View className='u-drawer'>
-            <Input value={tMin} className="u-input" type='number' placeholder='最低价' onChange={this.handleMinChange} />
-            <View className="u-line"></View>
-            <Input value={tMax} className="u-input" type='number' placeholder='最高价' onChange={this.handleMaxChange} />
+            <Input value={tMin} className='u-input' type='number' placeholder='最低价' onChange={this.handleMinChange} />
+            <View className='u-line' />
+            <Input value={tMax} className='u-input' type='number' placeholder='最高价' onChange={this.handleMaxChange} />
           </View>
-          <View className="u-drawer__action">
-            <AtButton className="u-drawer__btn" type='secondary' size='small' onClick={this.resetPrice}>重置</AtButton>
-            <AtButton className="u-drawer__btn" type='primary' size='small' onClick={this.changePrice}>确认</AtButton>
+          <View className='u-drawer__action'>
+            <AtButton className='u-drawer__btn' type='secondary' size='small' onClick={this.resetPrice}>
+              重置
+            </AtButton>
+            <AtButton className='u-drawer__btn' type='primary' size='small' onClick={this.changePrice}>
+              确认
+            </AtButton>
           </View>
         </AtDrawer>
       </View>

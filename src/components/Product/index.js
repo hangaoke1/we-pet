@@ -1,31 +1,67 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image } from '@tarojs/components'
+import PropTypes from 'prop-types'
 import Iconfont from '@/components/Iconfont'
+import shopApi from '@/api/shop'
+import { getCart } from '@/actions/cart'
 
 import './index.less'
 
 class index extends Component {
+  componentWillMount () {}
 
-  componentWillMount () { }
+  componentDidMount () {}
 
-  componentDidMount () { }
+  goProduct = () => {
+    const { item } = this.props
+    Taro.navigateTo({
+      url: `/pages/product/index?productId=${item.productId}&skuId=${item.id}`
+    })
+  }
+
+  addCart = (e) => {
+    e.stopPropagation()
+    const { item } = this.props
+    Taro.showLoading({
+      title: '加载中'
+    })
+    shopApi
+      .addShoppingCart({
+        skuId: item.id,
+        quantity: 1
+      }).then(res => {
+        Taro.hideLoading()
+        Taro.showToast({
+          title: '添加成功',
+          icon: 'success'
+        })
+        getCart()
+      }).catch(err => {
+        Taro.hideLoading()
+        Taro.showToast({
+          title: '添加失败',
+          icon: 'none'
+        })
+      })
+  }
 
   render () {
     const prefixCls = 'u-product'
+    const { item } = this.props
 
     return (
-      <View className={prefixCls}>
-        <Image className="u-img" src="http://img13.360buyimg.com/n2/s240x240_jfs/t1/106438/17/2049/174813/5dc99958Eeb00697e/a97ffb7f73ef994d.jpg!q70.jpg"></Image>
-        <View className="u-info">
-          <View className="u-name">小黄兜 三拼冻干 深海鱼宴</View>
+      <View className={prefixCls} onClick={this.goProduct}>
+        <Image className='u-img' src={item.skuImgUrl} lazyLoad webp />
+        <View className='u-info'>
+          <View className='u-name'>{item.skuName}</View>
           <View className="u-tag">
-            <View className="u-tag__item">1月新品8折</View>
-            <View className="u-tag__item">年夜饭套餐</View>
+            {/* <View className="u-tag__item">1月新品8折</View>
+            <View className="u-tag__item">年夜饭套餐</View> */}
           </View>
-          <View className="u-bottom">
-            <View className="u-price">¥ 30.0</View>
-            <View className="u-addcart">
-              <Iconfont type="icongouwuche" color="#fff" size="14"></Iconfont>
+          <View className='u-bottom'>
+            <View className='u-price'>¥ {item.price}</View>
+            <View className='u-addcart' onClick={this.addCart}>
+              <Iconfont type='icongouwuche' color='#fff' size='14' />
             </View>
           </View>
         </View>
@@ -33,5 +69,11 @@ class index extends Component {
     )
   }
 }
+
+index.propTypes = {
+  item: PropTypes.object
+}
+
+index.defaultProps = {}
 
 export default index

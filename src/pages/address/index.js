@@ -6,7 +6,7 @@ import Iconfont from '@/components/Iconfont'
 import apiAddress from '@/api/address'
 import { AtSwipeAction } from 'taro-ui'
 
-import { getAddress } from '@/actions/address' 
+import { getAddress, setAddress } from '@/actions/address'
 import './index.less'
 
 @connect(
@@ -62,22 +62,25 @@ class index extends Component {
   // 从微信获取地址并添加
   insertUserAddress = (address) => {
     // TODO: 判断地址是否重复
-    apiAddress.insertUserAddress({
-      province: address.provinceName,
-      city: address.cityName,
-      area: address.countyName,
-      detail: address.detailInfo,
-      contact: address.userName,
-      mobile: address.telNumber,
-      defaultFlag: 0
-    }).then((res) => {
-      getAddress()
-    }).catch(err => {
-      Taro.showToast({
-        title: err.message,
-        icon: 'none'
+    apiAddress
+      .insertUserAddress({
+        province: address.provinceName,
+        city: address.cityName,
+        area: address.countyName,
+        detail: address.detailInfo,
+        contact: address.userName,
+        mobile: address.telNumber,
+        defaultFlag: 0
       })
-    })
+      .then((res) => {
+        getAddress()
+      })
+      .catch((err) => {
+        Taro.showToast({
+          title: err.message,
+          icon: 'none'
+        })
+      })
   }
 
   deleteAddress = (item) => {
@@ -85,21 +88,25 @@ class index extends Component {
       title: '提示',
       content: '是否删除当前地址',
       confirmColor: '#ffdb47'
-    }).then(res => {
+    }).then((res) => {
       if (res.confirm) {
         Taro.showLoading()
-        apiAddress.deleteUserAddress({
-          id: item.id
-        }).then(() => {
-          getAddress()
-        }).catch(err => {
-          Taro.showToast({
-            title: err.message,
-            icon: 'none'
+        apiAddress
+          .deleteUserAddress({
+            id: item.id
           })
-        }).finally(() => {
-          Taro.hideLoading()
-        })
+          .then(() => {
+            getAddress()
+          })
+          .catch((err) => {
+            Taro.showToast({
+              title: err.message,
+              icon: 'none'
+            })
+          })
+          .finally(() => {
+            Taro.hideLoading()
+          })
       }
     })
   }
@@ -115,6 +122,13 @@ class index extends Component {
     Taro.navigateTo({
       url: '/pages/addressUpdate/index'
     })
+  }
+
+  hanldeSelectAddress = (id) => {
+    if (this.$router.params.from === 'confirmOrder') {
+      setAddress(id)
+      Taro.navigateBack()
+    }
   }
 
   render () {
@@ -145,9 +159,10 @@ class index extends Component {
                       backgroundColor: '#FF4949'
                     }
                   }
-                ]}>
+                ]}
+              >
                 <View className='u-item'>
-                  <View className='u-left'>
+                  <View className='u-left' onClick={this.hanldeSelectAddress.bind(this, item.id)}>
                     <View>
                       <Text className='u-form__name'>{item.contact}</Text>
                       <Text className='u-form__tel'>{item.mobile}</Text>
@@ -157,6 +172,7 @@ class index extends Component {
                       {item.city}
                       {item.area} {item.detail}
                     </View>
+                    {item.defaultFlag && <View className='u-default'>默认</View>}
                   </View>
                   <View className='u-right' onClick={this.editAddress.bind(this, item)}>
                     <Iconfont type='iconbianji2' size='20' color='#999' />
@@ -167,7 +183,9 @@ class index extends Component {
           ))}
         </View>
 
-        <View className='u-action' onClick={this.addAddress}>+ 新增地址</View>
+        <View className='u-action' onClick={this.addAddress}>
+          + 新增地址
+        </View>
       </View>
     )
   }

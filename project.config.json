@@ -2,11 +2,11 @@
 	"miniprogramRoot": "dist/",
 	"projectname": "we-pet",
 	"description": "",
-	"appid": "wx1f06f11c454d338d",
+	"appid": "wx6e1bef4d67e3a6c2",
 	"setting": {
 		"urlCheck": false,
 		"es6": false,
-		"postcss": false,
+		"postcss": true,
 		"minified": false,
 		"newFeature": true,
 		"coverView": true,

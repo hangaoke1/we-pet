@@ -1,0 +1,461 @@
+import Taro, { Component } from '@tarojs/taro'
+import { connect } from '@tarojs/redux'
+import { View, Swiper, SwiperItem, Image, Text } from '@tarojs/components'
+import classNames from 'classnames'
+import Iconfont from '@/components/Iconfont'
+import GImg from '@/components/GImg'
+import GFloatLayout from '@/components/GFloatLayout'
+import { AtInputNumber, AtButton } from 'taro-ui'
+import shopApi from '@/api/shop'
+import { getCart } from '@/actions/cart'
+import _ from '@/lib/lodash'
+
+import './index.less'
+
+const defaultSku = {
+  stock: 0,
+  skuName: '此规格商品已下架',
+  skuDetailImgUrl: '',
+  price: '暂无价格'
+}
+
+@connect(
+  ({ cart }) => ({
+    cart
+  }),
+  (dispatch) => ({})
+)
+class index extends Component {
+  config = {
+    navigationBarTitleText: '商品详情'
+  }
+
+  state = {
+    info: '',
+    productBannerImgList: [],
+    productSkuList: [],
+    currentSku: {},
+    choose: [],
+    count: 1,
+    showParams: false,
+    showSpecs: false,
+    showQuick: false,
+    buyLoading: false,
+    scrollTop: '',
+  }
+
+  componentWillMount () {
+    const params = this.$router.params
+    const skuId = params.skuId
+    console.log('>>> params', params)
+    shopApi
+      .queryProductFullInfoById({
+        productId: params.productId
+      })
+      .then((res) => {
+        const productBannerImgList = _.get(res, 'productBannerImgList', [])
+        const productSkuList = _.get(res, 'productSkuList', [])
+        const currentSku = productSkuList.filter((sku) => sku.id == skuId)[0] || defaultSku
+        this.setState({
+          info: _.cloneDeep(res),
+          choose: _.cloneDeep(_.get(currentSku, 'specs', [])),
+          productBannerImgList,
+          productSkuList,
+          currentSku
+        })
+      })
+  }
+
+  componentDidMount () {}
+
+  onPageScroll (e) {
+    this.setState({
+      scrollTop: e.scrollTop
+    })
+  }
+
+  // 查询购物车
+  queryShoppingCart = () => {
+    shopApi.queryShoppingCart().then((res) => {
+      console.log('>>> 查询购物车', res)
+    })
+  }
+
+  handleBackTop = () => {
+    Taro.pageScrollTo({
+      scrollTop: 0
+    })
+  }
+
+  goCart = () => {
+    Taro.switchTab({
+      url: '/pages/cart/index'
+    })
+  }
+
+  goShop = () => {
+    Taro.switchTab({
+      url: '/pages/shop/index'
+    })
+  }
+
+  goUser = () => {
+    Taro.switchTab({
+      url: '/pages/user/index'
+    })
+  }
+
+  doShare = () => {
+    Taro.showToast({
+      title: '分享成功',
+      icon: 'none'
+    })
+  }
+
+  setShowQuick = () => {
+    this.setState({
+      showQuick: true
+    })
+  }
+
+  hideQuick = () => {
+    this.setState({
+      showQuick: false
+    })
+  }
+
+  handleParamsOpen = () => {
+    this.setState({
+      showParams: true
+    })
+  }
+  handleParamsClose = () => {
+    this.setState({
+      showParams: false
+    })
+  }
+
+  handleSpecsOpen = () => {
+    this.setState({
+      showSpecs: true
+    })
+  }
+
+  handleSpecsClose = () => {
+    this.setState({
+      showSpecs: false,
+      count: 1
+    })
+  }
+
+  handleCountChange = (value) => {
+    this.setState({
+      count: value
+    })
+  }
+
+  changeChoose = (type, value) => {
+    // TODO: 1、计算互斥规格 2、计算当前sku
+    this.setState((state) => {
+      // 根据choose 定位sku
+      let newChoose = state.choose.map((item) => {
+        if (item.type === type) {
+          item.value = value
+        }
+        return item
+      })
+      let choosedSku = state.productSkuList.filter((sku) => {
+        const mapA = {}
+        const mapB = {}
+        const skuSpecs = sku.specs
+        skuSpecs.forEach((item) => {
+          mapA[item.type] = item.value
+        })
+        newChoose.forEach((item) => {
+          mapB[item.type] = item.value
+        })
+        return _.isEqual(mapA, mapB)
+      })[0]
+      return {
+        currentSku: choosedSku || defaultSku,
+        choose: newChoose
+      }
+    })
+  }
+
+  // 加入购物车
+  addToCart = () => {
+    if (this.setState.buyLoading) {
+      return
+    }
+    const { currentSku, count } = this.state
+    this.setState({
+      buyLoading: true
+    })
+    shopApi
+      .addShoppingCart({
+        skuId: currentSku.id,
+        quantity: +count
+      })
+      .then(() => {
+        this.setState({
+          buyLoading: false,
+          showSpecs: false
+        })
+        Taro.showToast({
+          title: '添加成功',
+          icon: 'success'
+        })
+        getCart()
+      })
+      .catch((error) => {
+        this.setState({
+          buyLoading: false
+        })
+        Taro.showToast({
+          title: error.messsage || '添加购物车失败',
+          icon: 'none'
+        })
+      })
+  }
+
+  render () {
+    const {
+      info,
+      showParams,
+      showSpecs,
+      scrollTop,
+      showQuick,
+      choose,
+      productBannerImgList,
+      currentSku,
+      buyLoading
+    } = this.state
+    const { cart } = this.props
+    const prefixCls = 'u-product'
+    const product = _.get(info, 'product', {})
+    const productCategory = _.get(info, 'productCategory', {})
+
+    let choosedSku = currentSku
+
+    return (
+      <View className={prefixCls}>
+        {showQuick ? (
+          <View className='u-quick'>
+            <View className='u-quick__content'>
+              <View className='u-quick__title'>
+                <Text>功能直达</Text>
+                <Iconfont onClick={this.hideQuick} type='iconshanchu' color='#fff' size='20' />
+              </View>
+              <View className='u-quick__list'>
+                <View className='u-quick__item' onClick={this.goShop}>
+                  <Iconfont type='iconicon_shangcheng-xian' color='#fff' size='20' />
+                  <View className='u-quick__name'>商城</View>
+                </View>
+                <View className='u-quick__item' onClick={this.goUser}>
+                  <Iconfont type='iconicon_yonghu-xian' color='#fff' size='20' />
+                  <View className='u-quick__name'>我的</View>
+                </View>
+                <View className='u-quick__item' onClick={this.goCart}>
+                  <Iconfont type='iconicon_gouwuche-xian' color='#fff' size='20' />
+                  <View className='u-quick__name'>购物车</View>
+                </View>
+                <View className='u-quick__item' onClick={this.doShare}>
+                  <Iconfont type='iconfenxiang' color='#fff' size='20' />
+                  <View className='u-quick__name'>分享</View>
+                </View>
+              </View>
+            </View>
+            <View className='u-quick__mask' onClick={this.hideQuick} />
+          </View>
+        ) : (
+          <View className='u-header'>
+            <View className='u-icon' onClick={this.goCart}>
+              <Iconfont type='icongouwuche1' color='#fff' size='16' />
+              <View className='u-count__icon'>{cart.totalCount}</View>
+            </View>
+            <View className='u-icon' onClick={this.setShowQuick}>
+              <Iconfont type='icongengduo' color='#fff' size='16' />
+            </View>
+          </View>
+        )}
+
+        <View className='u-swiper__wrap'>
+          <Swiper
+            className='u-swiper'
+            indicatorColor='#999'
+            indicatorActiveColor='#333'
+            circular
+            indicatorDots
+            autoplay
+          >
+            {productBannerImgList.map((image) => (
+              <SwiperItem key={image.id}>
+                <Image className='u-item' src={image.imgUrl} mode='aspectFit' lazyLoad webp/>
+              </SwiperItem>
+            ))}
+          </Swiper>
+        </View>
+
+        <View className='u-price'>
+          <View className='u-price__left'>
+            <Text className='u-price__unit'>¥</Text>
+            <Text className='u-price__val'>{choosedSku.price}</Text>
+          </View>
+          <View className='u-price__right'>
+            <Iconfont type='iconiconfontfenxiang' color='#ccc' size='20' />
+          </View>
+        </View>
+
+        <View className='u-name'>{choosedSku.skuName || product.name}</View>
+
+        <View className='u-desc'>{product.detail}</View>
+
+        <View className='u-params'>
+          <View className='u-params__item' onClick={this.handleParamsOpen}>
+            <View className='u-params__label'>参数</View>
+            <View className='u-params__val'>
+              <Text>品牌 产地...</Text>
+              <Iconfont type='iconarrowright' color='#333' size='14' />
+            </View>
+          </View>
+          <View className='u-params__item' onClick={this.handleSpecsOpen}>
+            <View className='u-params__label'>选择</View>
+            <View className='u-params__val'>
+              <Text>已选择 {choose.map((item) => item.value).join(' ')}</Text>
+              <Iconfont type='iconarrowright' color='#333' size='14' />
+            </View>
+          </View>
+        </View>
+
+        <View className='u-imgs'>
+          {currentSku && <GImg maxWidth={750} force mode='aspectFit' src={currentSku.skuDetailImgUrl} />}
+        </View>
+
+        <View className='u-footer'>
+          <View className='u-footer__item' onClick={this.goShop}>
+            <Iconfont type='iconicon_shangcheng-xian' size='18' />
+            <View className='u-footer__name'>商城</View>
+          </View>
+          <View className='u-footer__item' onClick={this.goCart}>
+            <Iconfont type='iconicon_gouwuche-xian' size='18' />
+            <View className='u-footer__name'>购物车</View>
+          </View>
+          <AtButton
+            loading={buyLoading}
+            onClick={this.handleSpecsOpen}
+            className='u-footer__btn'
+            disabled={choosedSku.stock === 0}
+            type='primary'
+            circle
+          >
+            加入购物车
+          </AtButton>
+          <AtButton className='u-footer__btn' disabled={choosedSku.stock === 0} type='secondary' circle>
+            立即购买
+          </AtButton>
+        </View>
+
+        <View
+          className={classNames({
+            'u-back': true,
+            'u-back__active': scrollTop > 100
+          })}
+          onClick={this.handleBackTop}
+        >
+          <Iconfont type='iconfanhuidingbu' color='#333' size='12' />
+          <Text>顶部</Text>
+        </View>
+
+        <GFloatLayout title='产品参数' isOpened={showParams} onClose={this.handleParamsClose}>
+          <View className='u-info'>
+            <View className='u-cel'>
+              <View className='u-label'>品牌</View>
+              <View className='u-val'>{product.brand}</View>
+            </View>
+
+            <View className='u-cel'>
+              <View className='u-label'>商品分类</View>
+              <View className='u-val'>{productCategory.categoryName}</View>
+            </View>
+
+            <View className='u-cel'>
+              <View className='u-label'>原产地</View>
+              <View className='u-val'>{product.origin}</View>
+            </View>
+
+            <View className='u-ok' onClick={this.handleParamsClose}>
+              完成
+            </View>
+          </View>
+        </GFloatLayout>
+
+        <GFloatLayout title='' isOpened={showSpecs} onClose={this.handleSpecsClose}>
+          <View className='u-sku'>
+            <View className='u-sku__top'>
+              <Image className='u-sku__img' src={choosedSku.skuImgUrl} lazyLoad webp />
+              <View className='u-sku__info'>
+                <View className='u-sku__name'>{choosedSku.skuName}</View>
+                <View className='u-sku__stock'>库存{choosedSku.stock || 0}件</View>
+                <View className='u-sku__price'>¥ {choosedSku.price}</View>
+              </View>
+            </View>
+
+            <View className='u-sku__specs'>
+              {(product.specs || []).map((specs) => {
+                const type = specs.type
+                const chooseItem = choose.filter((item) => item.type === type)[0]
+                return (
+                  <View key={specs.type}>
+                    <View className='u-specs__label'>{specs.name}</View>
+                    <View className='u-specs__list'>
+                      {specs.val.map((v) => {
+                        return (
+                          <View
+                            onClick={this.changeChoose.bind(this, specs.type, v)}
+                            key={v}
+                            className={classNames({
+                              'u-specs__item': true,
+                              'u-specs__active': chooseItem && v === chooseItem.value
+                            })}
+                          >
+                            {v}
+                          </View>
+                        )
+                      })}
+                    </View>
+                  </View>
+                )
+              })}
+            </View>
+
+            <View className='u-sku__count'>
+              <View className='u-count__label'>购买数量</View>
+              <View className='u-count__action'>
+                <AtInputNumber
+                  min={choosedSku.stock > 0 ? 1 : 0}
+                  max={choosedSku.stock}
+                  step={1}
+                  value={choosedSku.stock > 0 ? this.state.count : 0}
+                  onChange={this.handleCountChange}
+                />
+              </View>
+            </View>
+            <AtButton
+              loading={buyLoading}
+              onClick={this.addToCart}
+              className='u-addcart'
+              disabled={choosedSku.stock === 0}
+              type='primary'
+              circle
+            >
+              加入购物车
+            </AtButton>
+          </View>
+        </GFloatLayout>
+      </View>
+    )
+  }
+}
+
+export default index

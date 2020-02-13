@@ -1,5 +1,6 @@
 import Taro from '@tarojs/taro'
 import { GET_ADDRESS, SET_ADDRESS_USED } from '@/constants/address'
+import _ from '@/lib/lodash'
 
 // 用户信息
 const address = (
@@ -11,9 +12,16 @@ const address = (
 ) => {
   switch (action.type) {
     case GET_ADDRESS:
+      let id = state.id
+      if (!id) {
+        const defaultAddress = action.value.filter(item => item.defaultFlag)[0]
+        const firstAddress = action.value[0]
+        id = defaultAddress ? defaultAddress.id : _.get(firstAddress, 'id')
+      }
       return {
         ...state,
-        list: action.value
+        list: action.value,
+        id
       }
     case SET_ADDRESS_USED:
       /**

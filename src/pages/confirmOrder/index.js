@@ -42,7 +42,7 @@ class index extends Component {
     })
   }
 
-  goRemark = () => {
+  goRemark = () => {//
     const vm = this
     Taro.navigateTo({
       url: '/pages/remark/index',

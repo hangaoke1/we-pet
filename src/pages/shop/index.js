@@ -102,9 +102,8 @@ class index extends Component {
   }
 
   goSearch = () => {
-    Taro.showToast({
-      title: '前往搜索',
-      icon: 'none'
+    Taro.navigateTo({
+      url: '/pages/search/index'
     })
   }
 

@@ -4,13 +4,14 @@ import { View, Image, Block, OpenData, Text, Button } from '@tarojs/components'
 import Iconfont from '@/components/Iconfont'
 import gotoLogin from '@/lib/gotoLogin'
 import { getUserInfo } from '@/actions/user'
+import { getPet } from '@/actions/pet'
 import { AtGrid, AtModal, AtModalContent, AtModalAction, AtActionSheet, AtActionSheetItem } from 'taro-ui'
 
 import './index.less'
 
 @connect(
-  ({ user }) => ({
-    user
+  ({ user, pet }) => ({
+    user, pet
   }),
   (dispatch) => ({})
 )
@@ -31,6 +32,7 @@ class index extends Component {
   componentDidShow () {
     if (this.props.user.isLogin) {
       getUserInfo()
+      getPet()
     }
   }
 
@@ -73,9 +75,15 @@ class index extends Component {
     })
   }
 
+  goPet = () => {
+    Taro.navigateTo({
+      url: '/pages/pet/index'
+    })
+  }
+
   render () {
     const prefixCls = 'u-user'
-    const { user } = this.props
+    const { user, pet } = this.props
     const { showModal } = this.state
     const isLogin = user.isLogin
     const userInfo = user.userInfo
@@ -102,8 +110,8 @@ class index extends Component {
             </View>
           </View>
           <View className='u-entry'>
-            <View className='u-entry-item'>
-              <View className='u-entry-count'>0</View>
+            <View className='u-entry-item' onClick={this.goPet}>
+              <View className='u-entry-count'>{pet.list.length}</View>
               <View className='u-entry-name'>宠物信息</View>
             </View>
             <View className='u-entry-item'>

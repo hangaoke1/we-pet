@@ -47,12 +47,13 @@ class index extends Component {
   componentWillMount () {
     const params = this.$router.params
     const skuId = params.skuId
-    console.log('>>> params', params)
+    Taro.showLoading()
     shopApi
       .queryProductFullInfoById({
         productId: params.productId
       })
       .then((res) => {
+        Taro.hideLoading()
         const productBannerImgList = _.get(res, 'productBannerImgList', [])
         const productSkuList = _.get(res, 'productSkuList', [])
         const currentSku = productSkuList.filter((sku) => sku.id == skuId)[0] || defaultSku
@@ -63,6 +64,8 @@ class index extends Component {
           productSkuList,
           currentSku
         })
+      }).catch(() => {
+        Taro.hideLoading()
       })
   }
 

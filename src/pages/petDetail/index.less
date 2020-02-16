@@ -1,0 +1,89 @@
+@import '../../styles/var.less';
+
+.u-petDetail {
+  min-height: 100vh;
+  background-color: #f3f4f8;
+  overflow: hidden;
+}
+
+.u-form {
+  margin-top: 30px;
+  background: #fff;
+  &__required {
+    position: absolute;
+    left: 45px;
+    top: 50%;
+    transform: translate(-100%, -50%);
+    color: @red;
+  }
+  &__arrow {
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translate(50%, -50%);
+    color: @red;
+  }
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    padding: 30px 50px;
+    border-bottom: 1px solid #eee;
+    &:nth-last-of-type(1) {
+      border-bottom: none;
+    }
+  }
+  &__label {
+    font-size: 28px;
+    color: #ccc;
+  }
+  &__value {
+    font-size: 28px;
+    color: #333;
+    text-align: right;
+  }
+  &__input {
+    font-size: 28px;
+    color: #333;
+    text-align: right;
+  }
+}
+.u-action {
+  margin-top: 100px;
+  width: 650px;
+  margin-left: 50px;
+}
+
+.u-update {
+  margin-top: 100px;
+  width: 650px;
+  margin-left: 50px;
+}
+
+.u-delete {
+  margin-top: 30px;
+  width: 650px;
+  margin-left: 50px;
+  color: @red;
+  border-color: @red;
+}
+
+.u-avatar {
+  display: block;
+  box-sizing: border-box;
+  width: 65px;
+  height: 65px;
+  border-radius: 65px;
+}
+
+.u-avatar__placeholder {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 65px;
+  height: 65px;
+  border-radius: 65px;
+  background-color: rgba(0, 0, 0, 0.6);
+}

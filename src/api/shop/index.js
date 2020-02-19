@@ -24,5 +24,9 @@ export default {
   // 删除购物车商品
   clearShoppingCart: params => api.post('/pet/clearShoppingCart', params),
   // 修改购物车商品数量
-  alterShoppingCartQuantity: params => api.post('/pet/alterShoppingCartQuantity', params)
+  alterShoppingCartQuantity: params => api.post('/pet/alterShoppingCartQuantity', params),
+  // 下单
+  insertOrder: params => api.post('/pet/insertOrder', params),
+  // 查询订单 订单状态: 为空表示查询全部。100待支付，200待发货，300待收货，400已完成，900已取消
+  queryOrder: params => api.post('/pet/queryOrder', params),
 };

@@ -32,10 +32,7 @@ class index extends Component {
     history = [ keyword, ...history ]
     history = _.uniq(history)
     Taro.setStorageSync('search_history', history)
-    Taro.showToast({
-      icon: 'none',
-      title: '前往搜索结果'
-    })
+    // TODO: 
   }
 
   clearHistory = () => {

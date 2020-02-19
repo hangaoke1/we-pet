@@ -4,6 +4,8 @@ import { View, Image, Text } from '@tarojs/components'
 import { AtButton } from 'taro-ui'
 import Iconfont from '@/components/Iconfont'
 import { getAddress } from '@/actions/address'
+import shopApi from '@/api/shop'
+import requestPaymentPro from '@/lib/pay'
 
 import './index.less'
 
@@ -26,7 +28,6 @@ class index extends Component {
 
   componentWillMount () {
     const orderProduct = Taro.getStorageSync('order_product') || []
-    console.log('>>> orderProduct', orderProduct)
     this.setState({
       orderProduct
     })
@@ -42,7 +43,7 @@ class index extends Component {
     })
   }
 
-  goRemark = () => {//
+  goRemark = () => {
     const vm = this
     Taro.navigateTo({
       url: '/pages/remark/index',
@@ -60,9 +61,42 @@ class index extends Component {
   }
 
   handleSubmit = () => {
-    Taro.showToast({
-      title: '提交订单～',
-      icon: 'none'
+    const { address } = this.props
+    const { orderProduct } = this.state
+    const params = {
+      skuInfoList: orderProduct.map(item => {
+        return {
+          skuId: item.id,
+          quantity: item.quantity
+        }
+      }),
+      addressId: address.id,
+      buyerMemo: this.state.remark,
+      cartFlag: 0
+    }
+    Taro.showLoading()
+    shopApi.insertOrder(params).then(res => {
+      Taro.hideLoading()
+      requestPaymentPro(res).then(() => {
+        Taro.showToast({
+          title: '支付成功',
+          icon: 'none'
+        })
+        // TODO: 跳转到支付成功订单页面
+      }).catch(err => {
+        console.error(err)
+        // TODO: 跳转到待支付订单页面
+        Taro.showToast({
+          title: '支付失败',
+          icon: 'none'
+        })
+      })
+    }).catch(err => {
+      Taro.hideLoading()
+      Taro.showToast({
+        title: err.message || '下单失败',
+        icon: 'none'
+      })
     })
   }
 

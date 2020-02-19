@@ -32,7 +32,7 @@ class App extends Component {
   componentDidCatchError () {}
 
   config = {
-    pages: [ 'pages/search/index', 'pages/index/index', 'pages/pet/index', 'pages/petDetail/index', 'pages/petBreed/index', 'pages/confirmOrder/index', 'pages/cart/index', 'pages/product/index', 'pages/user/index', 'pages/addressUpdate/index', 'pages/addressAdd/index', 'pages/address/index', 'pages/shop/index', 'pages/login/index', 'pages/test/index', 'pages/webview/index', 'pages/remark/index' ],
+    pages: [ 'pages/order/index', 'pages/index/index', 'pages/search/index', 'pages/searchResult/index', 'pages/pet/index', 'pages/petDetail/index', 'pages/petBreed/index', 'pages/confirmOrder/index', 'pages/cart/index', 'pages/product/index', 'pages/user/index', 'pages/addressUpdate/index', 'pages/addressAdd/index', 'pages/address/index', 'pages/shop/index', 'pages/login/index', 'pages/test/index', 'pages/webview/index', 'pages/remark/index' ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',

@@ -83,12 +83,18 @@ class index extends Component {
           icon: 'none'
         })
         // TODO: 跳转到支付成功订单页面
+        Taro.redirectTo({
+          url: '/pages/order/index?current=2'
+        })
       }).catch(err => {
         console.error(err)
-        // TODO: 跳转到待支付订单页面
+        // 跳转到待支付订单页面
         Taro.showToast({
           title: '支付失败',
           icon: 'none'
+        })
+        Taro.redirectTo({
+          url: '/pages/order/index?current=1'
         })
       })
     }).catch(err => {

@@ -17,7 +17,7 @@ class index extends Component {
 
     return (
       <View className='u-orderDetail'>
-
+        订单详情
       </View>
     )
   }

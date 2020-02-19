@@ -6,12 +6,14 @@ import gotoLogin from '@/lib/gotoLogin'
 import { getUserInfo } from '@/actions/user'
 import { getPet } from '@/actions/pet'
 import { AtGrid, AtModal, AtModalContent, AtModalAction, AtActionSheet, AtActionSheetItem } from 'taro-ui'
+import shopApi from '@/api/shop'
 
 import './index.less'
 
 @connect(
   ({ user, pet }) => ({
-    user, pet
+    user,
+    pet
   }),
   (dispatch) => ({})
 )
@@ -22,7 +24,10 @@ class index extends Component {
   }
 
   state = {
-    showModal: false
+    showModal: false,
+    tobePaidCount: 0, // 待支付
+    tobeShippedCount: 0, // 待发货
+    deliveryCount: 0 // 待收货
   }
 
   componentWillMount () {}
@@ -33,9 +38,20 @@ class index extends Component {
     if (this.props.user.isLogin) {
       getUserInfo()
       getPet()
+      this.queryOrderCount()
     }
   }
 
+  queryOrderCount = () => {
+    shopApi.queryOrderCount().then((res) => {
+      const { tobePaidCount, tobeShippedCount, deliveryCount } = res
+      this.setState({
+        tobePaidCount,
+        tobeShippedCount,
+        deliveryCount
+      })
+    })
+  }
   login = () => {
     gotoLogin()
   }
@@ -64,7 +80,7 @@ class index extends Component {
     })
     setTimeout(() => {
       Taro.showActionSheet({
-        itemList: ['拨打号码']
+        itemList: [ '拨打号码' ]
       })
     }, 300)
   }
@@ -81,10 +97,16 @@ class index extends Component {
     })
   }
 
+  goOrder = (current = 0) => {
+    Taro.navigateTo({
+      url: '/pages/order/index?current=' + current
+    })
+  }
+
   render () {
     const prefixCls = 'u-user'
     const { user, pet } = this.props
-    const { showModal } = this.state
+    const { showModal, tobePaidCount, tobeShippedCount, deliveryCount } = this.state
     const isLogin = user.isLogin
     const userInfo = user.userInfo
     return (
@@ -155,7 +177,7 @@ class index extends Component {
         </View>
 
         <View className='u-order'>
-          <View className='u-order__title'>
+          <View className='u-order__title' onClick={this.goOrder.bind(this, 0)}>
             <View className='u-order__my'>我的订单</View>
             <View className='u-order__all'>
               <Text>全部订单</Text>
@@ -163,17 +185,20 @@ class index extends Component {
             </View>
           </View>
           <View className='u-order__menu'>
-            <View className='u-order__item'>
+            <View className='u-order__item' onClick={this.goOrder.bind(this, 1)}>
               <Iconfont type='icondaifukuan' color='#333' size='26' />
               <View className='u-order__name'>代付款</View>
+              {tobePaidCount && <View className='u-order__count'>{tobePaidCount}</View>}
             </View>
-            <View className='u-order__item'>
+            <View className='u-order__item' onClick={this.goOrder.bind(this, 2)}>
               <Iconfont type='icondaifahuo' color='#333' size='26' />
-              <View className='u-order__name'>代发货</View>
+              <View className='u-order__name'>待发货</View>
+              {tobeShippedCount && <View className='u-order__count'>{tobeShippedCount}</View>}
             </View>
-            <View className='u-order__item'>
+            <View className='u-order__item' onClick={this.goOrder.bind(this, 3)}>
               <Iconfont type='icondaishouhuo' color='#333' size='26' />
               <View className='u-order__name'>待收货</View>
+              {deliveryCount && <View className='u-order__count'>{deliveryCount}</View>}
             </View>
           </View>
         </View>

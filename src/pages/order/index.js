@@ -5,6 +5,7 @@ import Iconfont from '@/components/Iconfont'
 import OrderItem from '@/components/OrderItem'
 import GLoading from '@/components/GLoading'
 import shopApi from '@/api/shop'
+import requestPaymentPro from '@/lib/pay'
 
 import './index.less'
 
@@ -32,7 +33,7 @@ class index extends Component {
   init = () => {
     this.setState(
       {
-        current: 0,
+        current: this.$router.params.current ? Number(this.$router.params.current) : 0,
         pageNo: 1,
         pageSize: 10,
         loading: false,
@@ -112,7 +113,6 @@ class index extends Component {
   }
 
   onCancel = (orderId) => {
-    console.log('>>> 取消订单', orderId)
     Taro.showModal({
       title: '提示',
       content: '是否确定取消订单',
@@ -139,6 +139,40 @@ class index extends Component {
         }
       })
       .catch(() => {})
+  }
+
+  onRepay = (orderId) => {
+    
+    Taro.showLoading()
+    shopApi
+      .againPayOrder({
+        orderId
+      })
+      .then((res) => {
+        Taro.hideLoading()
+        requestPaymentPro(res).then(() => {
+          Taro.showToast({
+            title: '支付成功',
+            icon: 'none'
+          })
+          Taro.redirectTo({
+            url: '/pages/order/index?current=2'
+          })
+        }).catch(err => {
+          console.error(err)
+          Taro.showToast({
+            title: '支付失败',
+            icon: 'none'
+          })
+        })
+      })
+      .catch((err) => {
+        Taro.hideLoading()
+        Taro.showToast({
+          title: err.message,
+          icon: 'success'
+        })
+      })
   }
 
   render () {
@@ -190,7 +224,10 @@ class index extends Component {
               <GLoading color='#ffdb47' size='60' />
             </View>
           )}
-          {list.length > 0 && list.map((item) => <OrderItem key={item.id} orderInfo={item} onCancel={this.onCancel} />)}
+          {list.length > 0 &&
+            list.map((item) => (
+              <OrderItem key={item.id} orderInfo={item} onCancel={this.onCancel} onRepay={this.onRepay} />
+            ))}
           {list.length > 0 && (
             <View className='u-tip' onClick={this.loadmore}>
               <Text>{loadTip}</Text>

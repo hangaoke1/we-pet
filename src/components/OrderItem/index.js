@@ -18,15 +18,27 @@ class index extends Component {
 
   componentDidMount () {}
 
-  cancelOrder = () => {
+  cancelOrder = (e) => {
+    e.stopPropagation()
     const { orderInfo } = this.props
-    const order = _.get(orderInfo, 'order', {
-      totalFee: 0
-    })
+    const order = _.get(orderInfo, 'order')
     this.props.onCancel && this.props.onCancel(order.orderId)
   }
 
-  goDetail = () => {}
+  // 重新发起支付
+  repay = (e) => {
+    e.stopPropagation()
+    const { orderInfo } = this.props
+    const order = _.get(orderInfo, 'order')
+    this.props.onRepay && this.props.onRepay(order.orderId) 
+  }
+
+  goDetail = () => {
+    Taro.setStorageSync('order_detail', this.props.orderInfo)
+    Taro.navigateTo({
+      url: '/pages/orderDetail/index'
+    })
+  }
 
   render () {
     const { orderInfo } = this.props
@@ -37,8 +49,8 @@ class index extends Component {
     }, 0)
 
     return (
-      <View className='u-orderItem' onClick={this.goDetail}>
-        <View className='u-header'>
+      <View className='u-orderItem'>
+        <View className='u-header' onClick={this.goDetail}>
           <Image className='u-logo' src={config.petAvatar} lazyLoad webp />
           <View className='u-info'>
             <View className='u-info__label'>商品零售</View>
@@ -56,7 +68,7 @@ class index extends Component {
         {orderItemList.map((item) => {
           let specs = item.productSku.specs.map((s) => s.name + '/' + s.value).join('/')
           return (
-            <View className='u-product__item' key={item.id}>
+            <View className='u-product__item' key={item.id} onClick={this.goDetail}>
               <View className='u-product__img'>
                 <Image src={item.productSku.skuImgUrl} lazyLoad webp />
               </View>
@@ -73,7 +85,7 @@ class index extends Component {
             </View>
           )
         })}
-        <View className='u-total'>
+        <View className='u-total' onClick={this.goDetail}>
           共{totalQuantity}件商品 合计： ¥{order.totalFee && order.totalFee.toFixed(2)}
         </View>
         {order.orderStatus == 100 && (
@@ -81,7 +93,7 @@ class index extends Component {
             <AtButton className='u-action__btn' type='secondary' circle onClick={this.cancelOrder}>
               取消订单
             </AtButton>
-            <AtButton className='u-action__btn' type='primary' circle>
+            <AtButton className='u-action__btn' type='primary' circle onClick={this.repay}>
               立即支付
             </AtButton>
           </View>

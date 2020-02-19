@@ -33,4 +33,6 @@ export default {
   queryOrder: params => api.post('/pet/queryOrder', params),
   // 取消订单
   cancelOrder: params => api.post('/pet/cancelOrder', params),
+  // 重新支付
+  againPayOrder: params => api.post('/pet/againPayOrder', params),
 };

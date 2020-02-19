@@ -6,7 +6,7 @@ import Iconfont from '@/components/Iconfont'
 import { getPet } from '@/actions/pet'
 import getPetYear from '@/lib/getPetYear'
 import petApi from '@/api/pet'
-import defaultImg from '@/lib/defaultImg'
+import config from '@/config'
 
 import './index.less'
 
@@ -86,7 +86,7 @@ class index extends Component {
                 ]}
               >
                 <View className='u-item'>
-                  <Image class='u-item__img' src={item.avatar || defaultImg.petAvatar} lazyLoad webp />
+                  <Image class='u-item__img' src={item.avatar || config.petAvatar} lazyLoad webp />
                   <View className='u-item__info'>
                     <View className='u-item__name'>
                       <Text>{item.petName}</Text>

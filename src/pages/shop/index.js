@@ -114,9 +114,7 @@ class index extends Component {
         pageNo: 1,
         pageSize: 10,
         brand: '',
-        // brandList: [],
         address: '',
-        // addressList: [],
         subType: '',
         subList: [],
         min: '',
@@ -165,7 +163,7 @@ class index extends Component {
   }
 
   loadmore = () => {
-    const { loading, finished, brand, address, categoryId, pageNo, pageSize, list, petType, min, max } = this.state
+    const { loading, finished, brand, address, categoryId, pageNo, pageSize, petType, min, max } = this.state
     if (loading || finished) {
       return
     }
@@ -182,11 +180,11 @@ class index extends Component {
       min,
       max
     }
-    // console.log('>>> 查询参数', params)
     shopApi.queryProducts(params).then((res) => {
       console.log('>>> 查询商品结果', res)
       this.setState((state) => {
         return {
+          pageNo: pageNo + 1,
           loading: false,
           finished: pageNo * pageSize > res.totalCount ? true : false,
           list: [ ...state.list, ...res.items ]

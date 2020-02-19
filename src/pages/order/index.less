@@ -1,12 +1,23 @@
+@import '../../styles/var.less';
+
 .u-order {
-  min-height: 100vh;
+  height: 100vh;
   background-color: #f3f4f8;
+  display: flex;
+  flex-direction: column;
 }
+
+.u-list {
+  flex: 1;
+}
+
 .u-header {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   background-color: #fff;
 }
+
 .u-tab {
   flex: 1;
   overflow: hidden;
@@ -30,5 +41,31 @@
     line-height: 70px;
     font-size: 30px;
     margin: 0 auto;
+  }
+}
+
+.u-tip {
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  font-size: 24px;
+  color: #ccc;
+}
+
+.u-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* orderItem样式 */
+.u-action {
+  &__btn {
+    width: 150px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 24px;
+    margin-left: 20px;
   }
 }

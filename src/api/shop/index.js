@@ -27,6 +27,10 @@ export default {
   alterShoppingCartQuantity: params => api.post('/pet/alterShoppingCartQuantity', params),
   // 下单
   insertOrder: params => api.post('/pet/insertOrder', params),
+  // 查询订单数量
+  queryOrderCount: params => api.post('/pet/queryOrderCount', params),
   // 查询订单 订单状态: 为空表示查询全部。100待支付，200待发货，300待收货，400已完成，900已取消
   queryOrder: params => api.post('/pet/queryOrder', params),
+  // 取消订单
+  cancelOrder: params => api.post('/pet/cancelOrder', params),
 };

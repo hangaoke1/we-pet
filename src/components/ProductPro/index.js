@@ -1,12 +1,20 @@
 import Taro, { Component } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
+import { connect } from '@tarojs/redux'
 import PropTypes from 'prop-types'
 import Iconfont from '@/components/Iconfont'
 import shopApi from '@/api/shop'
 import { getCart } from '@/actions/cart'
+import gotoLogin from '@/lib/gotoLogin'
 
 import './index.less'
 
+@connect(
+  ({ user }) => ({
+    user
+  }),
+  (dispatch) => ({})
+)
 class index extends Component {
   componentWillMount () {}
 
@@ -21,6 +29,9 @@ class index extends Component {
 
   addCart = (e) => {
     e.stopPropagation()
+    if (!this.props.user.isLogin) {
+      return gotoLogin()
+    } 
     const { item } = this.props
     Taro.showLoading({
       title: '加载中'

@@ -5,8 +5,10 @@ import Iconfont from '@/components/Iconfont'
 import gotoLogin from '@/lib/gotoLogin'
 import { getUserInfo } from '@/actions/user'
 import { getPet } from '@/actions/pet'
-import { AtGrid, AtModal, AtModalContent, AtModalAction, AtActionSheet, AtActionSheetItem } from 'taro-ui'
+import { AtGrid, AtModal, AtModalContent, AtModalAction } from 'taro-ui'
 import shopApi from '@/api/shop'
+import config from '@/config'
+import makePhoneCall from '@/lib/makePhoneCall'
 
 import './index.less'
 
@@ -28,6 +30,18 @@ class index extends Component {
     tobePaidCount: 0, // 待支付
     tobeShippedCount: 0, // 待发货
     deliveryCount: 0 // 待收货
+  }
+
+  onShareAppMessage (res) {
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      console.log(res.target)
+    }
+    return {
+      title: '小黄兜宠物生活馆',
+      path: '/pages/index/index',
+      imageUrl: config.shareIcon
+    }
   }
 
   componentWillMount () {}
@@ -52,6 +66,7 @@ class index extends Component {
       })
     })
   }
+
   login = () => {
     gotoLogin()
   }
@@ -63,11 +78,17 @@ class index extends Component {
       })
     }
     if (item.value === '地址管理') {
+      if (!this.props.user.isLogin) {
+        return gotoLogin()
+      }
       Taro.navigateTo({
         url: '/pages/address/index'
       })
     }
     if (item.value === '宠物监控') {
+      if (!this.props.user.isLogin) {
+        return gotoLogin()
+      }
       Taro.navigateTo({
         url: '/pages/webview/index'
       })
@@ -79,9 +100,7 @@ class index extends Component {
       showModal: false
     })
     setTimeout(() => {
-      Taro.showActionSheet({
-        itemList: [ '拨打号码' ]
-      })
+      makePhoneCall('15557007893')
     }, 300)
   }
 
@@ -92,12 +111,18 @@ class index extends Component {
   }
 
   goPet = () => {
+    if (!this.props.user.isLogin) {
+      return gotoLogin()
+    }
     Taro.navigateTo({
       url: '/pages/pet/index'
     })
   }
 
   goOrder = (current = 0) => {
+    if (!this.props.user.isLogin) {
+      return gotoLogin()
+    }
     Taro.navigateTo({
       url: '/pages/order/index?current=' + current
     })

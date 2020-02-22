@@ -64,7 +64,7 @@ class index extends Component {
     const { address } = this.props
     const { orderProduct } = this.state
     const params = {
-      skuInfoList: orderProduct.map(item => {
+      skuInfoList: orderProduct.map((item) => {
         return {
           skuId: item.id,
           quantity: item.quantity
@@ -72,38 +72,43 @@ class index extends Component {
       }),
       addressId: address.id,
       buyerMemo: this.state.remark,
-      cartFlag: 0
+      cartFlag: this.$router.params.cartFlag
     }
     Taro.showLoading()
-    shopApi.insertOrder(params).then(res => {
-      Taro.hideLoading()
-      requestPaymentPro(res).then(() => {
+    shopApi
+      .insertOrder(params)
+      .then((res) => {
+        Taro.hideLoading()
+        requestPaymentPro(res)
+          .then(() => {
+            Taro.showToast({
+              title: '支付成功',
+              icon: 'none'
+            })
+            // TODO: 跳转到支付成功订单页面
+            Taro.redirectTo({
+              url: '/pages/order/index?current=2'
+            })
+          })
+          .catch((err) => {
+            console.error(err)
+            // 跳转到待支付订单页面
+            Taro.showToast({
+              title: '支付失败',
+              icon: 'none'
+            })
+            Taro.redirectTo({
+              url: '/pages/order/index?current=1'
+            })
+          })
+      })
+      .catch((err) => {
+        Taro.hideLoading()
         Taro.showToast({
-          title: '支付成功',
+          title: err.message || '下单失败',
           icon: 'none'
         })
-        // TODO: 跳转到支付成功订单页面
-        Taro.redirectTo({
-          url: '/pages/order/index?current=2'
-        })
-      }).catch(err => {
-        console.error(err)
-        // 跳转到待支付订单页面
-        Taro.showToast({
-          title: '支付失败',
-          icon: 'none'
-        })
-        Taro.redirectTo({
-          url: '/pages/order/index?current=1'
-        })
       })
-    }).catch(err => {
-      Taro.hideLoading()
-      Taro.showToast({
-        title: err.message || '下单失败',
-        icon: 'none'
-      })
-    })
   }
 
   render () {
@@ -112,6 +117,9 @@ class index extends Component {
     const chooseAddress = address.list.filter((item) => item.id === address.id)[0]
     const totalPrice = orderProduct.reduce((total, item) => {
       return total + Number(item.price)
+    }, 0)
+    const totalCount = orderProduct.reduce((total, item) => {
+      return total + Number(item.quantity)
     }, 0)
 
     return (
@@ -151,7 +159,7 @@ class index extends Component {
                   <View className='u-product__specs'>{specs}</View>
                 </View>
                 <View className='u-product__right'>
-                  <View className='u-product__price'>¥ {item.price}</View>
+                  <View className='u-product__price'>¥ {item.productSku.price}</View>
                   <View className='u-product__count'>
                     <Iconfont type='iconshanchu' size='14' color='#ccc' /> {item.quantity}
                   </View>
@@ -161,7 +169,7 @@ class index extends Component {
           })}
 
           <View className='u-item'>
-            <View className='u-label'>
+            <View className='u-label' style={{ fontSize: '12px', fontWeight: 'normal' }}>
               配送方式 <Text style={{ color: '#ccc' }}>物流配送</Text>
             </View>
             <View className='u-val'>快递 免邮</View>
@@ -194,7 +202,7 @@ class index extends Component {
 
         <View className='u-bottom'>
           <View className='u-bottom__info'>
-            <Text className='u-bottom__count'>共4件，</Text>
+              <Text className='u-bottom__count'>共{totalCount}件，</Text>
             <Text className='u-bottom__price'>合计：¥ {totalPrice.toFixed(2)}</Text>
           </View>
           <AtButton className='u-action__btn' type='primary' circle={false} full onClick={this.handleSubmit}>

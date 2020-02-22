@@ -33,6 +33,14 @@ class index extends Component {
     this.props.onRepay && this.props.onRepay(order.orderId) 
   }
 
+  // 确认收货
+  deliveryOrder = (e) => {
+    e.stopPropagation()
+    const { orderInfo } = this.props
+    const order = _.get(orderInfo, 'order')
+    this.props.onDeliveryOrder && this.props.onDeliveryOrder(order.orderId) 
+  }
+
   goDetail = () => {
     Taro.setStorageSync('order_detail', this.props.orderInfo)
     Taro.navigateTo({
@@ -98,6 +106,13 @@ class index extends Component {
             </AtButton>
           </View>
         )}
+        {order.orderStatus == 300 && (
+          <View className='u-action'>
+            <AtButton className='u-action__btn' type='primary' circle onClick={this.deliveryOrder}>
+              确认收货
+            </AtButton>
+          </View>
+        )}
       </View>
     )
   }
@@ -107,7 +122,8 @@ index.defaultProps = {}
 
 index.propTypes = {
   orderInfo: PropTypes.object,
-  onCancel: PropTypes.func
+  onCancel: PropTypes.func,
+  onDeliveryOrder: PropTypes.func
 }
 
 export default index

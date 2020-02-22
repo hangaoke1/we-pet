@@ -9,6 +9,7 @@ import { AtInputNumber, AtButton } from 'taro-ui'
 import shopApi from '@/api/shop'
 import { getCart } from '@/actions/cart'
 import _ from '@/lib/lodash'
+import gotoLogin from '@/lib/gotoLogin'
 
 import './index.less'
 
@@ -20,8 +21,8 @@ const defaultSku = {
 }
 
 @connect(
-  ({ cart }) => ({
-    cart
+  ({ user, cart }) => ({
+    user, cart
   }),
   (dispatch) => ({})
 )
@@ -37,11 +38,12 @@ class index extends Component {
     currentSku: {},
     choose: [],
     count: 1,
+    buyNow: false,
     showParams: false,
     showSpecs: false,
     showQuick: false,
     buyLoading: false,
-    scrollTop: '',
+    scrollTop: ''
   }
 
   componentWillMount () {
@@ -54,9 +56,17 @@ class index extends Component {
       })
       .then((res) => {
         Taro.hideLoading()
-        const productBannerImgList = _.get(res, 'productBannerImgList', [])
+        let productBannerImgList = _.get(res, 'productBannerImgList', [])
         const productSkuList = _.get(res, 'productSkuList', [])
         const currentSku = productSkuList.filter((sku) => sku.id == skuId)[0] || defaultSku
+        if (productBannerImgList.length === 0) {
+          productBannerImgList = productSkuList.map(item => {
+            return {
+              id: item.id,
+              imgUrl: item.skuImgUrl
+            }
+          })
+        }
         this.setState({
           info: _.cloneDeep(res),
           choose: _.cloneDeep(_.get(currentSku, 'specs', [])),
@@ -64,7 +74,8 @@ class index extends Component {
           productSkuList,
           currentSku
         })
-      }).catch(() => {
+      })
+      .catch(() => {
         Taro.hideLoading()
       })
   }
@@ -138,9 +149,10 @@ class index extends Component {
     })
   }
 
-  handleSpecsOpen = () => {
+  handleSpecsOpen = (buyNow) => {
     this.setState({
-      showSpecs: true
+      showSpecs: true,
+      buyNow
     })
   }
 
@@ -158,7 +170,6 @@ class index extends Component {
   }
 
   changeChoose = (type, value) => {
-    // TODO: 1、计算互斥规格 2、计算当前sku
     this.setState((state) => {
       // 根据choose 定位sku
       let newChoose = state.choose.map((item) => {
@@ -186,8 +197,31 @@ class index extends Component {
     })
   }
 
+  // 立即购买
+  buyNow = () => {
+    console.log(this.setState.currentSku)
+  }
+
   // 加入购物车
   addToCart = () => {
+    if (!this.props.user.isLogin) {
+      return gotoLogin()
+    }
+
+    // 立即购买
+    if (this.state.buyNow) {
+      Taro.setStorageSync('order_product', [{
+        quantity: this.state.count,
+        price: this.state.currentSku.price * this.state.count,
+        productSku: this.state.currentSku,
+        id: this.state.currentSku.id
+      }])
+      Taro.redirectTo({
+        url: '/pages/confirmOrder/index?cartFlag=0'
+      })
+      return
+    }
+
     if (this.setState.buyLoading) {
       return
     }
@@ -232,7 +266,8 @@ class index extends Component {
       choose,
       productBannerImgList,
       currentSku,
-      buyLoading
+      buyLoading,
+      buyNow
     } = this.state
     const { cart } = this.props
     const prefixCls = 'u-product'
@@ -294,7 +329,7 @@ class index extends Component {
           >
             {productBannerImgList.map((image) => (
               <SwiperItem key={image.id}>
-                <Image className='u-item' src={image.imgUrl} mode='aspectFit' lazyLoad webp/>
+                <Image className='u-item' src={image.imgUrl} mode='aspectFit' lazyLoad webp />
               </SwiperItem>
             ))}
           </Swiper>
@@ -322,7 +357,7 @@ class index extends Component {
               <Iconfont type='iconarrowright' color='#333' size='14' />
             </View>
           </View>
-          <View className='u-params__item' onClick={this.handleSpecsOpen}>
+          <View className='u-params__item' onClick={this.handleSpecsOpen.bind(this, false)}>
             <View className='u-params__label'>选择</View>
             <View className='u-params__val'>
               <Text>已选择 {choose.map((item) => item.value).join(' ')}</Text>
@@ -346,7 +381,7 @@ class index extends Component {
           </View>
           <AtButton
             loading={buyLoading}
-            onClick={this.handleSpecsOpen}
+            onClick={this.handleSpecsOpen.bind(this, false)}
             className='u-footer__btn'
             disabled={choosedSku.stock === 0}
             type='primary'
@@ -354,7 +389,7 @@ class index extends Component {
           >
             加入购物车
           </AtButton>
-          <AtButton className='u-footer__btn' disabled={choosedSku.stock === 0} type='secondary' circle>
+          <AtButton className='u-footer__btn' disabled={choosedSku.stock === 0} type='secondary' circle onClick={this.handleSpecsOpen.bind(this, true)}>
             立即购买
           </AtButton>
         </View>
@@ -452,7 +487,7 @@ class index extends Component {
               type='primary'
               circle
             >
-              加入购物车
+              { buyNow ? '立即购买' : '加入购物车'}
             </AtButton>
           </View>
         </GFloatLayout>

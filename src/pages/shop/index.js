@@ -9,6 +9,7 @@ import Product from '@/components/Product'
 import ProductPro from '@/components/ProductPro'
 import shopApi from '@/api/shop'
 import { getCart } from '@/actions/cart'
+import config from '@/config'
 
 import './index.less'
 
@@ -49,6 +50,18 @@ class index extends Component {
 
   constructor (props) {
     super(props)
+  }
+
+  onShareAppMessage (res) {
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      console.log(res.target)
+    }
+    return {
+      title: '小黄兜宠物生活馆',
+      path: '/pages/index/index',
+      imageUrl: config.shareIcon
+    }
   }
 
   componentWillMount () {}

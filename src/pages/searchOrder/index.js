@@ -8,12 +8,12 @@ import './index.less'
 
 class index extends Component {
   config = {
-    navigationBarTitleText: '商品搜索'
+    navigationBarTitleText: '订单搜索'
   }
 
   state = {
     value: '',
-    history: Taro.getStorageSync('search_history') || []
+    history: Taro.getStorageSync('search_order_history') || []
   }
 
   componentWillMount () {}
@@ -33,22 +33,22 @@ class index extends Component {
 
   goResult = (keyword) => {
     if (!keyword) { return }
-    let history = Taro.getStorageSync('search_history') || []
+    let history = Taro.getStorageSync('search_order_history') || []
     history = [ keyword, ...history ]
     history = _.uniq(history)
-    Taro.setStorageSync('search_history', history)
-    Taro.setStorageSync('search_keyword', keyword)
-    if (this.$router.params.from === 'searchResult') {
+    Taro.setStorageSync('search_order_history', history)
+    Taro.setStorageSync('search_order_keyword', keyword)
+    if (this.$router.params.from === 'searchOrderResult') {
       Taro.navigateBack()
     } else {
       Taro.redirectTo({
-        url: '/pages/searchResult/index'
+        url: '/pages/searchOrderResult/index'
       })
     }
   }
 
   clearHistory = () => {
-    Taro.setStorageSync('search_history', [])
+    Taro.setStorageSync('search_order_history', [])
     this.setState({
       history: []
     })

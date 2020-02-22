@@ -5,6 +5,7 @@ import { Iconfont } from '@/components/Iconfont'
 import apiHome from '@/api/home'
 import _ from '@/lib/lodash'
 import { getCart } from '@/actions/cart'
+import config from '@/config'
 import './index.less'
 
 export default class Index extends Component {
@@ -20,6 +21,18 @@ export default class Index extends Component {
     banners: [],
     notice: '',
     products: []
+  }
+
+  onShareAppMessage (res) {
+    if (res.from === 'button') {
+      // 来自页面内转发按钮
+      console.log(res.target)
+    }
+    return {
+      title: '小黄兜宠物生活馆',
+      path: '/pages/index/index',
+      imageUrl: config.shareIcon
+    }
   }
 
   onPullDownRefresh () {
@@ -94,6 +107,22 @@ export default class Index extends Component {
     })
   }
 
+  todo = () => {
+    Taro.showToast({
+      title: '敬请期待',
+      icon: 'none'
+    })
+  }
+
+  openLocation = () => {
+    Taro.openLocation({
+      latitude: 30.206371,
+      longitude: 120.202034,
+      name: '小黄兜宠物生活馆',
+      address: '浙江省杭州市滨江区滨盛路1893号'
+    })
+  }
+
   render () {
     const { banners, notice, products } = this.state
     return (
@@ -111,11 +140,15 @@ export default class Index extends Component {
           </AtNoticebar>
         </View>
         <View className='u-quick'>
-          <View className='u-quick__name'>DOUDOU小黄兜宠物(杭州滨江店)</View>
-          <View className='u-quick__address'>浙江省杭州市滨江区888号</View>
+          <View className='u-quick__name'>小黄兜宠物生活馆(杭州滨江店)</View>
+          <View className='u-quick__address'>浙江省杭州市滨江区滨盛路1893号</View>
           <View className='u-quick__bottom'>
-            <View className='u-quick__distance'>距离您3km</View>
-            <View className='u-quick__switch'>切换门店</View>
+            {/* <View className='u-quick__distance'>距离您3km</View> */}
+            <View className='u-quick__icon' onClick={this.openLocation}>
+              <Iconfont type='icondizhi01' color='#ffdb47' />
+              <Text style={{marginLeft: '5px'}}>查看位置</Text>
+            </View>
+            {/* <View className='u-quick__switch'>切换门店</View> */}
             <View className='u-quick__yuyue'>预约洗护</View>
           </View>
         </View>
@@ -127,7 +160,7 @@ export default class Index extends Component {
               <Iconfont type='iconzhuye' />
             </View>
           </View>
-          <View className='u-nav__item'>
+          <View className='u-nav__item' onClick={this.todo}>
             <View className='u-nav__name'>领券中心</View>
             <View className='u-nav__tip'>海量优惠等你来</View>
             <View className='u-nav__icon'>

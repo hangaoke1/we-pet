@@ -1,9 +1,10 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, ScrollView, Image } from '@tarojs/components'
+import { View, Text, ScrollView } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import Iconfont from '@/components/Iconfont'
 import shopApi from '@/api/shop'
-import gotoLogin from '@/lib/gotoLogin'
+import OrderItem from '@/components/OrderItem'
+import requestPaymentPro from '@/lib/pay'
 
 import './index.less'
 
@@ -91,7 +92,7 @@ class index extends Component {
       keyword
     }
     shopApi
-      .queryProducts(params)
+      .queryOrder(params)
       .then((res) => {
         this.setState((state) => {
           return {
@@ -107,43 +108,105 @@ class index extends Component {
 
   goSearch = () => {
     Taro.navigateTo({
-      url: '/pages/search/index?from=searchResult'
+      url: '/pages/searchOrder/index?from=searchOrderResult'
     })
   }
 
-  goProduct = (item) => {
-    Taro.navigateTo({
-      url: `/pages/product/index?productId=${item.productId}&skuId=${item.id}`
+  // 取消订单
+  onCancel = (orderId) => {
+    Taro.showModal({
+      title: '提示',
+      content: '是否确定取消订单',
+      confirmColor: '#ffdb47'
     })
+      .then((res) => {
+        if (res.confirm) {
+          Taro.showLoading()
+          shopApi
+            .cancelOrder({
+              orderId
+            })
+            .then(() => {
+              Taro.hideLoading()
+              this.refresh()
+            })
+            .catch((err) => {
+              Taro.hideLoading()
+              Taro.showToast({
+                title: err.message,
+                icon: 'none'
+              })
+            })
+        }
+      })
+      .catch(() => {})
   }
 
-  addCart = (item, e) => {
-    e.stopPropagation()
-    if (!this.props.user.isLogin) {
-      return gotoLogin()
-    }
-    Taro.showLoading({
-      title: '加载中'
-    })
+  // 重新支付
+  onRepay = (orderId) => {
+    
+    Taro.showLoading()
     shopApi
-      .addShoppingCart({
-        skuId: item.id,
-        quantity: 1
+      .againPayOrder({
+        orderId
       })
       .then((res) => {
         Taro.hideLoading()
-        Taro.showToast({
-          title: '添加成功',
-          icon: 'success'
+        requestPaymentPro(res).then(() => {
+          Taro.showToast({
+            title: '支付成功',
+            icon: 'none'
+          })
+          Taro.redirectTo({
+            url: '/pages/order/index?current=2'
+          })
+        }).catch(err => {
+          console.error(err)
+          Taro.showToast({
+            title: '支付失败',
+            icon: 'none'
+          })
         })
       })
       .catch((err) => {
         Taro.hideLoading()
         Taro.showToast({
-          title: '添加失败',
+          title: err.message,
           icon: 'none'
         })
       })
+  }
+
+  // 确认收货
+  onDeliveryOrder = (orderId) => {
+    Taro.showModal({
+      title: '提示',
+      content: '您已收到商品？',
+      confirmColor: '#ffdb47'
+    })
+      .then((res) => {
+        if (res.confirm) {
+          Taro.showLoading()
+          shopApi
+            .deliveryOrder({
+              orderId
+            })
+            .then(() => {
+              Taro.hideLoading()
+              Taro.redirectTo({
+                url: '/pages/order/index?current=4'
+              })
+            })
+            .catch((err) => {
+              Taro.hideLoading()
+              Taro.showToast({
+                title: err.message,
+                icon: 'none'
+              })
+            })
+        }
+      })
+      .catch(() => {})
   }
 
   render () {
@@ -168,18 +231,7 @@ class index extends Component {
 
         <ScrollView className='u-list' scrollY style={{ height: '400px' }} onScrollToLower={this.loadmore}>
           {list.map((item) => (
-            <View key={item.id} className='u-product' onClick={this.goProduct.bind(this, item)}>
-              <Image className='u-product__img' src={item.skuImgUrl} lazyLoad webp />
-              <View className='u-product__info'>
-                <View className='u-product__name'>{item.skuName}</View>
-                <View className='u-product__bottom'>
-                  <View className='u-product__price'>¥ {item.price}</View>
-                  <View className='u-product__add' onClick={this.addCart.bind(this, item)}>
-                    <Iconfont type='icongouwuche' color='#fff' size='14' />
-                  </View>
-                </View>
-              </View>
-            </View>
+            <OrderItem key={item.id} orderInfo={item} onCancel={this.onCancel} onRepay={this.onRepay} onDeliveryOrder={this.onDeliveryOrder} />
           ))}
           <View className='u-tip' onClick={this.loadmore}>
             <Text>{loadTip}</Text>

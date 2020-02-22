@@ -35,4 +35,6 @@ export default {
   cancelOrder: params => api.post('/pet/cancelOrder', params),
   // 重新支付
   againPayOrder: params => api.post('/pet/againPayOrder', params),
+  // 确认收货
+  deliveryOrder: params => api.post('/pet/deliveryOrder', params),
 };

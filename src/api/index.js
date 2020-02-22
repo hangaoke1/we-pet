@@ -9,7 +9,7 @@ const requestInterceptors = (opts) => {
     opts.url = apiPrefix + opts.url
   }
   opts.header = {
-    Authorization: token.get()
+    Authorization: token.get() || ''
   }
   return opts
 }

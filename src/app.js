@@ -32,7 +32,37 @@ class App extends Component {
   componentDidCatchError () {}
 
   config = {
-    pages: [ 'pages/index/index', 'pages/user/index', 'pages/order/index', 'pages/orderDetail/index', 'pages/search/index', 'pages/searchResult/index', 'pages/pet/index', 'pages/petDetail/index', 'pages/petBreed/index', 'pages/confirmOrder/index', 'pages/cart/index', 'pages/product/index', 'pages/addressUpdate/index', 'pages/addressAdd/index', 'pages/address/index', 'pages/shop/index', 'pages/login/index', 'pages/test/index', 'pages/webview/index', 'pages/remark/index' ],
+    pages: [
+      'pages/subscribe/index',
+      'pages/index/index',
+      'pages/searchOrderResult/index',
+      'pages/searchOrder/index',
+      'pages/searchResult/index',
+      'pages/search/index',
+      'pages/orderDetail/index',
+      'pages/user/index',
+      'pages/order/index',
+      'pages/pet/index',
+      'pages/petDetail/index',
+      'pages/petBreed/index',
+      'pages/confirmOrder/index',
+      'pages/cart/index',
+      'pages/product/index',
+      'pages/addressUpdate/index',
+      'pages/addressAdd/index',
+      'pages/address/index',
+      'pages/shop/index',
+      'pages/login/index',
+      'pages/test/index',
+      'pages/webview/index',
+      'pages/remark/index'
+    ],
+    plugins: {},
+    permission: {
+      'scope.userLocation': {
+        desc: '你的位置信息将用于小程序定位'
+      }
+    },
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',

@@ -5,14 +5,16 @@ import { getCart } from '@/actions/cart'
 import shopApi from '@/api/shop'
 import { AtButton } from 'taro-ui'
 import _ from '@/lib/lodash'
+import GLogin from '@/components/GLogin'
 import ProductItem from './components/ProductItem'
 import RadioIcon from './components/RadioIcon'
 
 import './index.less'
 
 @connect(
-  ({ cart }) => ({
-    cart
+  ({ cart, user }) => ({
+    cart,
+    user
   }),
   (dispatch) => ({})
 )
@@ -41,13 +43,19 @@ class index extends Component {
       const { cart } = this.props
       const allIds = _.get(cart, 'items', []).map((sku) => sku.productSku.id)
       if (!this.hasInit) {
-        this.isIinit = true
+        this.hasInit = true
         this.allIds = allIds
         this.setState({
           choosed: allIds
         })
       } else {
-        // TODO: 与之前的allIds做对比，如果之前不存在，现在存在，则默认选中
+        const newIds = allIds.filter((id) => !this.allIds.includes(id))
+        this.allIds = allIds
+        this.setState((state) => {
+          return {
+            choosed: _.uniq([ ...state.choosed, ...newIds ])
+          }
+        })
       }
     })
   }
@@ -76,8 +84,8 @@ class index extends Component {
     Taro.showModal({
       title: '提示',
       content: `确认将这${choosed.length}个宝贝删除?`
-    }).then(res => {
-      if(res.confirm) {
+    }).then((res) => {
+      if (res.confirm) {
         const id = choosed.join('-')
         this.handleDelete(id)
       }
@@ -151,16 +159,17 @@ class index extends Component {
         icon: 'none'
       })
     } else {
-      let orderProduct = cart.items.filter(item => choosed.includes(item.productSku.id))
+      let orderProduct = cart.items.filter((item) => choosed.includes(item.productSku.id))
       Taro.setStorageSync('order_product', orderProduct)
       Taro.navigateTo({
-        url: '/pages/confirmOrder/index'
+        url: '/pages/confirmOrder/index?cartFlag=1'
       })
     }
   }
+
   render () {
     const prefixCls = 'u-cart'
-    const { cart } = this.props
+    const { cart, user } = this.props
     const { choosed, edit } = this.state
     const isSelectedAll = choosed.length === _.get(cart, 'items.length', 0)
     const priceTotal = _.get(cart, 'items', [])
@@ -168,7 +177,8 @@ class index extends Component {
       .reduce((total, item) => {
         return total + Number(item.price)
       }, 0)
-    return (
+    const isLogin = user.isLogin
+    return isLogin ? (
       <View className={prefixCls}>
         <View className='u-header'>
           <View className='u-header__l'>购物车({cart.totalCount})</View>
@@ -221,6 +231,8 @@ class index extends Component {
           )}
         </View>
       </View>
+    ) : (
+      <GLogin />
     )
   }
 }

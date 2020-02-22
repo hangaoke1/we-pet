@@ -1,11 +1,12 @@
 import Taro, { Component } from '@tarojs/taro'
-import { View, Text, ScrollView } from '@tarojs/components'
+import { View, Text, ScrollView, Image } from '@tarojs/components'
 import { AtTabs, AtButton } from 'taro-ui'
 import Iconfont from '@/components/Iconfont'
 import OrderItem from '@/components/OrderItem'
 import GLoading from '@/components/GLoading'
 import shopApi from '@/api/shop'
 import requestPaymentPro from '@/lib/pay'
+import config from '@/config'
 
 import './index.less'
 
@@ -101,7 +102,8 @@ class index extends Component {
       .catch(() => {})
   }
 
-  handleClick = (value) => {
+  onChangeTab = (value) => {
+    if (this.state.current === value) { return }
     this.setState(
       {
         current: value
@@ -112,6 +114,7 @@ class index extends Component {
     )
   }
 
+  // 取消订单
   onCancel = (orderId) => {
     Taro.showModal({
       title: '提示',
@@ -133,7 +136,7 @@ class index extends Component {
               Taro.hideLoading()
               Taro.showToast({
                 title: err.message,
-                icon: 'success'
+                icon: 'none'
               })
             })
         }
@@ -141,6 +144,7 @@ class index extends Component {
       .catch(() => {})
   }
 
+  // 重新支付
   onRepay = (orderId) => {
     
     Taro.showLoading()
@@ -170,9 +174,53 @@ class index extends Component {
         Taro.hideLoading()
         Taro.showToast({
           title: err.message,
-          icon: 'success'
+          icon: 'none'
         })
       })
+  }
+
+  // 确认收货
+  onDeliveryOrder = (orderId) => {
+    Taro.showModal({
+      title: '提示',
+      content: '您已收到商品？',
+      confirmColor: '#ffdb47'
+    })
+      .then((res) => {
+        if (res.confirm) {
+          Taro.showLoading()
+          shopApi
+            .deliveryOrder({
+              orderId
+            })
+            .then(() => {
+              Taro.hideLoading()
+              Taro.redirectTo({
+                url: '/pages/order/index?current=4'
+              })
+            })
+            .catch((err) => {
+              Taro.hideLoading()
+              Taro.showToast({
+                title: err.message,
+                icon: 'none'
+              })
+            })
+        }
+      })
+      .catch(() => {})
+  }
+
+  goShop = () => {
+    Taro.switchTab({
+      url: '/pages/shop/index'
+    })
+  }
+
+  goSearch = () => {
+    Taro.navigateTo({
+      url: '/pages/searchOrder/index'
+    })
   }
 
   render () {
@@ -201,10 +249,10 @@ class index extends Component {
                 { title: '已完成' },
                 { title: '已取消' }
               ]}
-              onClick={this.handleClick}
+              onClick={this.onChangeTab}
             />
           </View>
-          <View className='u-search'>
+          <View className='u-search' onClick={this.goSearch}>
             <Iconfont type='iconsearch' size='16' color='#ccc' />
           </View>
         </View>
@@ -212,8 +260,9 @@ class index extends Component {
           {list.length === 0 &&
           finished && (
             <View className='u-empty'>
+              <Image className='u-empty__img' src={config.petAvatar}></Image>
               <View className='u-empty__label'>您还没有相关的订单</View>
-              <AtButton className='u-empty__btn' type='primary' circle>
+              <AtButton className='u-empty__btn' type='primary' circle onClick={this.goShop}>
                 去逛逛
               </AtButton>
             </View>
@@ -226,7 +275,7 @@ class index extends Component {
           )}
           {list.length > 0 &&
             list.map((item) => (
-              <OrderItem key={item.id} orderInfo={item} onCancel={this.onCancel} onRepay={this.onRepay} />
+              <OrderItem key={item.id} orderInfo={item} onCancel={this.onCancel} onRepay={this.onRepay} onDeliveryOrder={this.onDeliveryOrder} />
             ))}
           {list.length > 0 && (
             <View className='u-tip' onClick={this.loadmore}>

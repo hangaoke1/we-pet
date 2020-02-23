@@ -4,6 +4,7 @@
   color: #333;
   background-color: #f3f4f8;
   min-height: 100vh;
+  padding-bottom: 200px;
 }
 
 .u-swiper {
@@ -180,5 +181,219 @@
       border: 24px solid;
       border-color: transparent transparent @themeColor @themeColor;
     }
+  }
+}
+
+.u-service {
+  position: relative;
+  box-sizing: border-box;
+  width: 710px;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  background-color: #fff;
+  border-radius: 5px;
+  &__label {
+    font-size: 30px;
+    color: #000;
+  }
+  &__list {
+    display: flex;
+    width: 750px;
+    padding-top: 20px;
+    overflow: hidden;
+  }
+  &__item {
+    position: relative;
+    margin-right: 20px;
+  }
+  &__header {
+    position: relative;
+    width: 100px;
+    height: 100px;
+  }
+  &__img {
+    box-sizing: border-box;
+    width: 100px;
+    height: 100px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+  }
+  &__name {
+    margin-top: 10px;
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+  }
+  &__detail {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    font-size: 24px;
+    color: #ccc;
+    border: 1px solid #eee;
+    border-radius: 5px;
+  }
+  &__selected {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    background-color: #67C23A;
+  }
+}
+
+.u-time {
+  position: relative;
+  box-sizing: border-box;
+  width: 710px;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  background-color: #fff;
+  border-radius: 5px;
+  &__label {
+    font-size: 30px;
+    color: #000;
+  }
+  &__list {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  &__item {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 152.5px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  &__active  {
+    background-color: @themeColor;
+    border-color: @themeColor;
+  }
+  &__subList {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: @themeColor;
+  }
+  &__subItem {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 140px;
+    height: 80px;
+    border: 1px solid @themeColor-dark;
+    border-radius: 5px;
+  }
+  &__subActive {
+    border-width: 4px;
+  }
+  &__selected {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    background-color: #67C23A;
+  }
+  &__tip {
+    padding-top: 20px;
+    font-size: 24px;
+    color: #ccc;
+  }
+  &__disabled {
+    background: #eee;
+    color: #ccc;
+    border-color: #eee;
+  }
+}
+
+.u-date {
+  font-size: 24px;
+  color: @themeColor;
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  &__list {
+    display: flex;
+    align-items: center;
+  }
+  &__item {
+    min-width: 80px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 30px;
+    height: 100px;
+    text-align: center;
+  }
+  &__short {
+    color: #333;
+  }
+  &__active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 4px;
+    background-color: @themeColor;
+  }
+}
+
+.u-action {
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-left: 20px;
+  z-index: 100;
+  background-color: #fff;
+  border-top: 1px solid #eee;
+  &__left {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    color: #ccc;
+  }
+  &__right {
+    display: flex;
+    align-items: center;
+  }
+  &__label {
+    font-size: 24px;
+    color: #333;
+  }
+  &__btn {
+    width: 220px;
+    margin-left: 20px;
   }
 }

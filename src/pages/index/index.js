@@ -107,6 +107,12 @@ export default class Index extends Component {
     })
   }
 
+  goSubscribe = () => {
+    Taro.navigateTo({
+      url: '/pages/subscribe/index'
+    })
+  }
+
   todo = () => {
     Taro.showToast({
       title: '敬请期待',
@@ -149,7 +155,7 @@ export default class Index extends Component {
               <Text style={{marginLeft: '5px'}}>查看位置</Text>
             </View>
             {/* <View className='u-quick__switch'>切换门店</View> */}
-            <View className='u-quick__yuyue'>预约洗护</View>
+            <View className='u-quick__yuyue' onClick={this.goSubscribe}>预约洗护</View>
           </View>
         </View>
         <View className='u-nav'>

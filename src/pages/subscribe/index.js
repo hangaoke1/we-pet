@@ -19,6 +19,12 @@ function isDisabled (dateFmt, time) {
   return d.isBefore(current)
 }
 
+function isDisabledInt (dateFmt, time) {
+  const current = dayjs()
+  const d = dayjs(`${dateFmt} ${time}`).add(45, 'minute')
+  return d.isBefore(current)
+}
+
 function genDate () {
   const arr = [
     dayjs(),
@@ -65,7 +71,7 @@ class index extends Component {
   state = {
     storeId: 1,
     petId: '',
-    service: '洗澡',
+    service: { name: '洗澡', icon: '', price: 100 },
     date: '',
     dateFmt: '',
     timeInt: '',
@@ -73,10 +79,10 @@ class index extends Component {
     banners: [],
     // 洗澡、spa、美容、洁齿
     serviceList: [
-      { name: '洗澡', icon: '' },
-      { name: 'spa', icon: '' },
-      { name: '美容', icon: '' },
-      { name: '洁齿', icon: '' }
+      { name: '洗澡', icon: '', price: 100 },
+      { name: 'spa', icon: '', price: 150 },
+      { name: '美容', icon: '', price: 120 },
+      { name: '洁齿', icon: '', price: 80 }
     ],
     dateList: [],
     timeList: [
@@ -144,7 +150,7 @@ class index extends Component {
 
   selectedService = (item) => {
     this.setState({
-      service: item.name
+      service: item
     })
   }
 
@@ -172,7 +178,7 @@ class index extends Component {
   }
 
   handleSubmit = () => {
-    const { storeId, petId, dateFmt, time, service } = this.state
+    const { storeId, petId, dateFmt, time, service, date } = this.state
     if (!time) {
       return Taro.showToast({
         title: '请选择时间',
@@ -192,12 +198,11 @@ class index extends Component {
       })
     }
     const params = {
-      storeId, petId, service, reserveTime: `${dateFmt} ${time}`
+      storeId, petId, service, reserveTime: `${dateFmt} ${time}:00`, date, time
     }
-    console.log('>>> 下单参数', params)
-    Taro.showToast({
-      title: '敬请期待',
-      icon: 'none'
+    Taro.setStorageSync('subscribe_order', params)
+    Taro.navigateTo({
+      url: '/pages/subscribeConfirm/index'
     })
   }
 
@@ -289,7 +294,7 @@ class index extends Component {
                   <View key={item.name} className='u-service__item' onClick={this.selectedService.bind(this, item)}>
                     <View className='u-service__header'>
                       <Image className='u-service__img' src={config.petAvatar} />
-                      {item.name == service && (
+                      {item.name == service.name && (
                         <View className='u-service__selected'>
                           <Iconfont type='iconxuanzhong' color='#fff' size='16' />
                         </View>
@@ -343,7 +348,7 @@ class index extends Component {
             <View key={JSON.stringify(item)}>
               <View className='u-time__list'>
                 {item.map((v) => {
-                  const disabled = isDisabled(dateFmt, v)
+                  const disabled = isDisabledInt(dateFmt, v)
                   return (
                     <View
                       className={classNames({
@@ -395,7 +400,7 @@ class index extends Component {
           <View className='u-action__right'>
               <View>
                 <Text className='u-action__label'>合计：</Text>
-                <Text className='u-action__val'>¥ 100.00</Text>
+                <Text className='u-action__val'>¥ {service.price}</Text>
               </View>
               <AtButton className='u-action__btn' type='primary' circle={false} full onClick={this.handleSubmit}>
                 去下单

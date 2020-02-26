@@ -1,9 +1,9 @@
 import Taro from '@tarojs/taro'
-import { GET_ADDRESS, SET_ADDRESS_USED } from '@/constants/address'
+import { GET_STORE, SET_STORE } from '@/constants/store'
 import _ from '@/lib/lodash'
 
-// 用户地址
-const address = (
+// 门店信息
+const store = (
   state = {
     list: [],
     id: ''
@@ -11,19 +11,18 @@ const address = (
   action
 ) => {
   switch (action.type) {
-    case GET_ADDRESS:
+    case GET_STORE:
       let id = state.id
       if (!id) {
-        const defaultAddress = action.value.filter(item => item.defaultFlag)[0]
-        const firstAddress = action.value[0]
-        id = defaultAddress ? defaultAddress.id : _.get(firstAddress, 'id')
+        const firstStore = action.value[0]
+        id = _.get(firstStore, 'id')
       }
       return {
         ...state,
         list: action.value,
         id
       }
-    case SET_ADDRESS_USED:
+    case SET_STORE:
       /**
        * 1. 取主动选择的地址
        * 2. 取默认地址
@@ -38,4 +37,4 @@ const address = (
   }
 }
 
-export default address
+export default store

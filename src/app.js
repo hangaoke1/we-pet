@@ -33,8 +33,10 @@ class App extends Component {
 
   config = {
     pages: [
-      'pages/subscribe/index',
       'pages/index/index',
+      'pages/storeOrder/index',
+      'pages/subscribeConfirm/index',
+      'pages/subscribe/index',
       'pages/searchOrderResult/index',
       'pages/searchOrder/index',
       'pages/searchResult/index',

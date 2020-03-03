@@ -133,7 +133,7 @@ class index extends Component {
   }
 
   doCall = () => {
-    makePhoneCall('15557007893')
+    makePhoneCall(config.tel)
   }
 
   goPet = () => {

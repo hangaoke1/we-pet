@@ -32,8 +32,8 @@ class index extends Component {
   }
 
   componentWillMount () {
-    // this.init()
     getStore()
+    this.init()
   }
 
   componentDidMount () {}
@@ -74,19 +74,22 @@ class index extends Component {
     if (loading || finished) {
       return
     }
+    const currentMap = {
+      0: 100,
+      1: 200,
+      2: 900
+    }
     this.setState({
       loading: true
     })
     const params = {
       pageNo,
-      pageSize
+      pageSize,
+      reserveOrderStatus: currentMap[current]
     }
     storeApi
       .queryMyReserveWash(params)
       .then((res) => {
-        res.items.forEach((item) => {
-          item.id = item.order.orderId
-        })
         this.setState((state) => {
           return {
             pageNo: pageNo + 1,
@@ -111,6 +114,36 @@ class index extends Component {
     )
   }
 
+  // 取消订单
+  onCancel = (id) => {
+    Taro.showModal({
+      title: '提示',
+      content: '是否确定取消预约订单',
+      confirmColor: '#ffdb47'
+    })
+      .then((res) => {
+        if (res.confirm) {
+          Taro.showLoading()
+          storeApi
+            .cancelReserveWash({
+              id
+            })
+            .then(() => {
+              Taro.hideLoading()
+              this.refresh()
+            })
+            .catch((err) => {
+              Taro.hideLoading()
+              Taro.showToast({
+                title: err.message,
+                icon: 'none'
+              })
+            })
+        }
+      })
+      .catch(() => {})
+  }
+
   render () {
     const { list, loading, finished } = this.state
     let loadTip = ''
@@ -130,7 +163,8 @@ class index extends Component {
               current={this.state.current}
               tabList={[
                 { title: '已预约' },
-                { title: '已完成' }
+                { title: '已完成' },
+                { title: '已取消' }
               ]}
               onClick={this.onChangeTab}
             />
@@ -153,10 +187,9 @@ class index extends Component {
               <GLoading color='#ffdb47' size='60' />
             </View>
           )}
-          <ServiceOrder></ServiceOrder>
           {list.length > 0 &&
             list.map((item) => (
-              <View key={item.id}>预约订单</View>
+              <ServiceOrder key={item.id} item={item} onCancel={this.onCancel.bind(this)}>预约订单</ServiceOrder>
             ))}
           {list.length > 0 && (
             <View className='u-tip' onClick={this.loadmore}>

@@ -72,6 +72,14 @@ class index extends Component {
   }
 
   handleToolClick = (item) => {
+    if (item.value === '预约订单') {
+      if (!this.props.user.isLogin) {
+        return gotoLogin()
+      }
+      Taro.navigateTo({
+        url: '/pages/storeOrder/index'
+      })
+    }
     if (item.value === '联系客服') {
       this.setState({
         showModal: true
@@ -90,7 +98,7 @@ class index extends Component {
         return gotoLogin()
       }
       Taro.navigateTo({
-        url: '/pages/webview/index'
+        url: '/pages/device/index'
       })
     }
   }
@@ -100,7 +108,7 @@ class index extends Component {
       showModal: false
     })
     setTimeout(() => {
-      makePhoneCall('15557007893')
+      makePhoneCall(config.tel)
     }, 300)
   }
 
@@ -241,7 +249,7 @@ class index extends Component {
               {
                 image:
                   'https://img12.360buyimg.com/jdphoto/s72x72_jfs/t6160/14/2008729947/2754/7d512a86/595c3aeeNa89ddf71.png',
-                value: '服务订单'
+                value: '预约订单'
               },
               {
                 image:

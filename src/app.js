@@ -34,6 +34,7 @@ class App extends Component {
   config = {
     pages: [
       'pages/index/index',
+      'pages/device/index',
       'pages/storeOrder/index',
       'pages/subscribeConfirm/index',
       'pages/subscribe/index',

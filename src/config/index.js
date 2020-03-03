@@ -5,7 +5,8 @@ const config = {
   server: 'https://api.bbbhr.cn',
   uploadUrl: 'https://api.bbbhr.cn/pet/uploadFile',
   petAvatar: 'http://pet-agatha.oss-cn-hangzhou.aliyuncs.com/20200215/c43e7e14036e4b57b25e6fafb6db1074.jpg',
-  shareIcon: 'http://pet-agatha.oss-cn-hangzhou.aliyuncs.com/20200215/c43e7e14036e4b57b25e6fafb6db1074.jpg'
+  shareIcon: 'http://pet-agatha.oss-cn-hangzhou.aliyuncs.com/20200215/c43e7e14036e4b57b25e6fafb6db1074.jpg',
+  tel: '400-9999-9999'
 }
 
 export default config

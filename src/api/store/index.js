@@ -11,5 +11,7 @@ export default {
   // 预约洗护
   insertReserveWash: param => api.post('/pet/insertReserveWash', param),
   // 查询预约订单
-  queryMyReserveWash: param => api.post('/pet/queryMyReserveWash', param)
+  queryMyReserveWash: param => api.post('/pet/queryMyReserveWash', param),
+  // 取消订单
+  cancelReserveWash: param => api.post('/pet/cancelReserveWash', param)
 };

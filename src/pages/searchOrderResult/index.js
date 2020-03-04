@@ -16,7 +16,7 @@ import './index.less'
 )
 class index extends Component {
   config = {
-    navigationBarTitleText: '商品搜索'
+    navigationBarTitleText: '订单搜索结果'
   }
 
   state = {
@@ -34,7 +34,7 @@ class index extends Component {
   componentDidMount () {}
 
   componentDidShow () {
-    const newKeyword = Taro.getStorageSync('search_keyword')
+    const newKeyword = Taro.getStorageSync('search_order_keyword')
     if (newKeyword === this.state.keyword) {
       return
     }
@@ -52,7 +52,7 @@ class index extends Component {
     this.setState(
       {
         pageNo: 1,
-        pageSize: 10,
+        pageSize: 4,
         loading: false,
         finished: false,
         list: []
@@ -67,7 +67,7 @@ class index extends Component {
     this.setState(
       {
         pageNo: 1,
-        pageSize: 10,
+        pageSize: 4,
         loading: false,
         finished: false,
         list: []

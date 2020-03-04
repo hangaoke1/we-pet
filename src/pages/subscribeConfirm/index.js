@@ -8,6 +8,7 @@ import _ from '@/lib/lodash'
 import { getUserInfo } from '@/actions/user'
 import { getPet } from '@/actions/pet'
 import storeApi from '@/api/store'
+import serviceSource from '@/lib/serviceList'
 
 import './index.less'
 
@@ -115,7 +116,7 @@ class index extends Component {
             </View>
           </View>
           <View className='u-service__item'>
-            <Image className='u-service__icon' src={config.petAvatar} />
+            <Image className='u-service__icon' src={serviceSource.serviceMap[service.name].icon || config.petAvatar} />
             <View className='u-service__name'>{service.name}</View>
             <View className='u-service__price'>¥ {service.price}</View>
           </View>
@@ -154,7 +155,7 @@ class index extends Component {
           <View className='u-action__right'>
             <View>
               <Text className='u-action__label'>预约金：</Text>
-              <Text className='u-action__val'>¥ 5</Text>
+              <Text className='u-action__val'>¥ 0</Text>
             </View>
             <AtButton className='u-action__btn' type='primary' circle={false} full onClick={this.handleSubmit}>
               去下单

@@ -10,6 +10,7 @@ import config from '@/config'
 import _ from '@/lib/lodash'
 import { getPet } from '@/actions/pet'
 import dayjs from 'dayjs'
+import serviceSource from '@/lib/serviceList'
 
 import './index.less'
 
@@ -71,19 +72,14 @@ class index extends Component {
   state = {
     storeId: 1,
     petId: '',
-    service: { name: '洗澡', icon: '', price: 100 },
+    service: serviceSource.serviceList[0],
     date: '',
     dateFmt: '',
     timeInt: '',
     time: '',
     banners: [],
     // 洗澡、spa、美容、洁齿
-    serviceList: [
-      { name: '洗澡', icon: '', price: 100 },
-      { name: 'spa', icon: '', price: 150 },
-      { name: '美容', icon: '', price: 120 },
-      { name: '洁齿', icon: '', price: 80 }
-    ],
+    serviceList: serviceSource.serviceList,
     dateList: [],
     timeList: [
       [ '10:00', '11:00', '12:00', '13:00' ],
@@ -293,7 +289,7 @@ class index extends Component {
                 return (
                   <View key={item.name} className='u-service__item' onClick={this.selectedService.bind(this, item)}>
                     <View className='u-service__header'>
-                      <Image className='u-service__img' src={config.petAvatar} />
+                      <Image className='u-service__img' src={item.icon || config.petAvatar} />
                       {item.name == service.name && (
                         <View className='u-service__selected'>
                           <Iconfont type='iconxuanzhong' color='#fff' size='16' />

@@ -7,6 +7,7 @@ import { getUserInfo } from '@/actions/user'
 import { getPet } from '@/actions/pet'
 import { AtGrid, AtModal, AtModalContent, AtModalAction } from 'taro-ui'
 import shopApi from '@/api/shop'
+import storeApi from '@/api/store'
 import config from '@/config'
 import makePhoneCall from '@/lib/makePhoneCall'
 
@@ -27,6 +28,7 @@ class index extends Component {
 
   state = {
     showModal: false,
+    storeOrderCount: 0,
     tobePaidCount: 0, // 待支付
     tobeShippedCount: 0, // 待发货
     deliveryCount: 0 // 待收货
@@ -52,8 +54,21 @@ class index extends Component {
     if (this.props.user.isLogin) {
       getUserInfo()
       getPet()
+      this.queryStoreOrderCount()
       this.queryOrderCount()
     }
+  }
+
+  queryStoreOrderCount = () => {
+    storeApi.queryMyReserveWash({
+      reserveOrderStatus: 100,
+      pageSize: 1,
+      pageNo: 1
+    }).then(res => {
+      this.setState({
+        storeOrderCount: res.totalCount
+      })
+    })
   }
 
   queryOrderCount = () => {
@@ -136,10 +151,19 @@ class index extends Component {
     })
   }
 
+  goStoreOrder = () => {
+    if (!this.props.user.isLogin) {
+      return gotoLogin()
+    }
+    Taro.navigateTo({
+      url: '/pages/storeOrder/index?current=' + 0
+    })
+  }
+
   render () {
     const prefixCls = 'u-user'
     const { user, pet } = this.props
-    const { showModal, tobePaidCount, tobeShippedCount, deliveryCount } = this.state
+    const { showModal, tobePaidCount, tobeShippedCount, deliveryCount, storeOrderCount } = this.state
     const isLogin = user.isLogin
     const userInfo = user.userInfo
     return (
@@ -173,8 +197,8 @@ class index extends Component {
               <View className='u-entry-count'>0</View>
               <View className='u-entry-name'>我的卡次</View>
             </View>
-            <View className='u-entry-item'>
-              <View className='u-entry-count'>0</View>
+            <View className='u-entry-item' onClick={this.goStoreOrder}>
+              <View className='u-entry-count'>{storeOrderCount}</View>
               <View className='u-entry-name'>我的预约</View>
             </View>
           </View>
@@ -220,7 +244,7 @@ class index extends Component {
           <View className='u-order__menu'>
             <View className='u-order__item' onClick={this.goOrder.bind(this, 1)}>
               <Iconfont type='icondaifukuan' color='#333' size='26' />
-              <View className='u-order__name'>代付款</View>
+              <View className='u-order__name'>待付款</View>
               {tobePaidCount && <View className='u-order__count'>{tobePaidCount}</View>}
             </View>
             <View className='u-order__item' onClick={this.goOrder.bind(this, 2)}>
@@ -251,11 +275,11 @@ class index extends Component {
                   'https://img12.360buyimg.com/jdphoto/s72x72_jfs/t6160/14/2008729947/2754/7d512a86/595c3aeeNa89ddf71.png',
                 value: '预约订单'
               },
-              {
-                image:
-                  'https://img20.360buyimg.com/jdphoto/s72x72_jfs/t15151/308/1012305375/2300/536ee6ef/5a411466N040a074b.png',
-                value: '门店订单'
-              },
+              // {
+              //   image:
+              //     'https://img20.360buyimg.com/jdphoto/s72x72_jfs/t15151/308/1012305375/2300/536ee6ef/5a411466N040a074b.png',
+              //   value: '门店订单'
+              // },
               {
                 image:
                   'https://img10.360buyimg.com/jdphoto/s72x72_jfs/t5872/209/5240187906/2872/8fa98cd/595c3b2aN4155b931.png',

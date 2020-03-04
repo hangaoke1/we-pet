@@ -4,6 +4,7 @@ import { connect } from '@tarojs/redux'
 import PropTypes from 'prop-types'
 import config from '@/config'
 import { AtButton } from 'taro-ui'
+import serviceSource from '@/lib/serviceList'
 import './index.less'
 
 // 待支付，100已预约，200已完成，900已取消
@@ -15,8 +16,8 @@ const statusText = {
 }
 const statusColor = {
   0: '#F24957',
-  100: '#409EFF',
-  200: '#67C23A',
+  100: '#67C23A',
+  200: '#909399',
   900: '#909399'
 }
 
@@ -46,7 +47,7 @@ class index extends Component {
 
   render () {
     const { pet, item } = this.props
-    const currentPet = pet.list.filter(p => item.id === p.id)[0]
+    const currentPet = pet.list.filter(p => item.petId === p.id)[0]
     return (
       <View className='u-orderItem'>
         <View className='u-header'>
@@ -66,14 +67,15 @@ class index extends Component {
         </View>
         <View className='u-product__item' onClick={this.goDetail}>
           <View className='u-product__img'>
-            <Image src={config.petAvatar} lazyLoad webp />
+            <Image src={serviceSource.serviceMap[item.service].icon || config.petAvatar} lazyLoad webp />
           </View>
           <View className='u-product__info'>
             <View className='u-product__name'>{item.service}</View>
             <View className='u-product__specs'>{currentPet ? currentPet.petName : '宠物已经删除'}</View>
+            <View className='u-product__specs'>{currentPet ? currentPet.petBreed : ''}</View>
           </View>
           <View className='u-product__right'>
-            {/* <View className='u-product__price'>¥ 100</View> */}
+            <View className='u-product__price'>¥ {serviceSource.serviceMap[item.service].price}</View>
           </View>
         </View>
         <View className='u-total' onClick={this.goDetail}>

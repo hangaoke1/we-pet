@@ -61,7 +61,7 @@ class index extends Component {
         <View className='u-header' onClick={this.goDetail}>
           <Image className='u-logo' src={config.petAvatar} lazyLoad webp />
           <View className='u-info'>
-            <View className='u-info__label'>商品零售</View>
+            <View className='u-info__label'>商品零售 {order.orderId}</View>
             <View className='u-info__date'>{order.createTime}</View>
           </View>
           <View

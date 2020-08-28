@@ -1,6 +1,7 @@
 import Taro from '@tarojs/taro'
 import config from '@/config'
 import token from '@/lib/token'
+import gotoLogin from '@/lib/gotoLogin'
 // 请求拦截
 const requestInterceptors = (opts) => {
   const apiPrefix = config.server
@@ -29,8 +30,8 @@ export default function axios (opts) {
     }
     // 登录状态过期
     if (res.code === 900) {
-      // TODO: 清除本地token
       token.clear()
+      gotoLogin()
       return Promise.reject(res)
     }
     return Promise.reject(res)

@@ -58,7 +58,7 @@ class index extends Component {
       console.log(res.target)
     }
     return {
-      title: '小黄兜宠物生活馆',
+      title: '有宠宠物生活馆',
       path: '/pages/index/index',
       imageUrl: config.shareIcon
     }
@@ -420,13 +420,13 @@ class index extends Component {
                 </View>
               </View>
               <View className='u-filter__right'>
-                <View className='u-filter__showtype' onClick={this.changeShowType}>
+                {/* <View className='u-filter__showtype' onClick={this.changeShowType}>
                   {showType === 1 ? (
                     <Iconfont type='iconliebiao1' size='16' />
                   ) : (
                     <Iconfont type='iconshebeizhongleifenbu' size='16' />
                   )}
-                </View>
+                </View> */}
                 <View
                   className={classNames({
                     'u-filter__selected': !!(min || max)

@@ -309,11 +309,11 @@ class index extends Component {
         ) : (
           <View className='u-header'>
             <View className='u-icon' onClick={this.goCart}>
-              <Iconfont type='icongouwuche1' color='#fff' size='16' />
+              <Iconfont type='icongouwuche1' color='#fff' size='18' />
               <View className='u-count__icon'>{cart.totalCount}</View>
             </View>
             <View className='u-icon' onClick={this.setShowQuick}>
-              <Iconfont type='icongengduo' color='#fff' size='16' />
+              <Iconfont type='icongengduo' color='#fff' size='18' />
             </View>
           </View>
         )}
@@ -419,7 +419,7 @@ class index extends Component {
 
             <View className='u-cel'>
               <View className='u-label'>原产地</View>
-              <View className='u-val'>{product.origin}</View>
+              <View className='u-val'>{product.address}</View>
             </View>
 
             <View className='u-ok' onClick={this.handleParamsClose}>

@@ -7,25 +7,28 @@
 }
 
 .u-item__wrap {
-  width: 700px;
-  margin-top: 40px;
-  margin-left: 25px;
-  border-radius: 10px;
+  width: 710px;
+  margin-top: 20px;
+  margin-left: 20px;
   background: #fff;
   overflow: hidden;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0);
+  border-radius: 16px;
 }
 
 .u-item {
   display: flex;
   padding: 30px;
+
   &__img {
     flex: 0 0 auto;
-    width: 150px;
-    height: 150px;
+    width: 96px;
+    height: 96px;
     margin-left: 20px;
     margin-right: 20px;
-    border-radius: 150px;
+    border-radius: 96px;
   }
+
   &__name {
     display: flex;
     align-items: center;
@@ -33,6 +36,7 @@
     font-size: 34px;
     color: #333;
   }
+
   &__sex {
     margin-left: 10px;
     display: flex;
@@ -43,10 +47,21 @@
     background-color: #ff7875; // 40a9ff ff7875
     border-radius: 35px;
   }
+
   &__desc {
     margin-bottom: 10px;
     font-size: 28px;
     color: #ccc;
+  }
+  .u-petBreed {
+    box-sizing: border-box;
+    color: #FF7013;
+    padding: 0 20px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 20px;
+    font-size: 20px;
+    background:rgba(255,112,19,0.1);
   }
 }
 
@@ -54,12 +69,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 700px;
-  height: 80px;
-  margin-left: 25px;
+  width: 670px;
+  height: 68px;
+  background: rgba(255, 112, 19, 1);
+  border-radius: 34px;
+  margin: 0 auto;
   margin-top: 40px;
-  border-radius: 50px;
   font-size: 28px;
-  color: @themeColor;
-  background: #fff;
+  color: #fff;
 }

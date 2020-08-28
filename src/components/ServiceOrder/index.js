@@ -84,6 +84,7 @@ class index extends Component {
         
         <View className='u-serviceTime'>订单编号：{item.id}</View>
         <View className='u-serviceTime'>服务时间：{item.reserveTime}</View>
+        <View className='u-serviceTime'>预留电话：{item.mobile}</View>
 
         {item.reserveOrderStatus == 100 && (
           <View className='u-action'>

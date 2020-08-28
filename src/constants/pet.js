@@ -1,3 +1,3 @@
 const namespace = 'PET'
 
-export const GET_PET = `${namespace}/GET_PET`
+export const SET_PET = `${namespace}/SET_PET`

@@ -10,9 +10,6 @@ import statusText from '@/lib/statusText'
 import './index.less'
 
 class index extends Component {
-  config = {
-    navigationBarTitleText: '首页'
-  }
 
   componentWillMount () {}
 

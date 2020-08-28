@@ -4,19 +4,27 @@
   color: #333;
   background-color: #f3f4f8;
   min-height: 100vh;
+  padding-top: 20px;
   padding-bottom: 200px;
+  font-size: 28px;
+  font-family: PingFangSC-Regular, PingFang SC;
 }
 
 .u-header {
-  padding: 20px;
+  box-sizing: border-box;
+  width: 710px;
+  margin-left: 20px;
+  padding: 20px 40px;
+  border-radius: 16px;
   background-color: #fff;
-  &__tip {
-    font-size: 26px;
-    margin-bottom: 10px;
-  }
   &__info {
-    color: #000;
+    color: #333;
     font-size: 32px;
+  }
+  &__mobile {
+    margin-top: 20px;
+    color: #999;
+    font-size: 28px;
   }
 }
 
@@ -26,33 +34,54 @@
   margin-top: 20px;
   margin-left: 20px;
   background-color: #fff;
-  border-radius: 5px;
-  padding: 20px;
+  border-radius: 16px;
   &__name {
-    color: #000;
+    color: #333;
     font-weight: 500;
-    font-size: 26px;
+    font-size: 32px;
   }
   &__address {
     display: flex;
     align-items: center;
     margin-top: 10px;
     font-size: 24px;
-    color: #ccc;
+    color: #666;
+  }
+  .u-pay {
+    font-size: 28px;
   }
 }
 
-.u-pay {
+.u-pet {
+  box-sizing: border-box;
+  width: 710px;
+  height: 146px;
+  background: #FFFFFF;
+  border-radius: 16px;
   display: flex;
   align-items: center;
-  padding-top: 20px;
   margin-top: 20px;
-  border-top: 1px solid #eee;
-  font-size: 28px;
-  &__item {
-    display: flex;
-    align-items: center;
-    margin-right: 20px;
+  margin-left: 20px;
+  padding: 20px;
+  &__avatar {
+    width: 96px;
+    height: 96px;
+    margin-right: 24px;
+    border-radius: 96px;
+  }
+  &__name {
+    margin-bottom: 20px;
+    font-size: 28px;
+  }
+  &__petBreed {
+    box-sizing: border-box;
+    color: #FF7013;
+    padding: 0 20px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 20px;
+    font-size: 20px;
+    background:rgba(255,112,19,0.1);
   }
 }
 
@@ -62,18 +91,24 @@
   margin-top: 20px;
   margin-left: 20px;
   background-color: #fff;
-  border-radius: 5px;
-  padding: 20px 20px 0 20px;
+  border-radius: 16px;
+  &__title {
+    padding: 20px;
+    height: 44px;
+    font-size: 32px;
+    color: #333333;
+    line-height: 44px;
+  }
   &__item {
-    margin-bottom: 20px;
+    padding: 20px;
     display: flex;
     align-items: center;
   }
   &__icon {
     flex: 0 0 auto;
-    width: 100px;
-    height: 100px;
-    margin-right: 20px;
+    width: 80px;
+    height: 80px;
+    margin-right: 30px;
     border-radius: 10px;
     border: 1px solid #eee;
   }
@@ -81,45 +116,29 @@
     font-size: 28px;
     flex: 1;
     align-self: flex-start;
+    height: 40px;
+    line-height: 40px;
   }
   &__price {
     font-size: 30px;
-    color: #000;
     flex: 0 0 auto;
-  }
-  &__time {
-    padding: 20px 0;
-    border-top: 1px solid #eee;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  &__label {
-    font-size: 24px;
-  }
-  &__val {
-    font-size: 24px;
   }
 }
 
-.u-pet {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-  &__avatar {
-    width: 100px;
-    height: 100px;
-    margin-right: 20px;
-    border-radius: 100px;
+.u-time {
+  box-sizing: border-box;
+  width: 710px;
+  padding: 30px 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  border-radius: 16px;
+  background-color: #fff;
+
+  &__label {
+    font-size: 32px;
   }
-  &__name {
+  &__val {
     font-size: 28px;
-  }
-  &__type {
-    font-size: 28px;
-    color: #ccc;
   }
 }
 
@@ -129,29 +148,16 @@
   margin-top: 20px;
   margin-left: 20px;
   background-color: #fff;
-  border-radius: 5px;
+  border-radius: 16px;
   padding: 20px;
-  &__item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
   &__label {
-    font-size: 24px;
-    color: #000;
-    font-weight: 500;
+    font-size: 32px;
     flex: 0 0 auto;
-  }
-  &__val {
-    display: flex;
-    align-items: center;
-    font-size: 24px;
   }
   &__remark {
     display: flex;
     align-items: center;
     font-size: 24px;
-    margin-top: 20px;
   }
   &__input {
     flex: 1;

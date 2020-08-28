@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro'
-import { GET_PET } from '@/constants/pet'
+import { SET_PET } from '@/constants/pet'
 
-// 购物车信息
+// 宠物信息
 const pet = (
   state = {
     list: []
@@ -9,7 +9,7 @@ const pet = (
   action
 ) => {
   switch (action.type) {
-    case GET_PET:
+    case SET_PET:
       return {
         ...state,
         list: action.value,

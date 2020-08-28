@@ -10,6 +10,7 @@ import shopApi from '@/api/shop'
 import storeApi from '@/api/store'
 import config from '@/config'
 import makePhoneCall from '@/lib/makePhoneCall'
+import token from '@/lib/token'
 
 import './index.less'
 
@@ -40,7 +41,7 @@ class index extends Component {
       console.log(res.target)
     }
     return {
-      title: '小黄兜宠物生活馆',
+      title: '有宠宠物生活馆',
       path: '/pages/index/index',
       imageUrl: config.shareIcon
     }
@@ -52,11 +53,14 @@ class index extends Component {
 
   componentDidShow () {
     if (this.props.user.isLogin) {
-      getUserInfo()
-      getPet()
-      this.queryStoreOrderCount()
-      this.queryOrderCount()
+      this.init()
     }
+  }
+  init = () => {
+    getUserInfo()
+    getPet()
+    this.queryStoreOrderCount()
+    this.queryOrderCount()
   }
 
   queryStoreOrderCount = () => {
@@ -68,6 +72,10 @@ class index extends Component {
       this.setState({
         storeOrderCount: res.totalCount
       })
+    }).catch(() => {
+      this.setState({
+        storeOrderCount: 0
+      })
     })
   }
 
@@ -78,6 +86,12 @@ class index extends Component {
         tobePaidCount,
         tobeShippedCount,
         deliveryCount
+      })
+    }).catch(() => {
+      this.setState({
+        tobePaidCount: 0,
+        tobeShippedCount: 0,
+        deliveryCount: 0
       })
     })
   }
@@ -158,6 +172,11 @@ class index extends Component {
     Taro.navigateTo({
       url: '/pages/storeOrder/index?current=' + 0
     })
+  }
+
+  logout = () => {
+    token.clear()
+    this.init()
   }
 
   render () {
@@ -304,10 +323,14 @@ class index extends Component {
           />
         </View>
 
+        { isLogin && <View className='u-logout'>
+          <Button type='warn' onClick={this.logout}>退出登录</Button>
+        </View> }
+
         <AtModal isOpened={showModal}>
           <AtModalContent>
             <View className='u-kefu__title'>联系客服</View>
-            <View className='u-kefu__mobile'>号码：4000088888</View>
+            <View className='u-kefu__mobile'>号码：{config.tel}</View>
             <View className='u-kefu__time'>时间：10:00 - 20:00</View>
           </AtModalContent>
           <AtModalAction>

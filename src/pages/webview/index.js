@@ -5,7 +5,7 @@ import './index.less'
 
 class index extends Component {
   config = {
-    navigationBarTitleText: '小黄兜'
+    navigationBarTitleText: '有宠'
   }
 
   state = {

@@ -4,7 +4,8 @@ import token from '@/lib/token';
 // 用户信息
 const user = (state = {
   isLogin: token.isLogin(),
-  userInfo: {}
+  userInfo: {},
+  userCapital: {}
 }, action) => {
   switch(action.type){
     case SET_LOGIN:
@@ -15,7 +16,8 @@ const user = (state = {
     case SET_USERINFO:
       return {
         ...state,
-        userInfo: action.value
+        userInfo: action.value.user,
+        userCapital: action.value.userCapital
       }
     default:
       return state;

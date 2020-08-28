@@ -58,7 +58,7 @@ class index extends Component {
     return (
       <View className={prefixCls}>
         <OpenData className="u-logo" type="userAvatarUrl"></OpenData>
-        <View className="u-tip">登录后即注册为小黄兜会员</View>
+        <View className="u-tip">登录后即注册为有宠会员</View>
         <AtButton className='u-login-wechat' type='primary' openType='getUserInfo' onGetUserInfo={this.getUserInfo}>
           微信一键登录
         </AtButton>

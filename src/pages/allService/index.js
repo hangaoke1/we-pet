@@ -57,7 +57,7 @@ export default class AllService extends Component {
               <View className="flex-0 align-self-center">
                 <van-checkbox
                   value={isSelected}
-                  checkedColor="#FF7A24"
+                  checkedColor="#FF7013"
                 ></van-checkbox>
               </View>
               <View className="flex-0 ml-4 mr-2">

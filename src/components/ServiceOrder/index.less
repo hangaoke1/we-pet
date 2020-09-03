@@ -1,120 +1,39 @@
-@import '../../styles/var.less';
-
-.u-orderItem {
+.u-svOrder {
   box-sizing: border-box;
   width: 700px;
   margin: 0 auto;
-  padding: 20px 20px 40px 20px;
+  padding: 18px;
+  padding-bottom: 40px;
   margin-top: 30px;
   background: #fff;
   border-radius: 5px;
   color: #333;
 
-  .u-header {
-    display: flex;
-    font-size: 24px;
-  }
-
-  .u-logo {
-    flex: 0 0 auto;
-    width: 60px;
-    height: 60px;
-    margin-right: 10px;
-    border-radius: 60px;
-  }
-
-  .u-info {
-    flex: 1;
-
-    &__date {
-      color: #ccc;
+  &__pet {
+    padding: 24px 0;
+    &__avatar {
+      display: block;
+      width: 80px;
+      height: 80px;
+      border-radius: 80px;
     }
   }
 
-  .u-status {
-    flex: 0 0 auto;
-  }
-
-  .u-product {
-    &__label {
-      font-size: 24px;
-    }
-
-    &__item {
-      display: flex;
-      padding: 20px 0;
-    }
-
-    &__img {
-      flex: 0 0 auto;
-      width: 100px;
-      height: 100px;
-      margin-right: 20px;
-      border: 1px solid #eee;
+  &__info {
+    font-size: 28px;
+    &__image {
+      display: block;
+      width: 80px;
+      height: 80px;
       border-radius: 5px;
-      overflow: hidden;
-
-      Image {
-        width: 100px;
-        height: 100px;
-      }
-    }
-
-    &__info {
-      flex: 1;
-    }
-
-    &__name {
-      font-size: 28px;
-      line-height: 1;
-    }
-
-    &__specs {
-      margin-top: 10px;
-      font-size: 26px;
-      color: #ccc;
-    }
-
-    &__right {
-      flex: 0 0 auto;
-      margin-left: 20px;
-      text-align: right;
-    }
-
-    &__price {
-      line-height: 1;
-      font-size: 28px;
-    }
-
-    &__count {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      margin-top: 10px;
-      font-size: 26px;
-      color: #ccc;
     }
   }
-  .u-total {
-    text-align: right;
-    height: 80px;
-    line-height: 80px;
-    font-size: 24px;
-    color: #666;
-    border-bottom: 1px solid #eee;
-  }
+
   .u-action {
+    padding-top: 40px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    margin-top: 40px;
   }
 
-  .u-serviceTime {
-    color: #666;
-    font-size: 28px;
-    height: 80px;
-    line-height: 80px;
-    border-bottom: 1px solid #eee;
-  }
 }

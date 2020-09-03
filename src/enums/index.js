@@ -2,7 +2,7 @@ export const timeMap = {
   am: [
     {
       label: "1号",
-      value: "10:00"
+      value: "10:00",
     },
     {
       label: "2号",

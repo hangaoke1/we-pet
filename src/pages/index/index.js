@@ -6,10 +6,11 @@ import { View, Image, Text } from "@tarojs/components";
 import Iconfont from "@/components/Iconfont";
 import Divider from "@/components/Divider";
 import homeApi from "@/api/home";
+import shopApi from "@/api/shop";
 import { getCart } from "@/actions/cart";
 import config from "@/config";
 
-import StoreInfo from '@/components/StoreInfo';
+import StoreInfo from "@/components/StoreInfo";
 import ProductSale from "@/components/ProductSale";
 import ProductNew from "@/components/ProductNew";
 
@@ -26,14 +27,15 @@ export default class Index extends Component {
       "van-icon": "../../components/vant/dist/icon/index",
       "van-row": "../../components/vant/dist/row/index",
       "van-col": "../../components/vant/dist/col/index",
-      "van-image": "../../components/vant/dist/image/index",
+      "van-image": "../../components/vant/dist/image/index"
     }
   };
 
   state = {
     notice: "",
     banners: [],
-    products: []
+    productNewList: [],
+    productSaleList: []
   };
 
   onShareAppMessage(res) {
@@ -89,7 +91,20 @@ export default class Index extends Component {
       .queryNewProducts({})
       .then(res => {
         this.setState({
-          products: _.get(res, "items", [])
+          productNewList: _.get(res, "items", [])
+        });
+      })
+      .catch(error => {
+        console.log(">>> queryNewProducts异常", error);
+      });
+    shopApi
+      .queryProducts({
+        pageNo: 1,
+        pageSize: 10,
+      })
+      .then(res => {
+        this.setState({
+          productSaleList: _.get(res, "items", [])
         });
       })
       .catch(error => {
@@ -132,7 +147,7 @@ export default class Index extends Component {
   };
 
   render() {
-    const { banners } = this.state;
+    const { banners, productNewList } = this.state;
     return (
       <View className="u-home">
         <van-image
@@ -162,11 +177,11 @@ export default class Index extends Component {
           <View className="u-home__title">
             <Text>每日折扣</Text>
             <View className="u-home__subTitle">
-              <Text style={{ color: "#FF7A24" }}>更多</Text>
+              <Text style={{ color: "#FF7013" }}>更多</Text>
               <Iconfont
                 type="iconarrowright"
                 size="18"
-                color="#FF7A24"
+                color="#FF7013"
               ></Iconfont>
             </View>
           </View>
@@ -186,11 +201,11 @@ export default class Index extends Component {
           <View className="u-home__title bg-bai">
             <Text>新品推荐</Text>
             <View className="u-home__subTitle">
-              <Text style={{ color: "#FF7A24" }}>更多</Text>
+              <Text style={{ color: "#FF7013" }}>更多</Text>
               <Iconfont
                 type="iconarrowright"
                 size="18"
-                color="#FF7A24"
+                color="#FF7013"
               ></Iconfont>
             </View>
           </View>

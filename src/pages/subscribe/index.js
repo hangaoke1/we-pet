@@ -10,9 +10,9 @@ import config from "@/config";
 import _ from "@/lib/lodash";
 import dayjs from "dayjs";
 import { getPet } from "@/actions/pet";
-import { getWashList } from '@/actions/washService';
+import { getWashList } from "@/actions/washService";
 
-import { timeMap } from "@/enums";
+import { timeMap, timeMapOptions } from "@/enums";
 
 import "./index.less";
 
@@ -40,14 +40,15 @@ function genDate() {
       id: index,
       date: item.format("MM/DD"),
       week: index === 0 ? "今日" : weekMap[item.day()],
-      value: item.format("YYYY-MM-DD"),
+      value: item.format("YYYY-MM-DD")
     };
   });
   return newArray;
 }
 
 @connect(({ pet, washService }) => ({
-  pet, washService
+  pet,
+  washService
 }))
 class SubScribe extends Component {
   config = {
@@ -67,7 +68,11 @@ class SubScribe extends Component {
     date: "", // 日期
     time: "", // 时间
     banners: [],
-    dateList: genDate()
+    dateList: genDate(),
+    listAmToday: [],
+    listPmToday: [],
+    isDisableAm: false,
+    isDisablePm: false
   };
 
   componentWillMount() {
@@ -81,11 +86,29 @@ class SubScribe extends Component {
       .catch(error => {
         console.log(">>> queryBanners异常", error);
       });
-  }
-
-  componentWillMount() {
     Taro.setStorageSync("subscribe_service", []);
     getWashList();
+  }
+
+  componentDidMount() {
+    const now = dayjs();
+    const hourNow = now.hour();
+    const isDisableAm = hourNow >= 12;
+    const isDisablePm = hourNow >= 20;
+    const listAmToday = timeMap.am.filter(v => {
+      const t = dayjs().format("YYYY-MM-DD ") + v.slice(0, 5);
+      return dayjs(t).isAfter(now);
+    });
+    const listPmToday = timeMap.pm.filter(v => {
+      const t = dayjs().format("YYYY-MM-DD ") + v.slice(0, 5);
+      return dayjs(t).isAfter(now);
+    });
+    this.setState({
+      isDisableAm,
+      isDisablePm,
+      listAmToday,
+      listPmToday
+    });
   }
 
   componentDidShow() {
@@ -98,7 +121,7 @@ class SubScribe extends Component {
     });
     this.setState({
       service: Taro.getStorageSync("subscribe_service") || []
-    })
+    });
   }
 
   openLocation = () => {
@@ -136,7 +159,7 @@ class SubScribe extends Component {
       } else {
         newService = [...oldService, item];
       }
-      Taro.setStorageSync('subscribe_service', newService);
+      Taro.setStorageSync("subscribe_service", newService);
       return {
         service: newService
       };
@@ -144,7 +167,7 @@ class SubScribe extends Component {
   };
 
   handleSubmit = () => {
-    const { storeId, petId, dateFmt, time, service, date } = this.state;
+    const { storeId, petId, time, service, date } = this.state;
     if (!time) {
       return Taro.showToast({
         title: "请选择时间",
@@ -167,7 +190,7 @@ class SubScribe extends Component {
       storeId,
       petId,
       service,
-      reserveTime: `${dateFmt} ${time}:00`,
+      reserveTime: `${date} ${time}`,
       date,
       time
     };
@@ -178,27 +201,36 @@ class SubScribe extends Component {
   };
 
   handleDateChange = (date, range, e) => {
-    const time = range[e.target.value].split('     ')[0];
+    const time = range[e.target.value].split("     ")[0];
     this.setState({
       date: date.value,
       time
-    })
-  }
+    });
+  };
 
   showMoreService = () => {
     Taro.navigateTo({
-      url: '/pages/allService/index'
-    })
-  }
+      url: "/pages/allService/index"
+    });
+  };
 
   render() {
     const { list: serviceList } = this.props.washService;
-    const { banners, petId, service, dateList, date, time } = this.state;
+    const {
+      banners,
+      petId,
+      service,
+      dateList,
+      date,
+      time,
+      isDisableAm,
+      isDisablePm,
+      listAmToday,
+      listPmToday,
+    } = this.state;
     const { pet } = this.props;
     const petList = _.get(pet, "list", []);
     const total = service.reduce((t, i) => t + i.price, 0);
-    const isDisableAm = dayjs().hour() > 12;
-    const isDisablePm = dayjs().hour() > 20;
     return (
       <View className="u-subscribe">
         <Image
@@ -227,7 +259,7 @@ class SubScribe extends Component {
                     <View className="u-pet__selected">
                       <Iconfont
                         type="iconchenggong"
-                        color="#FF7A24"
+                        color="#FF7013"
                         size="16"
                       />
                     </View>
@@ -247,7 +279,11 @@ class SubScribe extends Component {
         </View>
 
         <View className="u-service">
-          <GTitle title="服务套餐" showMore onShowMore={this.showMoreService}></GTitle>
+          <GTitle
+            title="服务套餐"
+            showMore
+            onShowMore={this.showMoreService}
+          ></GTitle>
           <View className="u-service__list">
             {serviceList.slice(0, 4).map(item => {
               const serviceIds = service.map(v => v.id);
@@ -269,7 +305,7 @@ class SubScribe extends Component {
                       <View className="u-service__selected">
                         <Iconfont
                           type="iconxuanzhong-xiao"
-                          color="#FF7A24"
+                          color="#FF7013"
                           size="8"
                         />
                       </View>
@@ -281,7 +317,9 @@ class SubScribe extends Component {
           </View>
 
           <View className="u-time font-s-28">
-          <View className="u-serviceNames">已选择：{service.map(v => v.name).join('+')}</View>
+            <View className="u-serviceNames">
+              已选择：{service.map(v => v.name).join("+")}
+            </View>
             <View className="u-time__rule">
               <View className="font-s-28">预约时间</View>
               <View className="font-s-24 text-hui">预约规则</View>
@@ -313,7 +351,15 @@ class SubScribe extends Component {
                     {isDisableAm && index === 0 ? (
                       <View className="u-time__guoqi">过期</View>
                     ) : (
-                      <Picker mode="selector" range={timeMap.am} onChange={this.handleDateChange.bind(this, dateItem, timeMap.am)}>
+                      <Picker
+                        mode="selector"
+                        range={index === 0 ? listAmToday : timeMap.am}
+                        onChange={this.handleDateChange.bind(
+                          this,
+                          dateItem,
+                          timeMap.am
+                        )}
+                      >
                         <View className="u-time__yuyue">预约</View>
                       </Picker>
                     )}
@@ -323,7 +369,15 @@ class SubScribe extends Component {
                     {isDisablePm && index === 0 ? (
                       <View className="u-time__guoqi">过期</View>
                     ) : (
-                      <Picker mode="selector" range={timeMap.pm} onChange={this.handleDateChange.bind(this, dateItem, timeMap.pm)}>
+                      <Picker
+                        mode="selector"
+                        range={index === 0 ? listPmToday : timeMap.pm}
+                        onChange={this.handleDateChange.bind(
+                          this,
+                          dateItem,
+                          timeMap.pm
+                        )}
+                      >
                         <View className="u-time__yuyue">预约</View>
                       </Picker>
                     )}

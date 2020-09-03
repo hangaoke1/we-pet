@@ -86,7 +86,7 @@ class index extends Component {
         </View>
 
         <View className='u-two'>
-          <AtSwitch title='设为默认地址' color='#ffdb47' checked={defaultFlag} onChange={this.handleChange.bind(this, 'defaultFlag')} />
+          <AtSwitch title='设为默认地址' color='#FF7013' checked={defaultFlag} onChange={this.handleChange.bind(this, 'defaultFlag')} />
         </View>
 
         <View className='u-action'>

@@ -24,7 +24,7 @@ class index extends Component {
     return (
       <View className={prefixCls} onClick={this.handleClick} onTap={this.handleTap}>
         {selected ? (
-          <Iconfont type='iconhints-success' size={size} color='#ffdb47' />
+          <Iconfont type='iconhints-success' size={size} color='#FF7013' />
         ) : (
           <Iconfont type='iconcb' size={size} color='#ccc' />
         )}

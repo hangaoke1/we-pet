@@ -1,63 +1,60 @@
 /* eslint-disable react/jsx-closing-bracket-location */
-import Taro, { Component } from '@tarojs/taro'
-import { connect } from '@tarojs/redux'
-import { View, Text } from '@tarojs/components'
-import Iconfont from '@/components/Iconfont'
-import apiAddress from '@/api/address'
-import { AtSwipeAction } from 'taro-ui'
+import Taro, { Component } from '@tarojs/taro';
+import { connect } from '@tarojs/redux';
+import { View, Text } from '@tarojs/components';
+import Iconfont from '@/components/Iconfont';
+import apiAddress from '@/api/address';
+import { AtSwipeAction } from 'taro-ui';
 
-import { getAddress, setAddress } from '@/actions/address'
-import './index.less'
+import { getAddress, setAddress } from '@/actions/address';
+import './index.less';
 
-@connect(
-  ({ address }) => ({
-    address
-  }),
-  (dispatch) => ({})
-)
+@connect(({ address }) => ({
+  address
+}))
 class index extends Component {
   config = {
     navigationBarTitleText: '我的收货地址',
     backgroundColor: '#f3f4f8'
-  }
+  };
 
-  state = {}
+  state = {};
 
-  componentWillMount () {}
+  componentWillMount() {}
 
-  componentDidMount () {}
+  componentDidMount() {}
 
-  componentDidShow () {
-    getAddress()
+  componentDidShow() {
+    getAddress();
   }
 
   getWechatAddress = () => {
-    const vm = this
+    const vm = this;
     Taro.getSetting({
-      success (res) {
+      success(res) {
         if (!res.authSetting['scope.address']) {
           Taro.authorize({
             scope: 'scope.address',
-            success () {
+            success() {
               Taro.chooseAddress()
                 .then((address) => {
-                  console.log('>>> 收货地址', address)
-                  vm.insertUserAddress(address)
+                  console.log('>>> 收货地址', address);
+                  vm.insertUserAddress(address);
                 })
-                .catch(() => {})
+                .catch(() => {});
             }
-          })
+          });
         } else {
           Taro.chooseAddress()
             .then((address) => {
-              console.log('>>> 收货地址', address)
-              vm.insertUserAddress(address)
+              console.log('>>> 收货地址', address);
+              vm.insertUserAddress(address);
             })
-            .catch(() => {})
+            .catch(() => {});
         }
       }
-    })
-  }
+    });
+  };
 
   // 从微信获取地址并添加
   insertUserAddress = (address) => {
@@ -73,68 +70,68 @@ class index extends Component {
         defaultFlag: 0
       })
       .then((res) => {
-        getAddress()
+        getAddress();
       })
       .catch((err) => {
         Taro.showToast({
           title: err.message,
           icon: 'none'
-        })
-      })
-  }
+        });
+      });
+  };
 
   deleteAddress = (item) => {
     Taro.showModal({
       title: '提示',
       content: '是否删除当前地址',
-      confirmColor: '#ffdb47'
+      confirmColor: '#FF7013'
     }).then((res) => {
       if (res.confirm) {
-        Taro.showLoading()
+        Taro.showLoading();
         apiAddress
           .deleteUserAddress({
             id: item.id
           })
           .then(() => {
-            getAddress()
+            getAddress();
           })
           .catch((err) => {
             Taro.showToast({
               title: err.message,
               icon: 'none'
-            })
+            });
           })
           .finally(() => {
-            Taro.hideLoading()
-          })
+            Taro.hideLoading();
+          });
       }
-    })
-  }
+    });
+  };
 
   addAddress = () => {
     Taro.navigateTo({
       url: '/pages/addressAdd/index'
-    })
-  }
+    });
+  };
 
   editAddress = (item) => {
-    Taro.setStorageSync('EDIT_ADDRESS', item)
+    Taro.setStorageSync('EDIT_ADDRESS', item);
     Taro.navigateTo({
       url: '/pages/addressUpdate/index'
-    })
-  }
+    });
+  };
 
   hanldeSelectAddress = (id) => {
     if (this.$router.params.from === 'confirmOrder') {
-      setAddress(id)
-      Taro.navigateBack()
+      setAddress(id);
+      Taro.navigateBack();
     }
-  }
+  };
 
-  render () {
-    const prefixCls = 'u-address'
-    const { address } = this.props
-    const list = address.list
+  render() {
+    const prefixCls = 'u-address';
+    const { address } = this.props;
+    const list = address.list;
 
     return (
       <View className={prefixCls}>
@@ -146,9 +143,9 @@ class index extends Component {
           <Iconfont type='iconarrowright' color='#ccc' size='16' />
         </View>
 
-        <View className='u-list'>
+        <View className='u-list mt-3'>
           {list.map((item) => (
-            <View className='u-item__wrap' key={item.id}>
+            <View className='u-item__wrap border-bottom-divider' key={item.id}>
               <AtSwipeAction
                 autoClose
                 onClick={this.deleteAddress.bind(this, item)}
@@ -183,12 +180,13 @@ class index extends Component {
           ))}
         </View>
 
-        <View className='u-action' onClick={this.addAddress}>
-          + 新增地址
+        <View className='u-action flex align-center justify-center' onClick={this.addAddress}>
+          <Iconfont type='icontianjia' size='16' color='#fff' />
+          <Text className='ml-1 font-s-28 text-bai'>添加收货地址</Text>
         </View>
       </View>
-    )
+    );
   }
 }
 
-export default index
+export default index;

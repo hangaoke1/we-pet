@@ -117,7 +117,7 @@ class index extends Component {
     Taro.showModal({
       title: '提示',
       content: '是否确定取消订单',
-      confirmColor: '#ffdb47'
+      confirmColor: '#FF7013'
     })
       .then((res) => {
         if (res.confirm) {
@@ -182,7 +182,7 @@ class index extends Component {
     Taro.showModal({
       title: '提示',
       content: '您已收到商品？',
-      confirmColor: '#ffdb47'
+      confirmColor: '#FF7013'
     })
       .then((res) => {
         if (res.confirm) {

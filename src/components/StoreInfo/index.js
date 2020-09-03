@@ -35,7 +35,7 @@ export default class StoreInfo extends Component {
             <View className="flex-0 flex flex-column align-center">
               <Iconfont
                 type="icondianhua1"
-                color="#FF7A24"
+                color="#FF7013"
                 size="20"
               ></Iconfont>
               <View className="font-s-2 text-hui">电话</View>

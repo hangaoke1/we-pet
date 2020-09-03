@@ -271,7 +271,7 @@ class index extends Component {
                     <View className="u-pet__selected">
                       <Iconfont
                         type="iconchenggong"
-                        color="#FF7A24"
+                        color="#FF7013"
                         size="16"
                       />
                     </View>
@@ -313,7 +313,7 @@ class index extends Component {
                         <View className="u-service__selected">
                           <Iconfont
                             type="iconxuanzhong-xiao"
-                            color="#FF7A24"
+                            color="#FF7013"
                             size="8"
                           />
                         </View>

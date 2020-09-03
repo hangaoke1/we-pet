@@ -355,11 +355,11 @@
 }
 
 .main-color {
-	color: #FF7A24;
+	color: #FF7013;
 }
 
 .bg-main {
-	background-color: #FF7A24;
+	background-color: #FF7013;
 }
 
 .bg-page {
@@ -376,6 +376,14 @@
 
 .text-center {
 	text-align: center;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.text-left {
+	text-align: left;
 }
 
 /* 边框 */
@@ -584,6 +592,10 @@
 
 .font-s-32 {
 	font-size: 32px;
+}
+
+.font-s-36 {
+	font-size: 36px;
 }
 
 .font-s-4 {

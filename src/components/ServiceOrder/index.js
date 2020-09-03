@@ -1,63 +1,57 @@
-import Taro, { Component } from '@tarojs/taro'
-import { View, Image } from '@tarojs/components'
-import { connect } from '@tarojs/redux'
-import PropTypes from 'prop-types'
-import config from '@/config'
-import { AtButton } from 'taro-ui'
-import serviceSource from '@/lib/serviceList'
-import './index.less'
+import Taro, { Component } from "@tarojs/taro";
+import { View, Image, Text } from "@tarojs/components";
+import { connect } from "@tarojs/redux";
+import PropTypes from "prop-types";
+import config from "@/config";
+import { AtButton } from "taro-ui";
+import dayjs from 'dayjs';
+
+import Iconfont from "@/components/Iconfont";
+
+import "./index.less";
 
 // 待支付，100已预约，200已完成，900已取消
 const statusText = {
-  0: '待支付',
-  100: '已预约',
-  200: '已完成',
-  900: '已取消'
-}
+  0: "待支付",
+  100: "已预约",
+  200: "已完成",
+  900: "已取消"
+};
+
 const statusColor = {
-  0: '#F24957',
-  100: '#67C23A',
-  200: '#909399',
-  900: '#909399'
-}
+  0: "#F24957",
+  100: "#67C23A",
+  200: "#909399",
+  900: "#909399"
+};
 
-@connect(
-  ({ user, pet }) => ({
-    user,
-    pet
-  }),
-  (dispatch) => ({})
-)
-class index extends Component {
-  config = {
-    navigationBarTitleText: '首页'
-  }
+@connect(({ user, pet }) => ({
+  user,
+  pet
+}))
+class ServiceOrder extends Component {
+  static options = {
+    addGlobalClass: true // 支持使用全局样式
+  };
 
-  componentWillMount () {}
+  cancelOrder = e => {
+    e.stopPropagation();
+    const { item } = this.props;
+    this.props.onCancel && this.props.onCancel(item.id);
+  };
 
-  componentDidMount () {}
+  goDetail = () => {};
 
-  cancelOrder = (e) => {
-    e.stopPropagation()
-    const { item } = this.props
-    this.props.onCancel && this.props.onCancel(item.id)
-  }
+  render() {
+    const { pet, item } = this.props;
+    const currentPet = pet.list.filter(p => item.petId === p.id)[0];
+    const serviceList = item.service ? JSON.parse(item.service) : [];
 
-  goDetail = () => {}
-
-  render () {
-    const { pet, item } = this.props
-    const currentPet = pet.list.filter(p => item.petId === p.id)[0]
     return (
-      <View className='u-orderItem'>
-        <View className='u-header'>
-          <Image className='u-logo' src={currentPet ? currentPet.avatar : config.petAvatar} lazyLoad webp />
-          <View className='u-info'>
-            <View className='u-info__label'>服务订单</View>
-            <View className='u-info__date'>{item.createTime}</View>
-          </View>
+      <View className="u-svOrder">
+        <View className="font-s-24 flex align-center justify-between border-bottom-divider pb-2">
+          <View>{item.createTime}</View>
           <View
-            className='u-status'
             style={{
               color: statusColor[item.reserveOrderStatus]
             }}
@@ -65,46 +59,74 @@ class index extends Component {
             {statusText[item.reserveOrderStatus]}
           </View>
         </View>
-        <View className='u-product__item' onClick={this.goDetail}>
-          <View className='u-product__img'>
-            <Image src={serviceSource.serviceMap[item.service].icon || config.petAvatar} lazyLoad webp />
-          </View>
-          <View className='u-product__info'>
-            <View className='u-product__name'>{item.service}</View>
-            <View className='u-product__specs'>{currentPet ? currentPet.petName : '宠物已经删除'}</View>
-            <View className='u-product__specs'>{currentPet ? currentPet.petBreed : ''}</View>
-          </View>
-          <View className='u-product__right'>
-            <View className='u-product__price'>¥ {serviceSource.serviceMap[item.service].price}</View>
+
+        <View className="u-svOrder__pet flex border-bottom-divider">
+          <Image
+            className="u-svOrder__pet__avatar"
+            src={currentPet.avatar || config.petAvatar}
+          />
+          <View className="ml-2">
+            <View className="font-s-28 mb-1">{currentPet.petName}</View>
+            <View className="flex align-center">
+              <Iconfont type="icongong" color="#2F6BFE" size="14"></Iconfont>
+              <Text className="text-hui font-s-24">{currentPet.petBreed}</Text>
+            </View>
           </View>
         </View>
-        <View className='u-total' onClick={this.goDetail}>
-          共1件商品
+
+        <View className="u-svOrder__info py-2 border-bottom-divider">
+          <View className="mb-5">套餐内容</View>
+          {serviceList.map(sv => {
+            return (
+              <View className="flex mb-4" key={sv.id}>
+                <Image
+                  className="flex-0 u-svOrder__info__image mr-3"
+                  src={sv.image || config.petAvatar}
+                />
+                <View className="flex-1">{sv.name}</View>
+                <View className="flex-0">¥ {sv.price}</View>
+              </View>
+            );
+          })}
         </View>
-        
-        <View className='u-serviceTime'>订单编号：{item.id}</View>
-        <View className='u-serviceTime'>服务时间：{item.reserveTime}</View>
-        <View className='u-serviceTime'>预留电话：{item.mobile}</View>
+
+        <View className="font-s-28 pt-3 text-right">
+          <Text>预约时间：{dayjs(item.reserveTime).format('YYYY.MM.DD HH:mm')}</Text>
+        </View>
+
+        <View className="font-s-28 pt-3 text-right">
+          <Text>订单金额：</Text>
+          <Text className="text-red">¥ {item.totalFee}</Text>
+        </View>
+        <View className="font-s-28 pt-3 text-right">
+          <Text>支付金额：</Text>
+          <Text className="text-red">¥ {item.paidFee}</Text>
+        </View>
 
         {item.reserveOrderStatus == 100 && (
-          <View className='u-action'>
-            <AtButton className='u-action__btn' type='secondary' circle onClick={this.cancelOrder}>
+          <View className="u-action">
+            <AtButton
+              className="u-action__btn"
+              type="secondary"
+              circle
+              onClick={this.cancelOrder}
+            >
               取消订单
             </AtButton>
           </View>
         )}
       </View>
-    )
+    );
   }
 }
 
-index.defaultProps = {
+ServiceOrder.defaultProps = {
   item: {}
-}
+};
 
-index.propTypes = {
+ServiceOrder.propTypes = {
   item: PropTypes.object,
   onCancel: PropTypes.func
-}
+};
 
-export default index
+export default ServiceOrder;

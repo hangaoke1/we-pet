@@ -24,11 +24,11 @@ export default class GTitle extends Component {
         <Text>{title}</Text>
         {showMore && (
           <View className="g-subTitle" onClick={onShowMore}>
-            <Text style={{ color: "#FF7A24" }}>更多</Text>
+            <Text style={{ color: "#FF7013" }}>更多</Text>
             <Iconfont
               type="iconarrowright"
               size="18"
-              color="#FF7A24"
+              color="#FF7013"
             ></Iconfont>
           </View>
         )}

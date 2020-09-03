@@ -10,12 +10,9 @@ import config from "@/config";
 
 import "./index.less";
 
-@connect(
-  ({ pet }) => ({
-    pet
-  }),
-  dispatch => ({})
-)
+@connect(({ pet }) => ({
+  pet
+}))
 class Pet extends Component {
   config = {
     navigationBarTitleText: "我的爱宠",
@@ -127,11 +124,13 @@ class Pet extends Component {
                     </View> */}
                     <View className="flex align-center">
                       <View className="u-petBreed">{item.petBreed}</View>
-                      <View className="ml-1 mr-2 text-hui font-s-24">
-                        生日：{item.birthday.slice(5)}
-                      </View>
-                      <View className="text-hui font-s-24">
-                        {getPetYear(item.birthday)}
+                      <View className="flex align-center">
+                        <View className="ml-1 mr-2 text-hui font-s-24">
+                          生日：{item.birthday.slice(5)}
+                        </View>
+                        <View className="text-hui font-s-24">
+                          {getPetYear(item.birthday)}
+                        </View>
                       </View>
                     </View>
                   </View>

@@ -1,11 +1,12 @@
-import { SET_LOGIN, SET_USERINFO } from '@/constants/user';
+import { SET_LOGIN, SET_USERINFO, SET_COUPONS } from '@/constants/user';
 import token from '@/lib/token';
 
 // 用户信息
 const user = (state = {
   isLogin: token.isLogin(),
   userInfo: {},
-  userCapital: {}
+  userCapital: {},
+  coupons: [], // 用户优惠券
 }, action) => {
   switch(action.type){
     case SET_LOGIN:
@@ -18,6 +19,11 @@ const user = (state = {
         ...state,
         userInfo: action.value.user,
         userCapital: action.value.userCapital
+      }
+    case SET_COUPONS:
+      return {
+        ...state,
+        coupons: action.value,
       }
     default:
       return state;

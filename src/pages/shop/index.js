@@ -1,496 +1,105 @@
-/* eslint-disable react/no-unused-state */
-/* eslint-disable react/jsx-closing-bracket-location */
-import Taro, { Component } from '@tarojs/taro'
-import { View, Text, Image, ScrollView, Input } from '@tarojs/components'
-import classNames from 'classnames'
-import { AtDrawer, AtButton } from 'taro-ui'
-import Iconfont from '@/components/Iconfont'
-import Product from '@/components/Product'
-import ProductPro from '@/components/ProductPro'
-import shopApi from '@/api/shop'
-import { getCart } from '@/actions/cart'
-import config from '@/config'
+/* eslint-disable import/no-commonjs */
+import Taro, { Component } from "@tarojs/taro";
+import { View, Text, Image } from "@tarojs/components";
 
-import './index.less'
+import Iconfont from "@/components/Iconfont";
+import ProductNew from "@/components/ProductNew";
 
-class index extends Component {
+import "./index.less";
+
+const cateList = [
+  {
+    id: 1,
+    name: "主粮",
+    icon: require("../../images/zhuliang.png")
+  },
+  {
+    id: 2,
+    name: "罐头",
+    icon: require("../../images/guantou.png")
+  },
+  {
+    id: 3,
+    name: "零食",
+    icon: require("../../images/lingshi.png")
+  },
+  {
+    id: 4,
+    name: "日用",
+    icon: require("../../images/riyong.png")
+  },
+  {
+    id: 5,
+    name: "玩具",
+    icon: require("../../images/wanju.png")
+  },
+  {
+    id: 6,
+    name: "保健品",
+    icon: require("../../images/baojianpin.png")
+  },
+  {
+    id: 7,
+    name: "服饰",
+    icon: require("../../images/fushi.png")
+  },
+  {
+    id: 8,
+    name: "特惠",
+    icon: require("../../images/tehui.png")
+  }
+];
+
+export default class ShopIndex extends Component {
   config = {
-    navigationBarTitleText: '商城'
-  }
+    navigationBarTitleText: "商城"
+  };
 
-  state = {
-    // 1列表 2卡片
-    showType: 1,
-    // 1狗狗 2猫猫
-    petType: 1,
-    // 1品牌 2地址
-    subType: '',
-    subList: [],
-    // 品牌
-    brand: '',
-    brandList: [],
-    // 产地
-    address: '',
-    addressList: [],
-    min: '',
-    max: '',
-    tMin: '',
-    tMax: '',
-    // 左侧商品类型
-    categoryId: 0,
-    categoryList: [],
-    // 列表加载
-    list: [],
-    pageNo: 1,
-    pageSize: 10,
-    loading: false,
-    finished: false,
-    showDrawer: false
-  }
+  state = {};
 
-  constructor (props) {
-    super(props)
-  }
-
-  onShareAppMessage (res) {
-    if (res.from === 'button') {
-      // 来自页面内转发按钮
-      console.log(res.target)
-    }
-    return {
-      title: '有宠宠物生活馆',
-      path: '/pages/index/index',
-      imageUrl: config.shareIcon
-    }
-  }
-
-  componentWillMount () {}
-
-  componentDidMount () {
-    shopApi.queryProductCategory().then((res) => {
-      this.setState(
-        {
-          categoryList: res || []
-        },
-        () => {
-          this.init()
-        }
-      )
-    })
-  }
-
-  componentDidShow () {
-    getCart()
-  }
-
-  changeShowType = () => {
-    const { showType } = this.state
-    this.setState({
-      showType: showType === 1 ? 2 : 1
-    })
-  }
-
-  changePetType = () => {
-    const { petType } = this.state
-    this.setState(
-      {
-        petType: petType === 1 ? 2 : 1,
-        list: []
-      },
-      () => {
-        this.init()
-      }
-    )
-  }
-
-  changeCategoryId = (categoryId) => {
-    this.setState(
-      {
-        categoryId
-      },
-      () => {
-        this.init()
-      }
-    )
-  }
-
-  goSearch = () => {
-    Taro.navigateTo({
-      url: '/pages/search/index'
-    })
-  }
-
-  init = () => {
-    this.setState(
-      {
-        list: [],
-        pageNo: 1,
-        pageSize: 10,
-        brand: '',
-        address: '',
-        subType: '',
-        subList: [],
-        min: '',
-        max: '',
-        loading: false,
-        finished: false
-      },
-      () => {
-        this.getFilter()
-        this.loadmore()
-      }
-    )
-  }
-
-  refresh = () => {
-    this.setState(
-      {
-        list: [],
-        pageNo: 1,
-        pageSize: 10,
-        finished: false,
-        loading: false
-      },
-      () => {
-        // 查询商品
-        this.loadmore()
-      }
-    )
-  }
-
-  getFilter = () => {
-    const { categoryId, petType } = this.state
-    shopApi
-      .getFilter({
-        categoryId,
-        petType
-      })
-      .then((res) => {
-        // 查询结果
-        console.log('>>> 品牌、地址', res)
-        this.setState({
-          brandList: res.brandList,
-          addressList: res.addressList
-        })
-      })
-  }
-
-  loadmore = () => {
-    const { loading, finished, brand, address, categoryId, pageNo, pageSize, petType, min, max } = this.state
-    if (loading || finished) {
-      return
-    }
-    this.setState({
-      loading: true
-    })
-    const params = {
-      petType,
-      brand,
-      address,
-      categoryId,
-      pageNo,
-      pageSize,
-      min,
-      max
-    }
-    shopApi.queryProducts(params).then((res) => {
-      console.log('>>> 查询商品结果', res)
-      this.setState((state) => {
-        return {
-          pageNo: pageNo + 1,
-          loading: false,
-          finished: pageNo * pageSize > res.totalCount ? true : false,
-          list: [ ...state.list, ...res.items ]
-        }
-      })
-    })
-  }
-
-  selectSubType = (val) => {
-    const { subType, brand, address } = this.state
-    if (subType === 1) {
-      if (brand && brand !== val) {
-        return
-      }
-      this.setState(
-        (state) => ({
-          subType: state.brand === val ? 1 : '',
-          brand: state.brand === val ? '' : val
-        }),
-        () => {
-          this.refresh()
-        }
-      )
-    }
-    if (subType === 2) {
-      if (address && address !== val) {
-        return
-      }
-      this.setState(
-        (state) => ({
-          subType: state.address === val ? 2 : '',
-          address: state.address === val ? '' : val
-        }),
-        () => {
-          this.refresh()
-        }
-      )
-    }
-  }
-
-  changSubType = (type) => {
-    const { subType, brandList, addressList } = this.state
-    if (type === subType) {
-      this.setState({
-        subType: ''
-      })
-    } else {
-      this.setState({
-        subType: type,
-        subList: type === 1 ? brandList : addressList
-      })
-    }
-  }
-
-  hideSubType = () => {
-    this.setState({
-      subType: ''
-    })
-  }
-
-  handleShowDrawer = () => {
-    this.setState((state) => ({
-      showDrawer: true,
-      tMin: state.min,
-      tMax: state.max,
-      subType: ''
-    }))
-  }
-  onDrawerClose = () => {
-    this.setState(() => ({
-      showDrawer: false
-    }))
-  }
-
-  handleMinChange = (e) => {
-    const value = e.target.value
-    this.setState({
-      tMin: value
-    })
-  }
-
-  handleMaxChange = (e) => {
-    const value = e.target.value
-    this.setState({
-      tMax: value
-    })
-  }
-
-  resetPrice = () => {
-    this.setState(
-      {
-        tMax: '',
-        tMin: '',
-        min: '',
-        max: ''
-      },
-      () => {
-        this.refresh()
-      }
-    )
-  }
-
-  changePrice = () => {
-    this.setState(
-      (state) => ({
-        max: state.tMax,
-        min: state.tMin,
-        showDrawer: false
-      }),
-      () => {
-        this.refresh()
-      }
-    )
-  }
-
-  preventTouchMove = (e) => {
-    e.stopPropagation()
-    return
-  }
-
-  render () {
-    const prefixCls = 'u-shop'
-    const {
-      petType,
-      categoryList,
-      categoryId,
-      showType,
-      finished,
-      loading,
-      brand,
-      subType,
-      subList,
-      address,
-      list,
-      showDrawer,
-      tMin,
-      tMax,
-      min,
-      max
-    } = this.state
-    let loadTip = ''
-    if (finished) {
-      loadTip = '没有更多啦～'
-    } else if (loading) {
-      loadTip = '加载中...'
-    } else {
-      loadTip = '点击加载更多~'
-    }
+  render() {
     return (
-      <View className={prefixCls}>
-        <View className='u-header'>
-          <View className='u-type'>
-            <View className='u-type__item' onClick={this.changePetType}>
-              猫猫
-            </View>
-            <View className='u-type__item' onClick={this.changePetType}>
-              狗狗
-            </View>
-            <View
-              className={classNames({
-                'u-type__dot': true,
-                'u-type__active': petType === 1
-              })}
-            />
-          </View>
-          <View className='u-search' onClick={this.goSearch}>
-            <Iconfont type='iconsearch' size='18' color='#333' />
-            <Text className='u-search__text'>搜索</Text>
-          </View>
+      <View className="u-shop">
+        <View className="u-shop__search flex align-center p-2">
+          <Iconfont type="iconsousuo" size="12" color="#999" />
+          <Text className="text-hui ml-2">请输入您想搜索的商品</Text>
+        </View>
+        <View className="u-shop__banner">
+          <Image src="//img.alicdn.com/tps/i4/TB16ZRFg6MZ7e4jSZFOSut7epXa.jpg"></Image>
+        </View>
+        <View className="u-shop__category">
+          {cateList.map(item => {
+            return (
+              <View className="u-shop__item" key={item.id}>
+                <View className="flex flex-column align-center justify-center">
+                  <Image className="u-shop__icon" src={item.icon}></Image>
+                  <View className="mt-1 font-s-24">{item.name}</View>
+                </View>
+              </View>
+            );
+          })}
         </View>
 
-        <View className='u-content'>
-          <View className='u-category'>
-            {categoryList.map((item) => (
-              <View
-                key={item.id}
-                onClick={this.changeCategoryId.bind(this, item.categoryId)}
-                className={classNames({
-                  'u-category__item': true,
-                  'u-category__active': item.categoryId === categoryId
-                })}
-              >
-                {item.categoryName}
-              </View>
-            ))}
-          </View>
-
-          <View className='u-info'>
-            <Image className='u-banner' src='https://hgkcdn.oss-cn-shanghai.aliyuncs.com/pet/banner2.jpeg' lazyLoad webp />
-
-            <View className='u-filter'>
-              <View className='u-filter__left'>
-                <View
-                  className={classNames({
-                    'u-filter__brand': true,
-                    'u-filter__selected': !!brand
-                  })}
-                  onClick={this.changSubType.bind(this, 1)}
-                >
-                  <Text style={{ marginLeft: '10px' }}>品牌</Text>
-                  {subType === 1 ? (
-                    <Iconfont my-class='u-filter__icon' type='iconwebicon216' size={10} />
-                  ) : (
-                    <Iconfont my-class='u-filter__icon' type='iconwebicon215' size={10} />
-                  )}
-                </View>
-                <View
-                  className={classNames({
-                    'u-filter__brand': true,
-                    'u-filter__selected': !!address
-                  })}
-                  onClick={this.changSubType.bind(this, 2)}
-                >
-                  <Text style={{ marginLeft: '10px' }}>产地</Text>
-                  {subType === 2 ? (
-                    <Iconfont my-class='u-filter__icon' type='iconwebicon216' size={10} />
-                  ) : (
-                    <Iconfont my-class='u-filter__icon' type='iconwebicon215' size={10} />
-                  )}
-                </View>
-              </View>
-              <View className='u-filter__right'>
-                {/* <View className='u-filter__showtype' onClick={this.changeShowType}>
-                  {showType === 1 ? (
-                    <Iconfont type='iconliebiao1' size='16' />
-                  ) : (
-                    <Iconfont type='iconshebeizhongleifenbu' size='16' />
-                  )}
-                </View> */}
-                <View
-                  className={classNames({
-                    'u-filter__selected': !!(min || max)
-                  })}
-                  onClick={this.handleShowDrawer}
-                >
-                  筛选
-                </View>
-              </View>
-              {subType && (
-                <View className='u-filter__wrap'>
-                  <View className='u-filter__mask' onTouchMove={this.preventTouchMove} onClick={this.hideSubType} />
-                  <View className='u-filter__ctx'>
-                    <View className='u-filter__list'>
-                      {subList.map((item) => (
-                        <View
-                          key={item}
-                          className={classNames({
-                            'u-filter__item': true,
-                            'u-filter__active': subType === 1 ? item === brand : item === address
-                          })}
-                          onClick={this.selectSubType.bind(this, item)}
-                        >
-                          {item}
-                        </View>
-                      ))}
-                    </View>
-                  </View>
-                </View>
-              )}
+        <View className="mt-2">
+          <View className="u-shop__title bg-bai">
+            <Text>新品推荐</Text>
+            <View className="u-shop__subTitle">
+              <Text style={{ color: "#FF7013" }}>更多</Text>
+              <Iconfont
+                type="iconarrowright"
+                size="18"
+                color="#FF7013"
+              ></Iconfont>
             </View>
-
-            <ScrollView className='u-list' scrollY style={{ height: '400px' }} onScrollToLower={this.loadmore}>
-              {showType === 1 ? (
-                <View className='u-style-one'>{list.map((item) => <Product key={item.id} item={item} />)}</View>
-              ) : (
-                <View className='u-style-two'>{list.map((item) => <ProductPro key={item.id} item={item} />)}</View>
-              )}
-              <View className='u-tip' onClick={this.loadmore}>
-                <Text>{loadTip}</Text>
-              </View>
-            </ScrollView>
+          </View>
+          <View className="flex justify-between flex-wrap px-2">
+            <ProductNew></ProductNew>
+            <ProductNew></ProductNew>
+            <ProductNew></ProductNew>
+            <ProductNew></ProductNew>
           </View>
         </View>
-
-        <AtDrawer show={showDrawer} onClose={this.onDrawerClose} right mask>
-          <View className='u-drawer__title'>价格区间(元)</View>
-          <View className='u-drawer'>
-            <Input value={tMin} className='u-input' type='number' placeholder='最低价' onChange={this.handleMinChange} />
-            <View className='u-line' />
-            <Input value={tMax} className='u-input' type='number' placeholder='最高价' onChange={this.handleMaxChange} />
-          </View>
-          <View className='u-drawer__action'>
-            <AtButton className='u-drawer__btn' type='secondary' size='small' onClick={this.resetPrice}>
-              重置
-            </AtButton>
-            <AtButton className='u-drawer__btn' type='primary' size='small' onClick={this.changePrice}>
-              确认
-            </AtButton>
-          </View>
-        </AtDrawer>
       </View>
-    )
+    );
   }
 }
-
-export default index

@@ -530,6 +530,10 @@
 	text-overflow: ellipsis;
 }
 
+.line-through {
+	text-decoration: line-through;
+}
+
 .ellipsis-1 {
 	overflow: hidden;
   display: -webkit-box;

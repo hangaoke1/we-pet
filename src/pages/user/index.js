@@ -1,7 +1,7 @@
 /* eslint-disable import/no-commonjs */
 import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { View, Image, Block, OpenData, Text, Button, ScrollView } from '@tarojs/components';
+import { View, Image, OpenData, Text, Button, ScrollView } from '@tarojs/components';
 import Iconfont from '@/components/Iconfont';
 import gotoLogin from '@/lib/gotoLogin';
 import { getUserInfo } from '@/actions/user';
@@ -130,33 +130,30 @@ class UserPage extends Component {
     }
   };
 
+  navigateToWithLogin = (url) => {
+    if (!this.props.user.isLogin) {
+      return gotoLogin();
+    }
+    Taro.navigateTo({
+      url
+    });
+  };
+
   handleToolClick = (item) => {
     if (item.value === '宠物信息') {
-      return this.goPet();
+      this.navigateToWithLogin('/pages/pet/index');
     }
     if (item.value === '我的预约') {
-      if (!this.props.user.isLogin) {
-        return gotoLogin();
-      }
-      Taro.navigateTo({
-        url: '/pages/storeOrder/index'
-      });
+      this.navigateToWithLogin('/pages/storeOrder/index');
     }
     if (item.value === '地址管理') {
-      if (!this.props.user.isLogin) {
-        return gotoLogin();
-      }
-      Taro.navigateTo({
-        url: '/pages/address/index'
-      });
+      this.navigateToWithLogin('/pages/address/index');
     }
     if (item.value === '宠物监控') {
-      if (!this.props.user.isLogin) {
-        return gotoLogin();
-      }
-      Taro.navigateTo({
-        url: '/pages/device/index'
-      });
+      this.navigateToWithLogin('/pages/device/index');
+    }
+    if (item.value === '红包卡券') {
+      this.navigateToWithLogin('/pages/couponList/index');
     }
     if (item.value === '联系客服') {
       this.setState({
@@ -180,15 +177,6 @@ class UserPage extends Component {
     });
   };
 
-  goPet = () => {
-    if (!this.props.user.isLogin) {
-      return gotoLogin();
-    }
-    Taro.navigateTo({
-      url: '/pages/pet/index'
-    });
-  };
-
   goOrder = (current = 0) => {
     if (!this.props.user.isLogin) {
       return gotoLogin();
@@ -207,6 +195,12 @@ class UserPage extends Component {
     });
   };
 
+  addPet = () => {
+    Taro.navigateTo({
+      url: '/pages/petDetail/index'
+    });
+  };
+
   logout = () => {
     token.clear();
     this.init();
@@ -220,7 +214,7 @@ class UserPage extends Component {
     const userInfo = user.userInfo;
     return (
       <View className={prefixCls}>
-        <View className='u-header'></View>
+        <View className='u-header' />
 
         <View className='u-header__content'>
           <View className='flex flex-column align-center justify-center mb-4' onClick={this.login}>
@@ -265,36 +259,27 @@ class UserPage extends Component {
         <View className='u-content'>
           <ScrollView scrollX enhanced showScrollbar={false} className='u-pet'>
             <View className='flex align-center py-2'>
-              <View className='u-pet__item p-2 flex flex-0 mr-2'>
-                <Image className='u-pet__image mr-2' src={config.petAvatar} />
-                <View>
-                  <View className='font-s-28 mb-1'>小黑</View>
-                  <View className='flex align-center'>
-                    <Iconfont type='iconmu' color='pink' size='14' />
-                    <Text className='text-hui font-s-24 ml-1 ellipsis-1'>阿里斯顿奋斗史发</Text>
-                  </View>
-                </View>
+              <View className='u-pet__add flex-0 flex align-center justify-center mr-2' onClick={this.addPet}>
+                <Iconfont type='iconadd' color='#fff' size='24' />
               </View>
-              <View className='u-pet__item p-2 flex flex-0 mr-2'>
-                <Image className='u-pet__image mr-2' src={config.petAvatar} />
-                <View>
-                  <View className='font-s-28 mb-1'>小黑</View>
-                  <View className='flex align-center'>
-                    <Iconfont type='iconmu' color='pink' size='14' />
-                    <Text className='text-hui font-s-24 ml-1 ellipsis-1'>阿里斯顿奋斗史发</Text>
+              {pet.list.map((p) => {
+                return (
+                  <View className='u-pet__item p-2 flex flex-0 mr-2' key={p.id}>
+                    <Image className='u-pet__image mr-2' src={p.avatar || config.petAvatar} />
+                    <View>
+                      <View className='font-s-28 mb-1'>{p.petName}</View>
+                      <View className='flex align-center'>
+                        {p && p.sex == 0 ? (
+                          <Iconfont type='icongong' color='#2F6BFE' size='14' />
+                        ) : (
+                          <Iconfont type='iconmu' color='pink' size='14' />
+                        )}
+                        <Text className='text-hui font-s-24 ml-1 ellipsis-1'>{p.petBreed}</Text>
+                      </View>
+                    </View>
                   </View>
-                </View>
-              </View>
-              <View className='u-pet__item p-2 flex flex-0 mr-2'>
-                <Image className='u-pet__image mr-2' src={config.petAvatar} />
-                <View>
-                  <View className='font-s-28 mb-1'>小黑</View>
-                  <View className='flex align-center'>
-                    <Iconfont type='iconmu' color='pink' size='14' />
-                    <Text className='text-hui font-s-24 ml-1 ellipsis-1'>阿里斯顿奋斗史发</Text>
-                  </View>
-                </View>
-              </View>
+                );
+              })}
             </View>
           </ScrollView>
 

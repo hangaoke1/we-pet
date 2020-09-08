@@ -81,7 +81,6 @@ class SubscribeConfirm extends Component {
     storeApi
       .insertReserveWash(params)
       .then((res) => {
-        Taro.hideLoading();
         requestPaymentPro(res)
           .then(() => {
             Taro.showToast({

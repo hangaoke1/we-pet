@@ -56,7 +56,7 @@ class Pet extends Component {
     }
   };
 
-  goAddPet = () => {
+  addPet = () => {
     Taro.navigateTo({
       url: "/pages/petDetail/index"
     });
@@ -139,7 +139,7 @@ class Pet extends Component {
             </View>
           ))}
         </View>
-        <View className="u-action" onClick={this.goAddPet}>
+        <View className="u-action" onClick={this.addPet}>
           + 添加宠物档案
         </View>
       </View>

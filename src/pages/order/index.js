@@ -1,19 +1,20 @@
-import Taro, { Component } from '@tarojs/taro'
-import { View, Text, ScrollView, Image } from '@tarojs/components'
-import { AtTabs, AtButton } from 'taro-ui'
-import Iconfont from '@/components/Iconfont'
-import OrderItem from '@/components/OrderItem'
-import GLoading from '@/components/GLoading'
-import shopApi from '@/api/shop'
-import requestPaymentPro from '@/lib/pay'
-import config from '@/config'
+import Taro, { Component } from '@tarojs/taro';
+import { View, Text, ScrollView, Image } from '@tarojs/components';
+import { AtTabs, AtButton } from 'taro-ui';
+import Iconfont from '@/components/Iconfont';
+import OrderItem from '@/components/OrderItem';
+import GLoading from '@/components/GLoading';
+import GLoadMore from '@/components/GLoadMore';
+import shopApi from '@/api/shop';
+import requestPaymentPro from '@/lib/pay';
+import config from '@/config';
 
-import './index.less'
+import './index.less';
 
 class index extends Component {
   config = {
     navigationBarTitleText: '我的订单'
-  }
+  };
 
   state = {
     current: 0,
@@ -23,13 +24,13 @@ class index extends Component {
     pageSize: 4,
     loading: false,
     finished: false
+  };
+
+  componentWillMount() {
+    this.init();
   }
 
-  componentWillMount () {
-    this.init()
-  }
-
-  componentDidMount () {}
+  componentDidMount() {}
 
   init = () => {
     this.setState(
@@ -42,10 +43,10 @@ class index extends Component {
         list: []
       },
       () => {
-        this.loadmore()
+        this.loadmore();
       }
-    )
-  }
+    );
+  };
 
   refresh = () => {
     this.setState(
@@ -57,19 +58,19 @@ class index extends Component {
         list: []
       },
       () => {
-        this.loadmore()
+        this.loadmore();
       }
-    )
-  }
+    );
+  };
 
   loadmore = () => {
-    const { loading, finished, pageNo, pageSize, current } = this.state
+    const { loading, finished, pageNo, pageSize, current } = this.state;
     if (loading || finished) {
-      return
+      return;
     }
     this.setState({
       loading: true
-    })
+    });
     // 订单状态，为空表示查询全部。100待支付，200待发货，300待收货，400已完成，900已取消
     const currentMap = {
       0: '',
@@ -78,41 +79,43 @@ class index extends Component {
       3: 300,
       4: 400,
       5: 900
-    }
+    };
     const params = {
       pageNo,
       pageSize,
       orderStatus: currentMap[current]
-    }
+    };
     shopApi
       .queryOrder(params)
       .then((res) => {
         res.items.forEach((item) => {
-          item.id = item.order.orderId
-        })
+          item.id = item.order.orderId;
+        });
         this.setState((state) => {
           return {
             pageNo: pageNo + 1,
             loading: false,
             finished: pageNo * pageSize > res.totalCount ? true : false,
             list: [ ...state.list, ...res.items ]
-          }
-        })
+          };
+        });
       })
-      .catch(() => {})
-  }
+      .catch(() => {});
+  };
 
   onChangeTab = (value) => {
-    if (this.state.current === value) { return }
+    if (this.state.current === value) {
+      return;
+    }
     this.setState(
       {
         current: value
       },
       () => {
-        this.refresh()
+        this.refresh();
       }
-    )
-  }
+    );
+  };
 
   // 取消订单
   onCancel = (orderId) => {
@@ -123,61 +126,61 @@ class index extends Component {
     })
       .then((res) => {
         if (res.confirm) {
-          Taro.showLoading()
+          Taro.showLoading();
           shopApi
             .cancelOrder({
               orderId
             })
             .then(() => {
-              Taro.hideLoading()
-              this.refresh()
+              Taro.hideLoading();
+              this.refresh();
             })
             .catch((err) => {
-              Taro.hideLoading()
+              Taro.hideLoading();
               Taro.showToast({
                 title: err.message,
                 icon: 'none'
-              })
-            })
+              });
+            });
         }
       })
-      .catch(() => {})
-  }
+      .catch(() => {});
+  };
 
   // 重新支付
   onRepay = (orderId) => {
-    
-    Taro.showLoading()
+    Taro.showLoading();
     shopApi
       .againPayOrder({
         orderId
       })
       .then((res) => {
-        Taro.hideLoading()
-        requestPaymentPro(res).then(() => {
-          Taro.showToast({
-            title: '支付成功',
-            icon: 'none'
+        requestPaymentPro(res)
+          .then(() => {
+            Taro.showToast({
+              title: '支付成功',
+              icon: 'none'
+            });
+            Taro.redirectTo({
+              url: '/pages/order/index?current=2'
+            });
           })
-          Taro.redirectTo({
-            url: '/pages/order/index?current=2'
-          })
-        }).catch(err => {
-          console.error(err)
-          Taro.showToast({
-            title: '支付失败',
-            icon: 'none'
-          })
-        })
+          .catch((err) => {
+            console.error(err);
+            Taro.showToast({
+              title: '支付失败',
+              icon: 'none'
+            });
+          });
       })
       .catch((err) => {
-        Taro.hideLoading()
+        Taro.hideLoading();
         Taro.showToast({
           title: err.message,
           icon: 'none'
-        })
-      })
-  }
+        });
+      });
+  };
 
   // 确认收货
   onDeliveryOrder = (orderId) => {
@@ -188,51 +191,43 @@ class index extends Component {
     })
       .then((res) => {
         if (res.confirm) {
-          Taro.showLoading()
+          Taro.showLoading();
           shopApi
             .deliveryOrder({
               orderId
             })
             .then(() => {
-              Taro.hideLoading()
+              Taro.hideLoading();
               Taro.redirectTo({
                 url: '/pages/order/index?current=4'
-              })
+              });
             })
             .catch((err) => {
-              Taro.hideLoading()
+              Taro.hideLoading();
               Taro.showToast({
                 title: err.message,
                 icon: 'none'
-              })
-            })
+              });
+            });
         }
       })
-      .catch(() => {})
-  }
+      .catch(() => {});
+  };
 
   goShop = () => {
     Taro.switchTab({
       url: '/pages/shop/index'
-    })
-  }
+    });
+  };
 
   goSearch = () => {
     Taro.navigateTo({
       url: '/pages/searchOrder/index'
-    })
-  }
+    });
+  };
 
-  render () {
-    const { list, loading, finished } = this.state
-    let loadTip = ''
-    if (finished) {
-      loadTip = '没有更多啦～'
-    } else if (loading) {
-      loadTip = '加载中...'
-    } else {
-      loadTip = '点击加载更多~'
-    }
+  render() {
+    const { list, loading, finished } = this.state;
 
     return (
       <View className='u-order'>
@@ -260,7 +255,7 @@ class index extends Component {
           {list.length === 0 &&
           finished && (
             <View className='u-empty'>
-              <Image className='u-empty__img' src={config.petAvatar}></Image>
+              <Image className='u-empty__img' src={config.petAvatar} />
               <View className='u-empty__label'>您还没有相关的订单</View>
               <AtButton className='u-empty__btn' type='primary' circle onClick={this.goShop}>
                 去逛逛
@@ -275,17 +270,19 @@ class index extends Component {
           )}
           {list.length > 0 &&
             list.map((item) => (
-              <OrderItem key={item.id} orderInfo={item} onCancel={this.onCancel} onRepay={this.onRepay} onDeliveryOrder={this.onDeliveryOrder} />
+              <OrderItem
+                key={item.id}
+                orderInfo={item}
+                onCancel={this.onCancel}
+                onRepay={this.onRepay}
+                onDeliveryOrder={this.onDeliveryOrder}
+              />
             ))}
-          {list.length > 0 && (
-            <View className='u-tip' onClick={this.loadmore}>
-              <Text>{loadTip}</Text>
-            </View>
-          )}
+          {list.length > 0 && <GLoadMore loading={loading} finished={finished} onClick={this.loadmore} />}
         </ScrollView>
       </View>
-    )
+    );
   }
 }
 
-export default index
+export default index;

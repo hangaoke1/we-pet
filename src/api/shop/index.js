@@ -16,7 +16,7 @@ export default {
   // 查询品牌和地址
   getFilter: param => api.post('/pet/getFilter', param),
   // 查询商品详情
-  queryProductFullInfoById: params => api.post('/pet/queryProductFullInfoById', params),
+  queryProductFullInfoById: params => api.get('/pet/queryProductFullInfoById', params),
   // 加入购物车
   addShoppingCart: params => api.post('/pet/addShoppingCart', params),
   // 查询购物车

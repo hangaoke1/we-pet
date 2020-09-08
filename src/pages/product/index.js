@@ -1,35 +1,37 @@
-import Taro, { Component } from '@tarojs/taro'
-import { connect } from '@tarojs/redux'
-import { View, Swiper, SwiperItem, Image, Text } from '@tarojs/components'
-import classNames from 'classnames'
-import Iconfont from '@/components/Iconfont'
-import GImg from '@/components/GImg'
-import GFloatLayout from '@/components/GFloatLayout'
-import { AtInputNumber, AtButton } from 'taro-ui'
-import shopApi from '@/api/shop'
-import { getCart } from '@/actions/cart'
-import _ from '@/lib/lodash'
-import gotoLogin from '@/lib/gotoLogin'
+import Taro, { Component } from '@tarojs/taro';
+import { connect } from '@tarojs/redux';
+import { View, Swiper, SwiperItem, Image, Text } from '@tarojs/components';
+import classNames from 'classnames';
+import Iconfont from '@/components/Iconfont';
+import GImg from '@/components/GImg';
+import GFloatLayout from '@/components/GFloatLayout';
+import { AtInputNumber, AtButton } from 'taro-ui';
+import shopApi from '@/api/shop';
+import { getCart } from '@/actions/cart';
+import _ from '@/lib/lodash';
+import gotoLogin from '@/lib/gotoLogin';
 
-import './index.less'
+import './index.less';
 
 const defaultSku = {
   stock: 0,
   skuName: '此规格商品已下架',
   skuDetailImgUrl: '',
   price: '暂无价格'
-}
+};
 
-@connect(
-  ({ user, cart }) => ({
-    user, cart
-  }),
-  (dispatch) => ({})
-)
-class index extends Component {
+@connect(({ user, cart }) => ({
+  user,
+  cart
+}))
+class Product extends Component {
+  static options = {
+    addGlobalClass: true // 支持使用全局样式
+  };
+
   config = {
     navigationBarTitleText: '商品详情'
-  }
+  };
 
   state = {
     info: '',
@@ -44,28 +46,28 @@ class index extends Component {
     showQuick: false,
     buyLoading: false,
     scrollTop: ''
-  }
+  };
 
-  componentWillMount () {
-    const params = this.$router.params
-    const skuId = params.skuId
-    Taro.showLoading()
+  componentWillMount() {
+    const params = this.$router.params;
+    const skuId = params.skuId;
+    Taro.showLoading();
     shopApi
       .queryProductFullInfoById({
         productId: params.productId
       })
       .then((res) => {
-        Taro.hideLoading()
-        let productBannerImgList = _.get(res, 'productBannerImgList', [])
-        const productSkuList = _.get(res, 'productSkuList', [])
-        const currentSku = productSkuList.filter((sku) => sku.id == skuId)[0] || defaultSku
+        Taro.hideLoading();
+        let productBannerImgList = _.get(res, 'productBannerImgList', []);
+        const productSkuList = _.get(res, 'productSkuList', []);
+        const currentSku = productSkuList.filter((sku) => sku.id == skuId)[0] || defaultSku;
         if (productBannerImgList.length === 0) {
-          productBannerImgList = productSkuList.map(item => {
+          productBannerImgList = productSkuList.map((item) => {
             return {
               id: item.id,
               imgUrl: item.skuImgUrl
-            }
-          })
+            };
+          });
         }
         this.setState({
           info: _.cloneDeep(res),
@@ -73,162 +75,162 @@ class index extends Component {
           productBannerImgList,
           productSkuList,
           currentSku
-        })
+        });
       })
       .catch(() => {
-        Taro.hideLoading()
-      })
+        Taro.hideLoading();
+      });
   }
 
-  componentDidMount () {}
-
-  onPageScroll (e) {
+  onPageScroll(e) {
     this.setState({
       scrollTop: e.scrollTop
-    })
+    });
   }
 
   // 查询购物车
   queryShoppingCart = () => {
     shopApi.queryShoppingCart().then((res) => {
-      console.log('>>> 查询购物车', res)
-    })
-  }
+      console.log('>>> 查询购物车', res);
+    });
+  };
 
   handleBackTop = () => {
     Taro.pageScrollTo({
       scrollTop: 0
-    })
-  }
+    });
+  };
 
   goCart = () => {
     Taro.switchTab({
       url: '/pages/cart/index'
-    })
-  }
+    });
+  };
 
   goShop = () => {
     Taro.switchTab({
       url: '/pages/shop/index'
-    })
-  }
+    });
+  };
 
   goUser = () => {
     Taro.switchTab({
       url: '/pages/user/index'
-    })
-  }
+    });
+  };
 
   doShare = () => {
     Taro.showToast({
       title: '分享成功',
       icon: 'none'
-    })
-  }
+    });
+  };
 
   setShowQuick = () => {
     this.setState({
       showQuick: true
-    })
-  }
+    });
+  };
 
   hideQuick = () => {
     this.setState({
       showQuick: false
-    })
-  }
+    });
+  };
 
   handleParamsOpen = () => {
     this.setState({
       showParams: true
-    })
-  }
+    });
+  };
   handleParamsClose = () => {
     this.setState({
       showParams: false
-    })
-  }
+    });
+  };
 
   handleSpecsOpen = (buyNow) => {
     this.setState({
       showSpecs: true,
       buyNow
-    })
-  }
+    });
+  };
 
   handleSpecsClose = () => {
     this.setState({
       showSpecs: false,
       count: 1
-    })
-  }
+    });
+  };
 
   handleCountChange = (value) => {
     this.setState({
       count: value
-    })
-  }
+    });
+  };
 
   changeChoose = (type, value) => {
     this.setState((state) => {
       // 根据choose 定位sku
       let newChoose = state.choose.map((item) => {
         if (item.type === type) {
-          item.value = value
+          item.value = value;
         }
-        return item
-      })
+        return item;
+      });
       let choosedSku = state.productSkuList.filter((sku) => {
-        const mapA = {}
-        const mapB = {}
-        const skuSpecs = sku.specs
+        const mapA = {};
+        const mapB = {};
+        const skuSpecs = sku.specs;
         skuSpecs.forEach((item) => {
-          mapA[item.type] = item.value
-        })
+          mapA[item.type] = item.value;
+        });
         newChoose.forEach((item) => {
-          mapB[item.type] = item.value
-        })
-        return _.isEqual(mapA, mapB)
-      })[0]
+          mapB[item.type] = item.value;
+        });
+        return _.isEqual(mapA, mapB);
+      })[0];
       return {
         currentSku: choosedSku || defaultSku,
         choose: newChoose
-      }
-    })
-  }
+      };
+    });
+  };
 
   // 立即购买
   buyNow = () => {
-    console.log(this.setState.currentSku)
-  }
+    console.log(this.setState.currentSku);
+  };
 
   // 加入购物车
   addToCart = () => {
     if (!this.props.user.isLogin) {
-      return gotoLogin()
+      return gotoLogin();
     }
 
     // 立即购买
     if (this.state.buyNow) {
-      Taro.setStorageSync('order_product', [{
-        quantity: this.state.count,
-        price: this.state.currentSku.price * this.state.count,
-        productSku: this.state.currentSku,
-        id: this.state.currentSku.id
-      }])
+      Taro.setStorageSync('order_product', [
+        {
+          quantity: this.state.count,
+          price: this.state.currentSku.price * this.state.count,
+          productSku: this.state.currentSku,
+          id: this.state.currentSku.id
+        }
+      ]);
       Taro.redirectTo({
         url: '/pages/confirmOrder/index?cartFlag=0'
-      })
-      return
+      });
+      return;
     }
 
     if (this.setState.buyLoading) {
-      return
+      return;
     }
-    const { currentSku, count } = this.state
+    const { currentSku, count } = this.state;
     this.setState({
       buyLoading: true
-    })
+    });
     shopApi
       .addShoppingCart({
         skuId: currentSku.id,
@@ -238,25 +240,25 @@ class index extends Component {
         this.setState({
           buyLoading: false,
           showSpecs: false
-        })
+        });
         Taro.showToast({
           title: '添加成功',
           icon: 'success'
-        })
-        getCart()
+        });
+        getCart();
       })
       .catch((error) => {
         this.setState({
           buyLoading: false
-        })
+        });
         Taro.showToast({
           title: error.messsage || '添加购物车失败',
           icon: 'none'
-        })
-      })
-  }
+        });
+      });
+  };
 
-  render () {
+  render() {
     const {
       info,
       showParams,
@@ -268,13 +270,13 @@ class index extends Component {
       currentSku,
       buyLoading,
       buyNow
-    } = this.state
-    const { cart } = this.props
-    const prefixCls = 'u-product'
-    const product = _.get(info, 'product', {})
-    const productCategory = _.get(info, 'productCategory', {})
+    } = this.state;
+    const { cart } = this.props;
+    const prefixCls = 'u-product';
+    const product = _.get(info, 'product', {});
+    const productCategory = _.get(info, 'productCategory', {});
 
-    let choosedSku = currentSku
+    let choosedSku = currentSku;
 
     return (
       <View className={prefixCls}>
@@ -339,6 +341,9 @@ class index extends Component {
           <View className='u-price__left'>
             <Text className='u-price__unit'>¥</Text>
             <Text className='u-price__val'>{choosedSku.price}</Text>
+            {choosedSku.originPrice && (
+              <Text className='line-through text-hui ml-2 font-s-28'>¥ {choosedSku.originPrice}</Text>
+            )}
           </View>
           <View className='u-price__right'>
             <Iconfont type='iconiconfontfenxiang' color='#ccc' size='20' />
@@ -389,7 +394,13 @@ class index extends Component {
           >
             加入购物车
           </AtButton>
-          <AtButton className='u-footer__btn' disabled={choosedSku.stock === 0} type='secondary' circle onClick={this.handleSpecsOpen.bind(this, true)}>
+          <AtButton
+            className='u-footer__btn'
+            disabled={choosedSku.stock === 0}
+            type='secondary'
+            circle
+            onClick={this.handleSpecsOpen.bind(this, true)}
+          >
             立即购买
           </AtButton>
         </View>
@@ -441,8 +452,8 @@ class index extends Component {
 
             <View className='u-sku__specs'>
               {(product.specs || []).map((specs) => {
-                const type = specs.type
-                const chooseItem = choose.filter((item) => item.type === type)[0]
+                const type = specs.type;
+                const chooseItem = choose.filter((item) => item.type === type)[0];
                 return (
                   <View key={specs.type}>
                     <View className='u-specs__label'>{specs.name}</View>
@@ -459,11 +470,11 @@ class index extends Component {
                           >
                             {v}
                           </View>
-                        )
+                        );
                       })}
                     </View>
                   </View>
-                )
+                );
               })}
             </View>
 
@@ -487,13 +498,13 @@ class index extends Component {
               type='primary'
               circle
             >
-              { buyNow ? '立即购买' : '加入购物车'}
+              {buyNow ? '立即购买' : '加入购物车'}
             </AtButton>
           </View>
         </GFloatLayout>
       </View>
-    )
+    );
   }
 }
 
-export default index
+export default Product;

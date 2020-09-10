@@ -194,7 +194,7 @@ export default class Index extends Component {
             })}
           </van-row>
         </View>
-        <View className='mt-2'>
+        <View className='u-home__productNew mt-2'>
           <View className='u-home__title bg-bai'>
             <Text>新品推荐</Text>
             <View className='u-home__subTitle'>

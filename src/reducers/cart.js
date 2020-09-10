@@ -11,6 +11,7 @@ const address = (
 ) => {
   switch (action.type) {
     case GET_CART:
+      // 设置购物车数字角标
       Taro.setTabBarBadge({
         index: 2,
         text: action.value.totalCount + ''

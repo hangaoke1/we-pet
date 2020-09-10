@@ -20,7 +20,8 @@
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
-		}
+		},
+		"showShadowRootInWxmlPanel": false
 	},
 	"compileType": "miniprogram",
 	"simulatorType": "wechat",

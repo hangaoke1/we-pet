@@ -1,14 +1,13 @@
 import Taro, { PureComponent } from '@tarojs/taro';
-import { View, Image } from '@tarojs/components';
-import { connect } from "@tarojs/redux";
+import { View } from '@tarojs/components';
+import { connect } from '@tarojs/redux';
 import PropTypes from 'prop-types';
 
 import { getCart } from '@/actions/cart';
 import gotoLogin from '@/lib/gotoLogin';
 import shopApi from '@/api/shop';
-
-import config from '@/config';
-import Iconfont from '../Iconfont';
+import Iconfont from '@/components/Iconfont';
+import GImage from '@/components/GImage';
 
 import './index.less';
 
@@ -19,6 +18,7 @@ class ProductNew extends PureComponent {
   static propTypes = {
     info: PropTypes.object
   };
+
   static defaultProps = {
     info: {}
   };
@@ -69,7 +69,7 @@ class ProductNew extends PureComponent {
     return (
       <View className='u-productNew bg-bai' onClick={this.goProduct}>
         <View className='flex align-center justify-center'>
-          <Image className='u-productNew__img' src={info.skuImgUrl || config.petAvatar} webp lazyLoad />
+          <GImage my-class='u-productNew__img' src={info.skuImgUrl}></GImage>
         </View>
         <View className='p-2'>
           <View className='u-productNew__name mb-1 font-s-24 ellipsis-2'>{info.skuName || '测试商品'}</View>

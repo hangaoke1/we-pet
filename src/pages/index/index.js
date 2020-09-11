@@ -159,7 +159,13 @@ export default class Index extends Component {
     const { banners, productNewList, productSaleList } = this.state;
     return (
       <View className='u-home'>
-        <van-image custom-class='u-banner animated fade faster' fit='fill' src={banners[0].imgUrl} lazyLoad webp />
+        <van-image
+          custom-class='u-banner animated fadeIn faster delay-300ms'
+          fit='fill'
+          src={banners[0].imgUrl}
+          lazyLoad
+          webp
+        />
         <View className='u-info'>
           <StoreInfo />
           <View className='px-2 pt-1'>

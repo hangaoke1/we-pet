@@ -41,7 +41,7 @@ class index extends Component {
         skuId: item.id,
         quantity: 1
       })
-      .then((res) => {
+      .then(() => {
         Taro.hideLoading();
         Taro.showToast({
           title: '添加成功',
@@ -49,7 +49,7 @@ class index extends Component {
         });
         getCart();
       })
-      .catch((err) => {
+      .catch(() => {
         Taro.hideLoading();
         Taro.showToast({
           title: '添加失败',

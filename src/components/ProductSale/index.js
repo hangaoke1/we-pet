@@ -1,5 +1,5 @@
 import Taro, { PureComponent } from '@tarojs/taro';
-import { View, Image } from '@tarojs/components';
+import { View } from '@tarojs/components';
 import { connect } from "@tarojs/redux";
 import PropTypes from 'prop-types';
 
@@ -8,7 +8,9 @@ import gotoLogin from '@/lib/gotoLogin';
 import shopApi from '@/api/shop';
 
 import config from '@/config';
-import Iconfont from '../Iconfont';
+
+import GImage from '@/components/GImage';
+import Iconfont from '@/components/Iconfont';
 
 import './index.less';
 
@@ -69,7 +71,8 @@ class ProductSale extends PureComponent {
     return (
       <View className='u-productSale bg-bai' onClick={this.goProduct}>
         <View className='flex align-center justify-center'>
-          <Image className='u-productSale__img' src={info.skuImgUrl || config.petAvatar} webp lazyLoad />
+          {/* <Image className='u-productSale__img  animated fadeIn faster delay-300ms' src={info.skuImgUrl || config.petAvatar} webp lazyLoad /> */}
+          <GImage my-class='u-productSale__img' src={info.skuImgUrl || config.petAvatar}></GImage>
         </View>
         <View className='p-2'>
           <View className='productSale__name mb-1 font-s-24 ellipsis-2'>{info.skuName || '测试商品'}</View>

@@ -5,7 +5,7 @@ import _ from '@/lib/lodash'
 
 import './index.less'
 
-class index extends Component {
+class OrderProduct extends Component {
 
   componentWillMount () {}
 
@@ -38,4 +38,4 @@ class index extends Component {
   }
 }
 
-export default index
+export default OrderProduct

@@ -4,6 +4,7 @@ import { View, Swiper, SwiperItem, Image, Text } from '@tarojs/components';
 import classNames from 'classnames';
 import Iconfont from '@/components/Iconfont';
 import GImg from '@/components/GImg';
+import GImage from '@/components/GImage';
 import GFloatLayout from '@/components/GFloatLayout';
 import { AtInputNumber, AtButton } from 'taro-ui';
 import shopApi from '@/api/shop';
@@ -331,7 +332,7 @@ class Product extends Component {
           >
             {productBannerImgList.map((image) => (
               <SwiperItem key={image.id}>
-                <Image className='u-item' src={image.imgUrl} mode='aspectFit' lazyLoad webp />
+                <GImage my-class='u-item' src={image.imgUrl} />
               </SwiperItem>
             ))}
           </Swiper>

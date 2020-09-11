@@ -1,10 +1,11 @@
 import Taro, { Component } from '@tarojs/taro';
 import PropTypes from 'prop-types';
-import { View, Image, Text } from '@tarojs/components';
+import { View, Text } from '@tarojs/components';
 import { AtSwipeAction, AtInputNumber } from 'taro-ui';
 import _ from '@/lib/lodash';
 import { getCart } from '@/actions/cart';
 import shopApi from '@/api/shop';
+import GImage from '@/components/GImage';
 import RadioIcon from '../RadioIcon';
 
 import './index.less';
@@ -101,7 +102,7 @@ class ProductItem extends Component {
               <RadioIcon selected={!!selected} />
             </View>
             <View className='u-content'>
-              <Image className='u-img' onClick={this.goProduct} src={productSku.skuImgUrl} lazyLoad webp />
+              <GImage my-class='u-img' onClick={this.goProduct} src={productSku.skuImgUrl} />
               <View className='u-info'>
                 <View className='u-top' onClick={this.goProduct}>
                   <View className='u-name'>{productSku.skuName}</View>
@@ -109,7 +110,7 @@ class ProductItem extends Component {
                 </View>
                 <View className='u-bottom'>
                   <View className='u-price text-red' onClick={this.goProduct}>
-                    <Text className="font-s-2 mr-1">¥</Text>
+                    <Text className='font-s-2 mr-1'>¥</Text>
                     <Text>{productSku.price}</Text>
                   </View>
                   <View className='u-count'>

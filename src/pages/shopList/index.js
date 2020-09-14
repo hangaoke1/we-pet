@@ -39,11 +39,14 @@ export default class ShopList extends Component {
     this.setState({
       loading: true
     });
+
     shopApi
       .queryProducts({
         pageSize,
         pageNo,
-        categoryId: this.$router.params.categoryId
+        categoryId: Number(this.$router.params.categoryId),
+        hotFlag: Number(this.$router.params.hotFlag),
+        keyword: this.$router.params.keyword
       })
       .then((res) => {
         this.setState((state) => {
@@ -54,7 +57,7 @@ export default class ShopList extends Component {
             list: [ ...state.list, ...res.items ]
           };
         });
-      });
+      }).catch(() => {});
   };
   render() {
     const { list, loading, finished } = this.state;

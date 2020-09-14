@@ -127,6 +127,18 @@ export default class Index extends Component {
     });
   };
 
+  goProductNewMore = () => {
+    Taro.navigateTo({
+      url: '/pages/shopList/index?hotFlag=1&name=新品推荐'
+    });
+  }
+
+  goProductSaleMore = () => {
+    Taro.navigateTo({
+      url: '/pages/shopList/index?hotFlag=2&name=每日折扣'
+    });
+  }
+
   goShop = () => {
     Taro.switchTab({
       url: '/pages/shop/index'
@@ -138,6 +150,12 @@ export default class Index extends Component {
       url: '/pages/subscribe/index'
     });
   };
+
+  goGrew = () => {
+    Taro.navigateTo({
+      url: '/pages/petGrew/index'
+    });
+  }
 
   todo = () => {
     Taro.showToast({
@@ -176,7 +194,7 @@ export default class Index extends Component {
               <Iconfont type='iconyuyue' size='18' color='#666666' />
               <Text style={{ marginLeft: '4rpx' }}>预约</Text>
             </View>
-            <View className='u-home__action'>
+            <View className='u-home__action' onClick={this.goGrew}>
               <Iconfont type='iconjiyang' size='18' color='#666666' />
               <Text style={{ marginLeft: '4rpx' }}>寄养</Text>
             </View>
@@ -185,7 +203,7 @@ export default class Index extends Component {
         <View className='bg-bai mt-4'>
           <View className='u-home__title'>
             <Text>每日折扣</Text>
-            <View className='u-home__subTitle'>
+            <View className='u-home__subTitle' onClick={this.goProductSaleMore}>
               <Text style={{ color: '#FF7013' }}>更多</Text>
               <Iconfont type='iconarrowright' size='18' color='#FF7013' />
             </View>
@@ -203,7 +221,7 @@ export default class Index extends Component {
         <View className='u-home__productNew mt-2'>
           <View className='u-home__title bg-bai'>
             <Text>新品推荐</Text>
-            <View className='u-home__subTitle'>
+            <View className='u-home__subTitle' onClick={this.goProductNewMore}>
               <Text style={{ color: '#FF7013' }}>更多</Text>
               <Iconfont type='iconarrowright' size='18' color='#FF7013' />
             </View>

@@ -1,4 +1,4 @@
-@import '../../styles/var.less';
+@import (reference) '../../styles/var.less';
 
 .u-remark {
   min-height: 100vh;
@@ -17,12 +17,17 @@
   left: 0;
   bottom: 0;
   width: 100%;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+  background-color: #fff;
+}
+
+.u-bottom__btn {
+  width: 100%;
   height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: constant(safe-area-inset-bottom);
-  padding-bottom: env(safe-area-inset-bottom);
   color: #fff;
   background-color: @themeColor;
 }

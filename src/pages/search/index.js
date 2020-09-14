@@ -1,62 +1,69 @@
-import Taro, { Component } from '@tarojs/taro'
-import { View } from '@tarojs/components'
-import { AtSearchBar } from 'taro-ui'
-import _ from '@/lib/lodash'
-import Iconfont from '@/components/Iconfont'
+import Taro, { Component } from '@tarojs/taro';
+import { View } from '@tarojs/components';
+import { AtSearchBar } from 'taro-ui';
+import _ from '@/lib/lodash';
+import Iconfont from '@/components/Iconfont';
 
-import './index.less'
+import './index.less';
 
-class index extends Component {
+class Search extends Component {
   config = {
     navigationBarTitleText: '商品搜索'
-  }
+  };
 
   state = {
     value: '',
     history: Taro.getStorageSync('search_history') || []
+  };
+
+  componentDidShow() {
+    this.setState({
+      history: Taro.getStorageSync('search_history') || []
+    });
   }
-
-  componentWillMount () {}
-
-  componentDidMount () {}
 
   onChange = (value) => {
     this.setState({
       value: value
-    })
-  }
+    });
+  };
 
   onConfirm = () => {
-    const keyword = this.state.value
-    this.goResult(keyword)
-  }
+    const keyword = this.state.value;
+    this.goResult(keyword);
+  };
 
   goResult = (keyword) => {
-    if (!keyword) { return }
-    let history = Taro.getStorageSync('search_history') || []
-    history = [ keyword, ...history ]
-    history = _.uniq(history)
-    Taro.setStorageSync('search_history', history)
-    Taro.setStorageSync('search_keyword', keyword)
-    if (this.$router.params.from === 'searchResult') {
-      Taro.navigateBack()
-    } else {
-      Taro.redirectTo({
-        url: '/pages/searchResult/index'
-      })
+    if (!keyword) {
+      return;
     }
-  }
+    let history = Taro.getStorageSync('search_history') || [];
+    history = [ keyword, ...history ];
+    history = _.uniq(history);
+    Taro.setStorageSync('search_history', history);
+    Taro.setStorageSync('search_keyword', keyword);
+    Taro.navigateTo({
+      url: '/pages/shopList/index?keyword=' + keyword
+    });
+    // if (this.$router.params.from === 'searchResult') {
+    //   Taro.navigateBack();
+    // } else {
+    //   Taro.redirectTo({
+    //     url: '/pages/searchResult/index'
+    //   });
+    // }
+  };
 
   clearHistory = () => {
-    Taro.setStorageSync('search_history', [])
+    Taro.setStorageSync('search_history', []);
     this.setState({
       history: []
-    })
-  }
+    });
+  };
 
-  render () {
-    const prefixCls = 'ehome-index'
-    const { history } = this.state
+  render() {
+    const prefixCls = 'ehome-index';
+    const { history } = this.state;
     return (
       <View className={prefixCls}>
         <AtSearchBar
@@ -82,8 +89,8 @@ class index extends Component {
           </View>
         </View>
       </View>
-    )
+    );
   }
 }
 
-export default index
+export default Search;

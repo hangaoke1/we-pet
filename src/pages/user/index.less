@@ -1,4 +1,4 @@
-@import '../../styles/var.less';
+@import (reference) '../../styles/var.less';
 
 .u-user {
   overflow-x: hidden;
@@ -169,12 +169,17 @@
 
 
 .u-pet {
+  box-sizing: border-box;
   width: 750px;
   padding-left: 40px;
+  overflow-x: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 
   &__add {
     width: 100px;
-    height: 114px;
+    height: 120px;
     background: #FF7013;
     box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.1);
     border-radius: 16px;

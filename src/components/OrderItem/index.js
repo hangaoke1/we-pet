@@ -1,18 +1,15 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Image } from '@tarojs/components';
+import { View, Text } from '@tarojs/components';
 import PropTypes from 'prop-types';
-import { AtButton } from 'taro-ui';
-import config from '@/config';
 import Iconfont from '@/components/Iconfont';
+import GImage from '@/components/GImage';
 import _ from '@/lib/lodash';
-import statusColor from '@/lib/statusColor';
-import statusText from '@/lib/statusText';
 import './index.less';
 
-class index extends Component {
-  componentWillMount() {}
-
-  componentDidMount() {}
+class OrderItem extends Component {
+  static options = {
+    addGlobalClass: true // 支持使用全局样式
+  };
 
   cancelOrder = (e) => {
     e.stopPropagation();
@@ -48,33 +45,18 @@ class index extends Component {
     const { orderInfo } = this.props;
     const order = _.get(orderInfo, 'order', {});
     const orderItemList = _.get(orderInfo, 'orderItemList', []);
-    const totalQuantity = orderItemList.reduce((total, item) => {
-      return total + item.quantity;
-    }, 0);
+    // const totalQuantity = orderItemList.reduce((total, item) => {
+    //   return total + item.quantity;
+    // }, 0);
 
     return (
       <View className='u-orderItem'>
-        <View className='u-header' onClick={this.goDetail}>
-          <Image className='u-logo' src={config.petAvatar} lazyLoad webp />
-          <View className='u-info'>
-            <View className='u-info__label'>商品零售 {order.orderId}</View>
-            <View className='u-info__date'>{order.createTime}</View>
-          </View>
-          <View
-            className='u-status'
-            style={{
-              color: statusColor[order.orderStatus]
-            }}
-          >
-            {statusText[order.orderStatus]}
-          </View>
-        </View>
         {orderItemList.map((item) => {
           let specs = item.productSku.specs.map((s) => s.name + '/' + s.value).join('/');
           return (
             <View className='u-product__item' key={item.id} onClick={this.goDetail}>
               <View className='u-product__img'>
-                <Image src={item.productSku.skuImgUrl} lazyLoad webp />
+                <GImage my-class='u-product__img__content' src={item.productSku.skuImgUrl} />
               </View>
               <View className='u-product__info'>
                 <View className='u-product__name'>{item.productSku.skuName}</View>
@@ -90,23 +72,29 @@ class index extends Component {
           );
         })}
         <View className='u-total' onClick={this.goDetail}>
-          共{totalQuantity}件商品 合计： ¥{order.totalFee && order.totalFee.toFixed(2)}
+          {order.discountFee && (
+            <Text className='text-hui mr-1 font-s-24'>
+              总价 ¥{order.totalFee.toFixed(2)}，优惠 ¥{order.discountFee.toFixed(2)}
+            </Text>
+          )}
+          <Text>实付 ¥ {order.paidFee && order.paidFee.toFixed(2)}</Text>
         </View>
         {order.orderStatus == 100 && (
           <View className='u-action'>
-            <AtButton className='u-action__btn' type='secondary' circle onClick={this.cancelOrder}>
+            <View className='u-action__btn u-action__btn-default mr-1' onClick={this.cancelOrder}>
               取消订单
-            </AtButton>
-            <AtButton className='u-action__btn' type='primary' circle onClick={this.repay}>
-              立即支付
-            </AtButton>
+            </View>
+            <View className='u-action__btn' onClick={this.repay}>
+              付款
+            </View>
           </View>
         )}
         {order.orderStatus == 300 && (
           <View className='u-action'>
-            <AtButton className='u-action__btn' type='primary' circle onClick={this.deliveryOrder}>
+            <View className='u-action__btn u-action__btn-default mr-1'>查看物流</View>
+            <View className='u-action__btn' onClick={this.deliveryOrder}>
               确认收货
-            </AtButton>
+            </View>
           </View>
         )}
       </View>
@@ -114,12 +102,12 @@ class index extends Component {
   }
 }
 
-index.defaultProps = {};
+OrderItem.defaultProps = {};
 
-index.propTypes = {
+OrderItem.propTypes = {
   orderInfo: PropTypes.object,
   onCancel: PropTypes.func,
   onDeliveryOrder: PropTypes.func
 };
 
-export default index;
+export default OrderItem;

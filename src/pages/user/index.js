@@ -201,6 +201,13 @@ class UserPage extends Component {
     });
   };
 
+  goPet = (item) => {
+    Taro.setStorageSync('pet_update', item);
+    Taro.navigateTo({
+      url: '/pages/petDetail/index?id=' + item.id
+    });
+  };
+
   logout = () => {
     token.clear();
     this.init();
@@ -257,14 +264,14 @@ class UserPage extends Component {
         </View>
 
         <View className='u-content'>
-          <ScrollView scrollX enhanced showScrollbar={false} className='u-pet'>
-            <View className='flex align-center py-2'>
+          <View className='u-pet'>
+            <View className='flex align-center py-2 pr-5'>
               <View className='u-pet__add flex-0 flex align-center justify-center mr-2' onClick={this.addPet}>
                 <Iconfont type='iconadd' color='#fff' size='24' />
               </View>
               {pet.list.map((p) => {
                 return (
-                  <View className='u-pet__item p-2 flex flex-0 mr-2' key={p.id}>
+                  <View className='u-pet__item p-2 flex flex-0 mr-2' key={p.id} onClick={this.goPet.bind(this, p)}>
                     <Image className='u-pet__image mr-2' src={p.avatar || config.petAvatar} />
                     <View>
                       <View className='font-s-28 mb-1'>{p.petName}</View>
@@ -281,7 +288,32 @@ class UserPage extends Component {
                 );
               })}
             </View>
-          </ScrollView>
+          </View>
+          {/* <ScrollView scrollX enhanced showScrollbar={false} className='u-pet'>
+            <View className='flex align-center py-2 pr-5'>
+              <View className='u-pet__add flex-0 flex align-center justify-center mr-2' onClick={this.addPet}>
+                <Iconfont type='iconadd' color='#fff' size='24' />
+              </View>
+              {pet.list.map((p) => {
+                return (
+                  <View className='u-pet__item p-2 flex flex-0 mr-2' key={p.id} onClick={this.goPet.bind(this, p)}>
+                    <Image className='u-pet__image mr-2' src={p.avatar || config.petAvatar} />
+                    <View>
+                      <View className='font-s-28 mb-1'>{p.petName}</View>
+                      <View className='flex align-center'>
+                        {p && p.sex == 0 ? (
+                          <Iconfont type='icongong' color='#2F6BFE' size='14' />
+                        ) : (
+                          <Iconfont type='iconmu' color='pink' size='14' />
+                        )}
+                        <Text className='text-hui font-s-24 ml-1 ellipsis-1'>{p.petBreed}</Text>
+                      </View>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          </ScrollView> */}
 
           <View className='u-tool'>
             <View className='u-action flex flex-wrap pt-5'>

@@ -9,7 +9,8 @@ import './index.less';
 // 优惠券列表
 export default class CouponList extends Component {
   config = {
-    navigationBarTitleText: '红包卡券'
+    navigationBarTitleText: '红包卡券',
+    onReachBottomDistance: 50,
   };
 
   state = {
@@ -24,7 +25,8 @@ export default class CouponList extends Component {
     this.getList();
   }
 
-  onReachBottomDistance = () => {
+  onReachBottom = () => {
+    console.log('>>> 触底')
     this.getList();
   };
 

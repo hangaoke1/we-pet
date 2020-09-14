@@ -1,5 +1,5 @@
 import Taro, { PureComponent } from '@tarojs/taro';
-import { View } from '@tarojs/components';
+import { View, Text } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import PropTypes from 'prop-types';
 
@@ -20,7 +20,10 @@ class ProductNew extends PureComponent {
   };
 
   static defaultProps = {
-    info: {}
+    info: {
+      price: 0,
+      originPrice: 0
+    }
   };
   static options = {
     addGlobalClass: true // 支持使用全局样式
@@ -69,14 +72,19 @@ class ProductNew extends PureComponent {
     return (
       <View className='u-productNew bg-bai' onClick={this.goProduct}>
         <View className='flex align-center justify-center'>
-          <GImage my-class='u-productNew__img' src={info.skuImgUrl}></GImage>
+          <GImage my-class='u-productNew__img' src={info.skuImgUrl} />
         </View>
         <View className='p-2'>
           <View className='u-productNew__name mb-1 font-s-24 ellipsis-2'>{info.skuName || '测试商品'}</View>
           <View className='flex align-center justify-between'>
             <View className='u-price'>
-              <View className='u-price__current font-s-24'>¥{info.price || '0.00'}</View>
-              {info.originPrice && <View className='u-price__origin font-s-2'>¥{info.originPrice}</View>}
+              <View className='u-price__current font-s-28'>
+                <Text className='font-s-24'>¥</Text>
+                <Text>{info.price.toFixed(2) || '0.00'}</Text>
+              </View>
+              <View className='u-price__origin font-s-2' style={{ opacity: info.originPrice ? 1 : 0 }}>
+                ¥{info.originPrice.toFixed(2)}
+              </View>
             </View>
             <View className='u-price__cart' onClick={this.addCart}>
               <Iconfont type='icongouwuche2' color='#fff' size='14' />

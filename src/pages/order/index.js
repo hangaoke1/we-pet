@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Text, ScrollView, Image } from '@tarojs/components';
+import { View, ScrollView, Image } from '@tarojs/components';
 import { AtTabs, AtButton } from 'taro-ui';
 import Iconfont from '@/components/Iconfont';
 import OrderItem from '@/components/OrderItem';

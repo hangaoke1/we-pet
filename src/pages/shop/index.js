@@ -58,7 +58,6 @@ export default class ShopIndex extends Component {
 
   state = {
     productNewList: [],
-    productNewLoading: true
   };
 
   componentDidMount() {
@@ -71,6 +70,18 @@ export default class ShopIndex extends Component {
     });
   };
 
+  goSearch = () => {
+    Taro.navigateTo({
+      url: '/pages/search/index'
+    });
+  }
+
+  goProductNewMore = () => {
+    Taro.navigateTo({
+      url: '/pages/shopList/index?hotFlag=1&name=新品推荐'
+    });
+  }
+
   getProductNew = () => {
     shopApi
       .queryProducts({
@@ -81,7 +92,6 @@ export default class ShopIndex extends Component {
       .then((res) => {
         this.setState({
           productNewList: _.get(res, 'items', []),
-          productNewLoading: false
         });
       })
       .catch((error) => {
@@ -93,7 +103,7 @@ export default class ShopIndex extends Component {
     const { productNewList } = this.state;
     return (
       <View className='u-shop'>
-        <View className='u-shop__search flex align-center p-2'>
+        <View className='u-shop__search flex align-center p-2' onClick={this.goSearch}>
           <Iconfont type='iconsousuo' size='12' color='#999' />
           <Text className='text-hui ml-2'>请输入您想搜索的商品</Text>
         </View>
@@ -113,10 +123,12 @@ export default class ShopIndex extends Component {
           })}
         </View>
 
-        <View className='mt-2'>
+        <View style={{ height: '20rpx', background: '#F4F5F6' }} />
+
+        <View>
           <View className='u-shop__title bg-bai'>
             <Text>新品推荐</Text>
-            <View className='u-shop__subTitle'>
+            <View className='u-shop__subTitle' onClick={this.goProductNewMore}>
               <Text style={{ color: '#FF7013' }}>更多</Text>
               <Iconfont type='iconarrowright' size='18' color='#FF7013' />
             </View>

@@ -1,6 +1,6 @@
 import Taro, { PureComponent } from '@tarojs/taro';
-import { View } from '@tarojs/components';
-import { connect } from "@tarojs/redux";
+import { View, Text } from '@tarojs/components';
+import { connect } from '@tarojs/redux';
 import PropTypes from 'prop-types';
 
 import { getCart } from '@/actions/cart';
@@ -22,7 +22,10 @@ class ProductSale extends PureComponent {
     info: PropTypes.object
   };
   static defaultProps = {
-    info: {}
+    info: {
+      price: 0,
+      originPrice: 0
+    }
   };
   static options = {
     addGlobalClass: true // 支持使用全局样式
@@ -71,15 +74,19 @@ class ProductSale extends PureComponent {
     return (
       <View className='u-productSale bg-bai' onClick={this.goProduct}>
         <View className='flex align-center justify-center'>
-          {/* <Image className='u-productSale__img  animated fadeIn faster delay-300ms' src={info.skuImgUrl || config.petAvatar} webp lazyLoad /> */}
-          <GImage my-class='u-productSale__img' src={info.skuImgUrl || config.petAvatar}></GImage>
+          <GImage my-class='u-productSale__img' src={info.skuImgUrl || config.petAvatar} />
         </View>
         <View className='p-2'>
-          <View className='productSale__name mb-1 font-s-24 ellipsis-2'>{info.skuName || '测试商品'}</View>
+          <View className='u-productSale__name mb-1 font-s-24 ellipsis-2'>{info.skuName || '测试商品'}</View>
           <View className='flex align-center justify-between'>
             <View className='u-price'>
-              <View className='u-price__current font-s-24'>¥{info.price || '0.00'}</View>
-              {info.originPrice && <View className='u-price__origin font-s-2'>¥{info.originPrice}</View>}
+              <View className='u-price__current font-s-28'>
+                <Text className='font-s-24'>¥</Text>
+                <Text>{info.price.toFixed(2) || '0.00'}</Text>
+              </View>
+              <View className='u-price__origin font-s-2' style={{ opacity: info.originPrice ? 1 : 0 }}>
+                ¥{info.originPrice.toFixed(2)}
+              </View>
             </View>
             <View className='u-price__cart' onClick={this.addCart}>
               <Iconfont type='icongouwuche2' color='#fff' size='14' />

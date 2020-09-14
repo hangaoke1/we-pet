@@ -1,26 +1,33 @@
 import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { View, Image, Text } from '@tarojs/components';
-import { AtButton } from 'taro-ui';
+import { View, Text } from '@tarojs/components';
+import { AtButton, AtFloatLayout } from 'taro-ui';
 import Iconfont from '@/components/Iconfont';
+import GImage from '@/components/GImage';
+import Coupon from '@/components/Coupon';
 import { getAddress } from '@/actions/address';
 import shopApi from '@/api/shop';
 import requestPaymentPro from '@/lib/pay';
+import _ from '@/lib/lodash';
+import { getCoupons } from '@/actions/user';
 
 import './index.less';
 
-@connect(({ address }) => ({
-  address
+@connect(({ address, user }) => ({
+  address,
+  user
 }))
 class ConfirmOrder extends Component {
   config = {
-    navigationBarTitleText: '确认订单',
+    navigationBarTitleText: '订单确认',
     backgroundColor: '#f3f4f8'
   };
 
   state = {
     remark: '',
-    orderProduct: []
+    orderProduct: [],
+    showCoupons: false,
+    coupon: null
   };
 
   componentWillMount() {
@@ -30,9 +37,37 @@ class ConfirmOrder extends Component {
     });
   }
 
+  componentDidShow() {
+    if (this.props.user.isLogin) {
+      getCoupons();
+    }
+  }
+
   componentDidMount() {
     getAddress();
   }
+
+  // 显示可用优惠券
+  hanldeCouponsClick = () => {
+    this.setState({
+      showCoupons: true
+    });
+  };
+
+  handleClose = () => {
+    this.setState({
+      showCoupons: false
+    });
+  };
+
+  handleChooseCoupon = (c) => {
+    const { coupon } = this.state;
+    const isEuqal = c.couponsId === _.get(coupon, 'couponsId');
+    this.setState({
+      coupon: isEuqal ? null : c,
+      showCoupons: false
+    });
+  };
 
   goAddress = () => {
     Taro.navigateTo({
@@ -60,8 +95,9 @@ class ConfirmOrder extends Component {
   };
 
   handleSubmit = () => {
+    // TODO: 添加优惠券
     const { address } = this.props;
-    const { orderProduct } = this.state;
+    const { orderProduct, coupon } = this.state;
     const params = {
       skuInfoList: orderProduct.map((item) => {
         return {
@@ -71,7 +107,8 @@ class ConfirmOrder extends Component {
       }),
       addressId: address.id,
       buyerMemo: this.state.remark,
-      cartFlag: this.$router.params.cartFlag
+      cartFlag: this.$router.params.cartFlag,
+      couponId: _.get(coupon, 'couponsId')
     };
     Taro.showLoading();
     shopApi
@@ -83,7 +120,6 @@ class ConfirmOrder extends Component {
               title: '支付成功',
               icon: 'none'
             });
-            // TODO: 跳转到支付成功订单页面
             Taro.redirectTo({
               url: '/pages/order/index?current=2'
             });
@@ -110,15 +146,26 @@ class ConfirmOrder extends Component {
   };
 
   render() {
-    const { remark, orderProduct } = this.state;
-    const { address } = this.props;
+    const { address, user } = this.props;
+    const { coupons = [] } = user;
+    const { remark, orderProduct, showCoupons, coupon } = this.state;
     const chooseAddress = address.list.filter((item) => item.id === address.id)[0];
-    const totalPrice = orderProduct.reduce((total, item) => {
+
+    let totalPriceOri = orderProduct.reduce((total, item) => {
       return total + Number(item.price);
     }, 0);
+    let totalPrice = totalPriceOri;
     const totalCount = orderProduct.reduce((total, item) => {
       return total + Number(item.quantity);
     }, 0);
+
+    const enableCoupons = coupons.filter((v) => v.required <= totalPriceOri);
+    const couponsLen = enableCoupons.length;
+
+    if (coupon) {
+      // TODO: 减去优惠券价值
+      totalPrice = totalPriceOri - _.get(coupon, 'value', 0);
+    }
 
     return (
       <View className='u-confirmOrder'>
@@ -143,44 +190,70 @@ class ConfirmOrder extends Component {
         </View>
 
         <View className='u-product'>
-          <View className='u-product__label'>商品信息</View>
-
-          {orderProduct.map((item) => {
-            let specs = item.productSku.specs.map((s) => s.name + '/' + s.value).join('/');
-            return (
-              <View className='u-product__item' key={item.id}>
-                <View className='u-product__img'>
-                  <Image src={item.productSku.skuImgUrl} lazyLoad webp />
-                </View>
-                <View className='u-product__info'>
-                  <View className='u-product__name'>{item.productSku.skuName}</View>
-                  <View className='u-product__specs'>{specs}</View>
-                </View>
-                <View className='u-product__right'>
-                  <View className='u-product__price'>¥ {item.productSku.price}</View>
-                  <View className='u-product__count'>
-                    <Iconfont type='iconshanchu' size='14' color='#ccc' /> {item.quantity}
+          <View className='border-bottom-divider'>
+            {orderProduct.map((item) => {
+              let specs = item.productSku.specs.map((s) => s.name + '/' + s.value).join('/');
+              return (
+                <View className='u-product__item' key={item.id}>
+                  <View className='u-product__img'>
+                    <GImage my-class='u-product__img-content' src={item.productSku.skuImgUrl} />
+                  </View>
+                  <View className='u-product__info'>
+                    <View className='u-product__name'>{item.productSku.skuName}</View>
+                    <View className='u-product__specs mt-1 text-hui'>规格：{specs || '无'}</View>
+                    <View className='u-product__price mt-1 text-red'>¥ {item.productSku.price}</View>
+                  </View>
+                  <View className='u-product__right'>
+                    <View className='u-product__count'>
+                      <View>
+                        <Iconfont type='iconshanchu' size='14' color='#333' />
+                      </View>
+                      <Text>{item.quantity}</Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            );
-          })}
-
-          <View className='u-item'>
-            <View className='u-label' style={{ fontSize: '12px', fontWeight: 'normal' }}>
-              配送方式 <Text style={{ color: '#ccc' }}>物流配送</Text>
-            </View>
-            <View className='u-val'>快递 免邮</View>
+              );
+            })}
           </View>
-        </View>
 
-        <View className='u-pay'>
-          <View className='u-item'>
-            <View className='u-label'>支付方式</View>
-            <View className='u-val'>
-              <Iconfont type='iconweixinzhifu' color='#84c83e' size='16' />
-              <View style={{ marginLeft: '2px' }}>微信支付</View>
+          <View className='border-bottom-divider'>
+            <View className='u-item'>
+              <View className='u-label'>商品价格</View>
+              <View className='u-val text-red'>¥ {totalPriceOri.toFixed(2)}</View>
             </View>
+            <View className='u-item'>
+              <View className='u-label'>运费</View>
+              <View className='u-val text-red'>¥ 0.00</View>
+            </View>
+            <View className='u-item'>
+              <View className='u-label'>优惠券</View>
+              <View className='u-val'>
+                <View className='flex align-center'>
+                  {couponsLen > 0 ? (
+                    <View className='flex-0 flex align-center' onClick={this.hanldeCouponsClick}>
+                      {coupon ? (
+                        <Text className='mr-1 text-red'>-¥ {_.get(coupon, 'value', 0)}</Text>
+                      ) : (
+                        <Text className='mr-1' style={{ color: '#C00C00' }}>
+                          {couponsLen}张可用
+                        </Text>
+                      )}
+
+                      {!coupon && <Iconfont type='icondian' color='#C00C00' size='8' />}
+                      <Iconfont type='iconarrowright' color='#272727' size='16' />
+                    </View>
+                  ) : (
+                    <View className='flex-0 flex align-center'>
+                      <Text className='mr-1 text-hui'>暂无可用优惠券</Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+            </View>
+          </View>
+
+          <View className='text-right py-3 font-s-28'>
+            共<Text className='text-red'>{totalCount}</Text>件商品，共计：<Text className='text-red'>¥ {totalPrice.toFixed(2)}</Text>
           </View>
         </View>
 
@@ -199,14 +272,28 @@ class ConfirmOrder extends Component {
         </View>
 
         <View className='u-bottom'>
-          <View className='u-bottom__info'>
-            <Text className='u-bottom__count'>共{totalCount}件，</Text>
-            <Text className='u-bottom__price'>合计：¥ {totalPrice.toFixed(2)}</Text>
+          <View className='u-bottom__info font-s-24'>
+            <Text>
+              实付金额：<Text className='text-red'>¥ {totalPrice.toFixed(2)}</Text>
+            </Text>
           </View>
           <AtButton className='u-action__btn' type='primary' circle={false} full onClick={this.handleSubmit}>
-            提交订单
+            去付款
           </AtButton>
         </View>
+
+        <AtFloatLayout isOpened={showCoupons} title='选择优惠券' onClose={this.handleClose} scrollY>
+          {enableCoupons.map((c) => {
+            return (
+              <Coupon
+                key={c.couponsId}
+                info={c}
+                isSelect={c.couponsId === _.get(coupon, 'couponsId')}
+                onClick={this.handleChooseCoupon.bind(this, c)}
+              />
+            );
+          })}
+        </AtFloatLayout>
       </View>
     );
   }

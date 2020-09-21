@@ -1,8 +1,10 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, Text, Image } from '@tarojs/components';
 import _ from '@/lib/lodash';
+import shopApi from '@/api/shop';
 import Iconfont from '@/components/Iconfont';
 import OrderProduct from '@/components/OrderProduct';
+import GImage from '@/components/GImage';
 
 import './index.less';
 
@@ -15,17 +17,40 @@ const refundText = {
   6: '退货成功'
 };
 
+const warrantyTypeRange = [ '仅退款', '退货退款' ];
+// const reasonRange = [ '不想要了', '与图片不符' ];
+const statusRange = [ '未收到货', '已收到货' ];
+
 class RefundOrderDetail extends Component {
   config = {
     navigationBarTitleText: '退款详情'
   };
 
   state = {
-    orderInfo: Taro.getStorageSync('order_detail')
+    orderInfo: Taro.getStorageSync('order_detail'),
+    refundInfo: ''
   };
 
-  // TODO: 获取售后详情
-  getRefundInfo = () => {};
+  componentWillMount() {
+    this.getRefundInfo();
+  }
+
+  getRefundInfo = () => {
+    const { orderInfo } = this.state;
+    const order = _.get(orderInfo, 'order');
+    const orderId = order.orderId;
+    shopApi
+      .queryOrderById({
+        orderId
+      })
+      .then((res) => {
+        const refundInfo = res.orderWarrantyLogEntity;
+        this.setState({
+          refundInfo
+        });
+      })
+      .catch(() => {});
+  };
 
   goProduct = (item) => {
     Taro.navigateTo({
@@ -49,7 +74,7 @@ class RefundOrderDetail extends Component {
   };
 
   render() {
-    const { orderInfo } = this.state;
+    const { orderInfo, refundInfo } = this.state;
     const order = _.get(orderInfo, 'order');
     const userAddress = _.get(orderInfo, 'userAddress');
     const orderItemList = _.get(orderInfo, 'orderItemList');
@@ -118,6 +143,45 @@ class RefundOrderDetail extends Component {
             <Text className='text-red'>¥{order.paidFee.toFixed(2)}</Text>
           </View>
         </View>
+
+        {refundInfo && (
+          <View className='u-order'>
+            <View className='border-bottom-divider pb-2 font-s-32 px-2'>退款信息</View>
+            <View className='u-order__item px-2'>
+              <View className='u-order__tag'>退款类型：</View>
+              <View className='u-order__val'>{warrantyTypeRange[refundInfo.warrantyType]}</View>
+            </View>
+            <View className='u-order__item px-2'>
+              <View className='u-order__tag'>货物状态：</View>
+              <View className='u-order__val'>{statusRange[refundInfo.productState]}</View>
+            </View>
+            {refundInfo.warrantyType == '1' && (
+              <View className='u-order__item px-2'>
+                <View className='u-order__tag'>退货单号：</View>
+                <View className='u-order__val'>{refundInfo.logisticsNo}</View>
+              </View>
+            )}
+            <View className='u-order__item px-2'>
+              <View className='u-order__tag'>退款原因：</View>
+              <View className='u-order__val'>{refundInfo.reason}</View>
+            </View>
+            <View className='u-order__item px-2'>
+              <View className='u-order__tag'>退款说明：</View>
+              <View className='u-order__val'>{refundInfo.remark}</View>
+            </View>
+            {refundInfo.imgArray && (
+              <View className='flex flex-wrap px-2 mt-2'>
+                {JSON.parse(refundInfo.imgArray).map((img) => {
+                  return (
+                    <View key={img.url} className='u-img__wrap'>
+                      <GImage my-class='u-img' src={img.url} />
+                    </View>
+                  );
+                })}
+              </View>
+            )}
+          </View>
+        )}
 
         <View className='u-order'>
           <View className='border-bottom-divider pb-2 font-s-32 px-2'>订单信息</View>

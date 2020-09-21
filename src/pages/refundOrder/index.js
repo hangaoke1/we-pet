@@ -71,12 +71,9 @@ class RefundOrder extends Component {
     });
 
     const currentMap = {
-      0: 1,
-      1: 2,
-      2: 3,
-      3: 4,
-      4: 5,
-      5: 6
+      0: '1,4',
+      1: '2,5',
+      2: '3,6'
     };
     const params = {
       pageNo,
@@ -137,14 +134,10 @@ class RefundOrder extends Component {
           <View className='u-tab'>
             <AtTabs
               current={this.state.current}
-              scroll
               tabList={[
                 { title: '退款中' },
                 { title: '退款关闭' },
-                { title: '退款成功' },
-                { title: '退货中' },
-                { title: '退货关闭' },
-                { title: '退货成功' }
+                { title: '退款成功' }
               ]}
               onClick={this.onChangeTab}
             />
@@ -176,9 +169,6 @@ class RefundOrder extends Component {
               <RefundOrderItem
                 key={item.id}
                 orderInfo={item}
-                onCancel={this.onCancel}
-                onRepay={this.onRepay}
-                onDeliveryOrder={this.onDeliveryOrder}
               />
             ))}
           {list.length > 0 && <GLoadMore loading={loading} finished={finished} onClick={this.loadmore} />}

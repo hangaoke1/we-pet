@@ -6,6 +6,15 @@ import GImage from '@/components/GImage';
 import _ from '@/lib/lodash';
 import './index.less';
 
+// 0或者不传表示 无售后，1退款中，2退款关闭，3退款成功，4退货中，5退货关闭，6退货成功
+const wText = {
+  1: '退款中',
+  2: '退款关闭',
+  3: '退款成功',
+  4: '退货中',
+  5: '退货关闭',
+  6: '退货成功'
+};
 class RefundOrderItem extends Component {
   static options = {
     addGlobalClass: true // 支持使用全局样式
@@ -53,6 +62,8 @@ class RefundOrderItem extends Component {
           )}
           <Text>实付 ¥ {order.paidFee && order.paidFee.toFixed(2)}</Text>
         </View>
+
+        <View className='pt-2 text-right main-color font-s-26'>{wText[order.warrantyStatus]}</View>
       </View>
     );
   }
@@ -61,7 +72,7 @@ class RefundOrderItem extends Component {
 RefundOrderItem.defaultProps = {};
 
 RefundOrderItem.propTypes = {
-  orderInfo: PropTypes.object,
+  orderInfo: PropTypes.object
 };
 
 export default RefundOrderItem;

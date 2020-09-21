@@ -58,7 +58,7 @@ export default class Refund extends Component {
         Taro.showToast({
           title: '请输入退货单号',
           icon: 'none'
-        })
+        });
         return;
       }
     }
@@ -66,23 +66,30 @@ export default class Refund extends Component {
       Taro.showToast({
         title: '请选择货物状态',
         icon: 'none'
-      })
+      });
       return;
     }
     if (params.reason === '') {
       Taro.showToast({
         title: '请选择退货原因',
         icon: 'none'
-      })
+      });
       return;
     }
-    shopApi.refund(params).then(() => {
-      // TODO: 跳转到对应界面
-      Taro.showToast({
-        title: '提交成功',
-        icon: 'success'
+    shopApi
+      .refund(params)
+      .then(() => {
+        Taro.showToast({
+          title: '提交成功',
+          icon: 'success'
+        });
+        setTimeout(() => {
+          Taro.redirectTo({
+            url: '/pages/refundOrder/index?current=0'
+          });
+        }, 1000);
       })
-    }).catch(() => {})
+      .catch(() => {});
   };
 
   goProduct = (item) => {

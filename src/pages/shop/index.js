@@ -4,7 +4,9 @@ import { View, Text, Image } from '@tarojs/components';
 import _ from '@/lib/lodash';
 import Iconfont from '@/components/Iconfont';
 import ProductNew from '@/components/ProductNew';
+import GImage from '@/components/GImage';
 import shopApi from '@/api/shop';
+import homeApi from '@/api/home';
 
 import './index.less';
 
@@ -58,10 +60,23 @@ export default class ShopIndex extends Component {
 
   state = {
     productNewList: [],
+    banners: [],
   };
 
   componentDidMount() {
     this.getProductNew();
+    homeApi
+      .queryBanners({
+        bannerType: 1 // 0首页 1商城
+      })
+      .then((res) => {
+        this.setState({
+          banners: res || []
+        });
+      })
+      .catch((error) => {
+        console.log('>>> queryBanners异常', error);
+      });
   }
 
   handleCateClick = (item) => {
@@ -100,7 +115,7 @@ export default class ShopIndex extends Component {
   };
 
   render() {
-    const { productNewList } = this.state;
+    const { productNewList, banners } = this.state;
     return (
       <View className='u-shop'>
         <View className='u-shop__search flex align-center p-2' onClick={this.goSearch}>
@@ -108,7 +123,7 @@ export default class ShopIndex extends Component {
           <Text className='text-hui ml-2'>请输入您想搜索的商品</Text>
         </View>
         <View className='u-shop__banner'>
-          <Image src='//img.alicdn.com/tps/i4/TB16ZRFg6MZ7e4jSZFOSut7epXa.jpg' />
+          <GImage src={banners[0] && banners[0].imgUrl}></GImage>
         </View>
         <View className='u-shop__category'>
           {cateList.map((item) => {

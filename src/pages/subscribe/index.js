@@ -249,7 +249,7 @@ class SubScribe extends Component {
                   {item.id == petId && (
                     <View className='u-pet__selected'>
                       {/* <Iconfont type='iconchenggong' color='#FF7013' size='16' /> */}
-                      <Image className='u-pet__selected-icon' src={require('../../images/selected.png')}></Image>
+                      <Image className='u-pet__selected-icon' src={require('../../images/selected.png')} />
                     </View>
                   )}
                 </View>
@@ -290,7 +290,11 @@ class SubScribe extends Component {
           </View>
 
           <View className='u-time font-s-28'>
-            <View className='u-serviceNames'>已选择：{service.map((v) => v.name).join('+')}</View>
+            {service.length > 0 ? (
+              <View className='u-serviceNames'>已选择：{service.map((v) => v.name).join('+')}</View>
+            ) : (
+              <View className='u-serviceNames text-hui'>请选择服务项目</View>
+            )}
             <View className='u-time__rule'>
               <View className='font-s-28'>预约时间</View>
               <View className='font-s-24 text-hui'>预约规则</View>

@@ -10,7 +10,7 @@ import './index.less';
 export default class CouponList extends Component {
   config = {
     navigationBarTitleText: '红包卡券',
-    onReachBottomDistance: 50,
+    onReachBottomDistance: 50
   };
 
   state = {
@@ -26,7 +26,6 @@ export default class CouponList extends Component {
   }
 
   onReachBottom = () => {
-    console.log('>>> 触底')
     this.getList();
   };
 
@@ -63,15 +62,11 @@ export default class CouponList extends Component {
   };
 
   render() {
-    const { list, loading, finished } = this.state;
+    const { list = [], loading, finished } = this.state;
     return (
       <View className='u-couponList'>
         {list.map((info) => <Coupon key={info.id} info={info} onClick={this.handleClick} />)}
-        <GLoadMore
-          onClick={this.getList}
-          finished={finished}
-          loading={loading}
-        />
+        <GLoadMore onClick={this.getList} finished={finished} loading={loading} />
       </View>
     );
   }

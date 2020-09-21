@@ -62,7 +62,7 @@ class ConfirmOrder extends Component {
 
   handleChooseCoupon = (c) => {
     const { coupon } = this.state;
-    const isEuqal = c.couponsId === _.get(coupon, 'couponsId');
+    const isEuqal = c.id === _.get(coupon, 'id');
     this.setState({
       coupon: isEuqal ? null : c,
       showCoupons: false
@@ -95,7 +95,6 @@ class ConfirmOrder extends Component {
   };
 
   handleSubmit = () => {
-    // TODO: 添加优惠券
     const { address } = this.props;
     const { orderProduct, coupon } = this.state;
     const params = {
@@ -108,7 +107,7 @@ class ConfirmOrder extends Component {
       addressId: address.id,
       buyerMemo: this.state.remark,
       cartFlag: this.$router.params.cartFlag,
-      couponId: _.get(coupon, 'couponsId')
+      couponId: _.get(coupon, 'id')
     };
     Taro.showLoading();
     shopApi
@@ -286,9 +285,9 @@ class ConfirmOrder extends Component {
           {enableCoupons.map((c) => {
             return (
               <Coupon
-                key={c.couponsId}
+                key={c.id}
                 info={c}
-                isSelect={c.couponsId === _.get(coupon, 'couponsId')}
+                isSelect={c.id === _.get(coupon, 'id')}
                 onClick={this.handleChooseCoupon.bind(this, c)}
               />
             );

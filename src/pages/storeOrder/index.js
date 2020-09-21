@@ -146,6 +146,12 @@ class StoreOrder extends Component {
       .catch(() => {});
   };
 
+  goShop = () => {
+    Taro.redirectTo({
+      url: '/pages/subscribe/index'
+    });
+  };
+
   render() {
     const { list, loading, finished } = this.state;
 
@@ -164,11 +170,8 @@ class StoreOrder extends Component {
           {list.length === 0 &&
           finished && (
             <View className='u-empty'>
-              <Image className='u-empty__img' src={config.petAvatar} />
-              <View className='u-empty__label'>您还没有相关的订单</View>
-              <AtButton className='u-empty__btn' type='primary' circle onClick={this.goShop}>
-                去预约
-              </AtButton>
+              <Image className='u-empty__img' src={require('../../images/order_empty.png')} />
+              <View className='u-empty__label'>您还没有订单哦，<Text className='main-color' onClick={this.goShop}>去预约</Text></View>
             </View>
           )}
           {list.length === 0 &&

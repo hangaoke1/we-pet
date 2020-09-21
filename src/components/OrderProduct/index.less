@@ -1,4 +1,5 @@
 .u-product {
+  color: #333;
   &__label {
     font-size: 24px;
   }
@@ -17,7 +18,7 @@
     border-radius: 5px;
     overflow: hidden;
 
-    Image {
+    &-content {
       width: 100px;
       height: 100px;
     }
@@ -29,12 +30,11 @@
 
   &__name {
     font-size: 28px;
-    line-height: 1;
   }
 
   &__specs {
     margin-top: 10px;
-    font-size: 26px;
+    font-size: 24px;
     color: #ccc;
   }
 
@@ -47,14 +47,5 @@
   &__price {
     line-height: 1;
     font-size: 28px;
-  }
-
-  &__count {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-top: 10px;
-    font-size: 26px;
-    color: #ccc;
   }
 }

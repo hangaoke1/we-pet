@@ -313,7 +313,7 @@ class Product extends Component {
           <View className='u-header'>
             <View className='u-icon' onClick={this.goCart}>
               <Iconfont type='icongouwuche1' color='#fff' size='18' />
-              <View className='u-count__icon'>{cart.totalCount}</View>
+              <View className='u-count__icon bg-red2'>{cart.totalCount}</View>
             </View>
             <View className='u-icon' onClick={this.setShowQuick}>
               <Iconfont type='icongengduo' color='#fff' size='18' />
@@ -377,33 +377,33 @@ class Product extends Component {
         </View>
 
         <View className='u-footer'>
-          <View className='u-footer__item' onClick={this.goShop}>
-            <Iconfont type='iconicon_shangcheng-xian' size='18' />
-            <View className='u-footer__name'>商城</View>
+          <View className='flex align-center'>
+            <View className='u-footer__item' onClick={this.goCart}>
+              <Iconfont type='iconicon_gouwuche-xian' color='#707070' size='26' />
+              <View className='u-footer__item-count bg-red2'>{cart.totalCount}</View>
+            </View>
           </View>
-          <View className='u-footer__item' onClick={this.goCart}>
-            <Iconfont type='iconicon_gouwuche-xian' size='18' />
-            <View className='u-footer__name'>购物车</View>
+          <View className='flex align-center'>
+            <AtButton
+              loading={buyLoading}
+              onClick={this.handleSpecsOpen.bind(this, false)}
+              className='u-footer__btn u-footer__btn__add'
+              disabled={choosedSku.stock === 0}
+              type='primary'
+              circle
+            >
+              加入购物车
+            </AtButton>
+            <AtButton
+              className='u-footer__btn'
+              disabled={choosedSku.stock === 0}
+              type='primary'
+              circle
+              onClick={this.handleSpecsOpen.bind(this, true)}
+            >
+              立即购买
+            </AtButton>
           </View>
-          <AtButton
-            loading={buyLoading}
-            onClick={this.handleSpecsOpen.bind(this, false)}
-            className='u-footer__btn'
-            disabled={choosedSku.stock === 0}
-            type='primary'
-            circle
-          >
-            加入购物车
-          </AtButton>
-          <AtButton
-            className='u-footer__btn'
-            disabled={choosedSku.stock === 0}
-            type='secondary'
-            circle
-            onClick={this.handleSpecsOpen.bind(this, true)}
-          >
-            立即购买
-          </AtButton>
         </View>
 
         <View

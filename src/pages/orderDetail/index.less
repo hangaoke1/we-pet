@@ -1,38 +1,36 @@
 @import (reference) '../../styles/var.less';
 
 .u-orderDetail {
-  padding: 0 30px;
   min-height: 100vh;
-  background-color: #f3f4f8;
+  padding-bottom: 140px;
+  background-color: #F2F3F4;
   color: #333;
 
   .u-status {
-    padding: 20px 0;
-    font-size: 36px;
-  }
-
-  .u-address {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     box-sizing: border-box;
     padding: 20px;
+    width: 750px;
+    height: 220px;
+    background-color: #FFE6B1;
+    font-size: 32px;
+    &__icon {
+      width: 262px;
+      height: 112px;
+    }
+  }
+
+  .u-address, .u-logistics {
+    box-sizing: border-box;
+    padding: 40px 20px;
     width: 100%;
     display: flex;
     align-items: center;
     border-radius: 5px;
     background-color: #fff;
     font-size: 28px;
-
-    &__icon {
-      margin-right: 20px;
-    }
-
-    &__mobile {
-      margin-left: 10px;
-      color: #ccc;
-    }
-
-    &__location {
-      margin-top: 20px;
-    }
   }
 
   .u-sku {
@@ -42,11 +40,6 @@
     margin-top: 30px;
     border-radius: 5px;
     background-color: #fff;
-
-    &__label {
-      font-size: 30px;
-      color: #000;
-    }
 
     &__pay {
       display: flex;
@@ -74,12 +67,8 @@
     margin-top: 30px;
     border-radius: 5px;
     background-color: #fff;
-    font-size: 28px;
-
-    &__label {
-      font-size: 30px;
-      color: #000;
-    }
+    font-size: 24px;
+    color: #333;
 
     &__item {
       display: flex;
@@ -90,13 +79,11 @@
 
     &__tag {
       flex: 0 0 auto;
-      color: #666;
     }
 
     &__val {
-      margin-left: 40px;
+      margin-left: 60px;
       flex: 1;
-      color: #333;
     }
 
     .u-copy {
@@ -139,7 +126,7 @@
     padding-bottom: calc(20px + constant(safe-area-inset-bottom));
     padding-bottom: calc(20px + env(safe-area-inset-bottom));
     &__btn {
-      width: 150px;
+      width: 180px;
       height: 60px;
       line-height: 60px;
       font-size: 28px;

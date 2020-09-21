@@ -32,6 +32,26 @@ const config = {
       {
         from: "src/components/vant/dist/checkbox/index.wxs",
         to: "dist/components/vant/dist/checkbox/index.wxs"
+      },
+      {
+        from: "src/components/vant/dist/calendar/index.wxs",
+        to: "dist/components/vant/dist/calendar/index.wxs"
+      },
+      {
+        from: "src/components/vant/dist/calendar/calendar.wxml",
+        to: "dist/components/vant/dist/calendar/calendar.wxml"
+      },
+      {
+        from: "src/components/vant/dist/calendar/utils.js",
+        to: "dist/components/vant/dist/calendar/utils.js"
+      },
+      {
+        from: "src/components/vant/dist/calendar/utils.wxs",
+        to: "dist/components/vant/dist/calendar/utils.wxs"
+      },
+      {
+        from: "src/components/vant/dist/calendar/components/month/index.wxs",
+        to: "dist/components/vant/dist/calendar/components/month/index.wxs"
       }
     ],
     options: {}

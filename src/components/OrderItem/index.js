@@ -45,9 +45,6 @@ class OrderItem extends Component {
     const { orderInfo } = this.props;
     const order = _.get(orderInfo, 'order', {});
     const orderItemList = _.get(orderInfo, 'orderItemList', []);
-    // const totalQuantity = orderItemList.reduce((total, item) => {
-    //   return total + item.quantity;
-    // }, 0);
 
     return (
       <View className='u-orderItem'>

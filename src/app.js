@@ -37,7 +37,9 @@ class App extends Component {
   config = {
     pages: [
       "pages/index/index",
+      "pages/refund/index",
       "pages/petGrew/index",
+      "pages/orderDetail/index",
       "pages/user/index",
       "pages/order/index",
       "pages/confirmOrder/index",
@@ -58,7 +60,6 @@ class App extends Component {
       "pages/searchOrder/index",
       "pages/searchResult/index",
       "pages/search/index",
-      "pages/orderDetail/index",
       "pages/petBreed/index",
       "pages/addressUpdate/index",
       "pages/addressAdd/index",

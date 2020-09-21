@@ -75,7 +75,7 @@ class SubscribeConfirm extends Component {
       reserveTime,
       mobile,
       payType,
-      couponId: _.get(coupon, 'couponsId')
+      couponId: _.get(coupon, 'id')
     };
     Taro.showLoading();
     storeApi
@@ -144,7 +144,7 @@ class SubscribeConfirm extends Component {
 
   handleChooseCoupon = (c) => {
     const { coupon } = this.state;
-    const isEuqal = c.couponsId === _.get(coupon, 'couponsId');
+    const isEuqal = c.id === _.get(coupon, 'id');
     this.setState({
       coupon: isEuqal ? null : c,
       showCoupons: false
@@ -282,9 +282,9 @@ class SubscribeConfirm extends Component {
           {enableCoupons.map((c) => {
             return (
               <Coupon
-                key={c.couponsId}
+                key={c.id}
                 info={c}
-                isSelect={c.couponsId === _.get(coupon, 'couponsId')}
+                isSelect={c.id === _.get(coupon, 'id')}
                 onClick={this.handleChooseCoupon.bind(this, c)}
               />
             );

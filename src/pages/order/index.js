@@ -1,17 +1,16 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, ScrollView, Image } from '@tarojs/components';
-import { AtTabs, AtButton } from 'taro-ui';
+import { View, ScrollView, Image, Text } from '@tarojs/components';
+import { AtTabs } from 'taro-ui';
 import Iconfont from '@/components/Iconfont';
 import OrderItem from '@/components/OrderItem';
 import GLoading from '@/components/GLoading';
 import GLoadMore from '@/components/GLoadMore';
 import shopApi from '@/api/shop';
 import requestPaymentPro from '@/lib/pay';
-import config from '@/config';
 
 import './index.less';
 
-class index extends Component {
+class OrderPage extends Component {
   config = {
     navigationBarTitleText: '我的订单'
   };
@@ -83,7 +82,8 @@ class index extends Component {
     const params = {
       pageNo,
       pageSize,
-      orderStatus: currentMap[current]
+      orderStatus: currentMap[current],
+      warrantyStatus: 0
     };
     shopApi
       .queryOrder(params)
@@ -255,11 +255,12 @@ class index extends Component {
           {list.length === 0 &&
           finished && (
             <View className='u-empty'>
-              <Image className='u-empty__img' src={config.petAvatar} />
-              <View className='u-empty__label'>您还没有相关的订单</View>
-              <AtButton className='u-empty__btn' type='primary' circle onClick={this.goShop}>
-                去逛逛
-              </AtButton>
+              <Image className='u-empty__img' src={require('../../images/order_empty.png')} />
+              <View className='u-empty__label'>
+                您还没有订单哦，<Text className='main-color' onClick={this.goShop}>
+                  去逛逛
+                </Text>
+              </View>
             </View>
           )}
           {list.length === 0 &&
@@ -285,4 +286,4 @@ class index extends Component {
   }
 }
 
-export default index;
+export default OrderPage;

@@ -382,6 +382,18 @@
 	background-color: #FFFFFF;
 }
 
+.bg-red {
+	background-color: #FF656A;
+}
+
+.bg-red2 {
+	background-color: #f5222d;
+}
+
+.bg-red3 {
+	background-color: #C00C00;
+}
+
 .text-center {
 	text-align: center;
 }

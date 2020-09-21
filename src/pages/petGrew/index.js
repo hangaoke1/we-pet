@@ -14,15 +14,16 @@ import grewApi from '@/api/grew';
 
 import './index.less';
 
-const today = dayjs().format('YYYY-MM-DD');
-
 @connect(({ pet, washService }) => ({
   pet,
   washService
 }))
 class PetGrew extends Component {
   config = {
-    navigationBarTitleText: '寄养'
+    navigationBarTitleText: '寄养',
+    usingComponents: {
+      'van-calendar': '../../components/vant/dist/calendar/index'
+    }
   };
 
   state = {
@@ -30,7 +31,8 @@ class PetGrew extends Component {
     banners: [],
     startDate: undefined,
     endDate: undefined,
-    showModal: false
+    showModal: false,
+    showCalendar: false
   };
 
   componentWillMount() {
@@ -126,10 +128,24 @@ class PetGrew extends Component {
     });
   };
 
+  handleConfirm = (res) => {
+    this.setState({
+      startDate: dayjs(res.detail[0]).format('YYYY-MM-DD'),
+      endDate: dayjs(res.detail[1]).format('YYYY-MM-DD'),
+      showCalendar: false
+    });
+  };
+
+  handleClose = () => {
+    this.setState({
+      showCalendar: false
+    });
+  };
+
   render() {
     const { pet } = this.props;
     const petList = _.get(pet, 'list', []);
-    const { banners, petId, startDate, endDate, showModal } = this.state;
+    const { banners, petId, startDate, endDate, showModal, showCalendar } = this.state;
 
     const isActive = petId && startDate && endDate;
     return (
@@ -166,17 +182,14 @@ class PetGrew extends Component {
         </View>
 
         <View className='u-item px-2 mt-2 flex align-center justify-between'>
-          <View>寄养开始时间</View>
-          <Picker start={today} mode='date' onChange={this.onStartDateChange}>
-            <View>{startDate ? <Text>{startDate}</Text> : <Text className='text-hui'>开始时间</Text>}</View>
-          </Picker>
-        </View>
-
-        <View className='u-item px-2 mt-2 flex align-center justify-between'>
-          <View>寄养结束时间</View>
-          <Picker start={today} mode='date' onChange={this.onEndDateChange}>
-            <View>{endDate ? <Text>{endDate}</Text> : <Text className='text-hui'>结束时间</Text>}</View>
-          </Picker>
+          <View>寄养时间</View>
+          <View
+            onClick={() => {
+              this.setState({ showCalendar: true });
+            }}
+          >
+            {startDate ? startDate + ' 至 ' + endDate : <Text className='text-hui'>请选择时间</Text>}
+          </View>
         </View>
 
         <View className='u-item px-2 mt-2 flex align-center'>
@@ -187,6 +200,8 @@ class PetGrew extends Component {
         <View className={classnames('u-submit', isActive ? '' : 'u-submit__disable')} onClick={this.handleSubmit}>
           提交
         </View>
+
+        <van-calendar type='range' show={showCalendar} onConfirm={this.handleConfirm} onClose={this.handleClose} />
 
         <AtModal isOpened={showModal}>
           <AtModalHeader>寄养成功</AtModalHeader>

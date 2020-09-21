@@ -70,7 +70,9 @@ export default class Index extends Component {
   init = () => {
     getCart();
     homeApi
-      .queryBanners()
+      .queryBanners({
+        bannerType: 0 // 0首页 1商城
+      })
       .then((res) => {
         this.setState({
           banners: res || []

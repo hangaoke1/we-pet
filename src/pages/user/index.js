@@ -1,7 +1,7 @@
 /* eslint-disable import/no-commonjs */
 import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { View, Image, OpenData, Text, Button, ScrollView } from '@tarojs/components';
+import { View, Image, OpenData, Text, Button } from '@tarojs/components';
 import Iconfont from '@/components/Iconfont';
 import gotoLogin from '@/lib/gotoLogin';
 import { getUserInfo } from '@/actions/user';
@@ -181,9 +181,15 @@ class UserPage extends Component {
     if (!this.props.user.isLogin) {
       return gotoLogin();
     }
-    Taro.navigateTo({
-      url: '/pages/order/index?current=' + current
-    });
+    if (current === 4) {
+      Taro.navigateTo({
+        url: '/pages/refundOrder/index?current=' + 0
+      });
+    } else {
+      Taro.navigateTo({
+        url: '/pages/order/index?current=' + current
+      });
+    }
   };
 
   goStoreOrder = () => {
@@ -289,31 +295,6 @@ class UserPage extends Component {
               })}
             </View>
           </View>
-          {/* <ScrollView scrollX enhanced showScrollbar={false} className='u-pet'>
-            <View className='flex align-center py-2 pr-5'>
-              <View className='u-pet__add flex-0 flex align-center justify-center mr-2' onClick={this.addPet}>
-                <Iconfont type='iconadd' color='#fff' size='24' />
-              </View>
-              {pet.list.map((p) => {
-                return (
-                  <View className='u-pet__item p-2 flex flex-0 mr-2' key={p.id} onClick={this.goPet.bind(this, p)}>
-                    <Image className='u-pet__image mr-2' src={p.avatar || config.petAvatar} />
-                    <View>
-                      <View className='font-s-28 mb-1'>{p.petName}</View>
-                      <View className='flex align-center'>
-                        {p && p.sex == 0 ? (
-                          <Iconfont type='icongong' color='#2F6BFE' size='14' />
-                        ) : (
-                          <Iconfont type='iconmu' color='pink' size='14' />
-                        )}
-                        <Text className='text-hui font-s-24 ml-1 ellipsis-1'>{p.petBreed}</Text>
-                      </View>
-                    </View>
-                  </View>
-                );
-              })}
-            </View>
-          </ScrollView> */}
 
           <View className='u-tool'>
             <View className='u-action flex flex-wrap pt-5'>

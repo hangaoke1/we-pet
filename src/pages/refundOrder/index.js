@@ -2,17 +2,16 @@ import Taro, { Component } from '@tarojs/taro';
 import { View, ScrollView, Image, Text } from '@tarojs/components';
 import { AtTabs } from 'taro-ui';
 import Iconfont from '@/components/Iconfont';
-import OrderItem from '@/components/OrderItem';
+import RefundOrderItem from '@/components/RefundOrderItem';
 import GLoading from '@/components/GLoading';
 import GLoadMore from '@/components/GLoadMore';
 import shopApi from '@/api/shop';
-import requestPaymentPro from '@/lib/pay';
 
 import './index.less';
 
-class OrderPage extends Component {
+class RefundOrder extends Component {
   config = {
-    navigationBarTitleText: '我的订单'
+    navigationBarTitleText: '退款/售后'
   };
 
   state = {
@@ -70,20 +69,20 @@ class OrderPage extends Component {
     this.setState({
       loading: true
     });
-    // 订单状态，为空表示查询全部。100待付款，200待发货，300待收货，400已完成，900已取消
+
     const currentMap = {
-      0: '',
-      1: 100,
-      2: 200,
-      3: 300,
-      4: 400,
-      5: 900
+      0: 1,
+      1: 2,
+      2: 3,
+      3: 4,
+      4: 5,
+      5: 6
     };
     const params = {
       pageNo,
       pageSize,
-      orderStatus: currentMap[current],
-      warrantyStatus: 0
+      orderStatus: '',
+      warrantyStatus: currentMap[current]
     };
     shopApi
       .queryOrder(params)
@@ -117,103 +116,6 @@ class OrderPage extends Component {
     );
   };
 
-  // 取消订单
-  onCancel = (orderId) => {
-    Taro.showModal({
-      title: '提示',
-      content: '是否确定取消订单',
-      confirmColor: '#FF7013'
-    })
-      .then((res) => {
-        if (res.confirm) {
-          Taro.showLoading();
-          shopApi
-            .cancelOrder({
-              orderId
-            })
-            .then(() => {
-              Taro.hideLoading();
-              this.refresh();
-            })
-            .catch((err) => {
-              Taro.hideLoading();
-              Taro.showToast({
-                title: err.message,
-                icon: 'none'
-              });
-            });
-        }
-      })
-      .catch(() => {});
-  };
-
-  // 重新支付
-  onRepay = (orderId) => {
-    Taro.showLoading();
-    shopApi
-      .againPayOrder({
-        orderId
-      })
-      .then((res) => {
-        requestPaymentPro(res)
-          .then(() => {
-            Taro.showToast({
-              title: '支付成功',
-              icon: 'none'
-            });
-            Taro.redirectTo({
-              url: '/pages/order/index?current=2'
-            });
-          })
-          .catch((err) => {
-            console.error(err);
-            Taro.showToast({
-              title: '支付失败',
-              icon: 'none'
-            });
-          });
-      })
-      .catch((err) => {
-        Taro.hideLoading();
-        Taro.showToast({
-          title: err.message,
-          icon: 'none'
-        });
-      });
-  };
-
-  // 确认收货
-  onDeliveryOrder = (orderId) => {
-    Taro.showModal({
-      title: '提示',
-      content: '您已收到商品？',
-      confirmColor: '#FF7013'
-    })
-      .then((res) => {
-        if (res.confirm) {
-          Taro.showLoading();
-          shopApi
-            .deliveryOrder({
-              orderId
-            })
-            .then(() => {
-              Taro.hideLoading();
-              Taro.redirectTo({
-                url: '/pages/order/index?current=4'
-              });
-            })
-            .catch((err) => {
-              Taro.hideLoading();
-              Taro.showToast({
-                title: err.message,
-                icon: 'none'
-              });
-            });
-        }
-      })
-      .catch(() => {});
-  };
-
   goShop = () => {
     Taro.switchTab({
       url: '/pages/shop/index'
@@ -237,12 +139,12 @@ class OrderPage extends Component {
               current={this.state.current}
               scroll
               tabList={[
-                { title: '全部' },
-                { title: '待付款' },
-                { title: '待发货' },
-                { title: '待收货' },
-                { title: '已完成' },
-                { title: '已取消' }
+                { title: '退款中' },
+                { title: '退款关闭' },
+                { title: '退款成功' },
+                { title: '退货中' },
+                { title: '退货关闭' },
+                { title: '退货成功' }
               ]}
               onClick={this.onChangeTab}
             />
@@ -271,7 +173,7 @@ class OrderPage extends Component {
           )}
           {list.length > 0 &&
             list.map((item) => (
-              <OrderItem
+              <RefundOrderItem
                 key={item.id}
                 orderInfo={item}
                 onCancel={this.onCancel}
@@ -286,4 +188,4 @@ class OrderPage extends Component {
   }
 }
 
-export default OrderPage;
+export default RefundOrder;

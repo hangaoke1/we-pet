@@ -38,6 +38,8 @@ class App extends Component {
     pages: [
       "pages/index/index",
       "pages/refund/index",
+      "pages/refundOrder/index",
+      "pages/refundOrderDetail/index",
       "pages/petGrew/index",
       "pages/orderDetail/index",
       "pages/user/index",

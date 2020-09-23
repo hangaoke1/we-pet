@@ -1,0 +1,80 @@
+@import (reference) '../../styles/var.less';
+
+.u-pet {
+  min-height: 100vh;
+  background-color: #f3f4f8;
+  overflow: hidden;
+}
+
+.u-item__wrap {
+  width: 710px;
+  margin-top: 20px;
+  margin-left: 20px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0);
+  border-radius: 16px;
+}
+
+.u-item {
+  display: flex;
+  padding: 30px;
+
+  &__img {
+    flex: 0 0 auto;
+    width: 96px;
+    height: 96px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 96px;
+  }
+
+  &__name {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 34px;
+    color: #333;
+  }
+
+  &__sex {
+    margin-left: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    background-color: #ff7875; // 40a9ff ff7875
+    border-radius: 35px;
+  }
+
+  &__desc {
+    margin-bottom: 10px;
+    font-size: 28px;
+    color: #ccc;
+  }
+  .u-petBreed {
+    box-sizing: border-box;
+    color: #FF7013;
+    padding: 0 20px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 20px;
+    font-size: 20px;
+    background:rgba(255,112,19,0.1);
+  }
+}
+
+.u-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 670px;
+  height: 68px;
+  background: rgba(255, 112, 19, 1);
+  border-radius: 34px;
+  margin: 0 auto;
+  margin-top: 40px;
+  font-size: 28px;
+  color: #fff;
+}

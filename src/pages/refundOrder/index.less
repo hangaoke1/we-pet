@@ -1,0 +1,55 @@
+@import (reference) '../../styles/var.less';
+
+.u-order {
+  height: 100vh;
+  background-color: #f3f4f8;
+  display: flex;
+  flex-direction: column;
+}
+
+.u-list {
+  flex: 1;
+}
+
+.u-header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+}
+
+.u-tab {
+  flex: 1;
+  overflow: hidden;
+}
+
+.u-search {
+  flex: 0 0 auto;
+  padding: 0 20px;
+}
+
+.u-empty {
+  padding-top: 260px;
+
+  &__img {
+    display: block;
+    width: 680px;
+    height: 256px;
+    border-radius: 300px;
+    margin: 0 auto;
+  }
+
+  &__label {
+    margin-top: 94px;
+    text-align: center;
+    font-size: 32px;
+    color: #999;
+  }
+}
+
+.u-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

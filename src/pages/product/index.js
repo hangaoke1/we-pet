@@ -37,6 +37,7 @@ class Product extends Component {
   state = {
     info: '',
     productBannerImgList: [],
+    productDetailImgList: [],
     productSkuList: [],
     currentSku: {},
     choose: [],
@@ -59,9 +60,10 @@ class Product extends Component {
       })
       .then((res) => {
         Taro.hideLoading();
-        let productBannerImgList = _.get(res, 'productBannerImgList', []);
         const productSkuList = _.get(res, 'productSkuList', []);
         const currentSku = productSkuList.filter((sku) => sku.id == skuId)[0] || defaultSku;
+
+        let productBannerImgList = _.get(res, 'productBannerImgList', []);
         if (productBannerImgList.length === 0) {
           productBannerImgList = productSkuList.map((item) => {
             return {
@@ -70,10 +72,13 @@ class Product extends Component {
             };
           });
         }
+
+        let productDetailImgList = _.get(res, 'productDetailImgList', []);
         this.setState({
           info: _.cloneDeep(res),
           choose: _.cloneDeep(_.get(currentSku, 'specs', [])),
           productBannerImgList,
+          productDetailImgList,
           productSkuList,
           currentSku
         });
@@ -268,6 +273,7 @@ class Product extends Component {
       showQuick,
       choose,
       productBannerImgList,
+      productDetailImgList,
       currentSku,
       buyLoading,
       buyNow
@@ -281,6 +287,7 @@ class Product extends Component {
 
     return (
       <View className={prefixCls}>
+        {/* 商品头部 */}
         {showQuick ? (
           <View className='u-quick'>
             <View className='u-quick__content'>
@@ -321,6 +328,7 @@ class Product extends Component {
           </View>
         )}
 
+        {/* 商品轮播 */}
         <View className='u-swiper__wrap'>
           <Swiper
             className='u-swiper'
@@ -338,6 +346,7 @@ class Product extends Component {
           </Swiper>
         </View>
 
+        {/* 商品基本信息 */}
         <View className='u-price'>
           <View className='u-price__left'>
             <Text className='u-price__unit'>¥</Text>
@@ -350,11 +359,10 @@ class Product extends Component {
             <Iconfont type='iconiconfontfenxiang' color='#ccc' size='20' />
           </View>
         </View>
-
         <View className='u-name'>{choosedSku.skuName || product.name}</View>
-
         <View className='u-desc'>{product.detail}</View>
-
+        
+        {/* 商品参数 */}
         <View className='u-params'>
           <View className='u-params__item' onClick={this.handleParamsOpen}>
             <View className='u-params__label'>参数</View>
@@ -372,10 +380,23 @@ class Product extends Component {
           </View>
         </View>
 
+        {/* 商品详情图片 */}
         <View className='u-imgs'>
-          {currentSku && <GImg maxWidth={750} force mode='aspectFit' src={currentSku.skuDetailImgUrl} />}
+          {productDetailImgList.map((v) => {
+            return <GImg key={v.id} maxWidth={750} force mode='aspectFit' src={v.imgUrl} />;
+          })}
+
+          {!productDetailImgList.length && (
+            <View className='u-empty'>
+              <Image src={require('../../images/product_empty.png')} />{' '}
+              <View className='text-center font-s-32'>
+                <Text className='text-hui'>暂无详情</Text>
+              </View>
+            </View>
+          )}
         </View>
 
+        {/* 底部操作 */}
         <View className='u-footer'>
           <View className='flex align-center'>
             <View className='u-footer__item' onClick={this.goCart}>

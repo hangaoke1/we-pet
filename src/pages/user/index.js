@@ -317,13 +317,13 @@ class UserPage extends Component {
             </View>
           </View>
 
-          {/* {isLogin && (
+          {isLogin && (
             <View className='u-logout'>
               <Button type='warn' onClick={this.logout}>
                 退出登录
               </Button>
             </View>
-          )} */}
+          )}
         </View>
 
         <AtModal isOpened={showModal}>

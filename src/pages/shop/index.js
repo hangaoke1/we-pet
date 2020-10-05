@@ -1,6 +1,6 @@
 /* eslint-disable import/no-commonjs */
 import Taro, { Component } from '@tarojs/taro';
-import { View, Text, Image } from '@tarojs/components';
+import { View, Text, Image, Swiper, SwiperItem } from '@tarojs/components';
 import _ from '@/lib/lodash';
 import Iconfont from '@/components/Iconfont';
 import ProductNew from '@/components/ProductNew';
@@ -60,7 +60,7 @@ export default class ShopIndex extends Component {
 
   state = {
     productNewList: [],
-    banners: [],
+    banners: []
   };
 
   componentDidMount() {
@@ -89,13 +89,13 @@ export default class ShopIndex extends Component {
     Taro.navigateTo({
       url: '/pages/search/index'
     });
-  }
+  };
 
   goProductNewMore = () => {
     Taro.navigateTo({
       url: '/pages/shopList/index?hotFlag=1&name=新品推荐'
     });
-  }
+  };
 
   getProductNew = () => {
     shopApi
@@ -106,7 +106,7 @@ export default class ShopIndex extends Component {
       })
       .then((res) => {
         this.setState({
-          productNewList: _.get(res, 'items', []),
+          productNewList: _.get(res, 'items', [])
         });
       })
       .catch((error) => {
@@ -122,9 +122,22 @@ export default class ShopIndex extends Component {
           <Iconfont type='iconsousuo' size='12' color='#999' />
           <Text className='text-hui ml-2'>请输入您想搜索的商品</Text>
         </View>
-        <View className='u-shop__banner'>
-          <GImage src={banners[0] && banners[0].imgUrl}></GImage>
-        </View>
+
+        <Swiper
+          className='u-shop__banner'
+          indicatorColor='#999'
+          indicatorActiveColor='#333'
+          circular
+          indicatorDots
+          autoplay
+        >
+          {banners.map((banner) => (
+            <SwiperItem key={banner.id}>
+              <GImage my-class='u-shop__banner' src={banner.imgUrl} />
+            </SwiperItem>
+          ))}
+        </Swiper>
+
         <View className='u-shop__category'>
           {cateList.map((item) => {
             return (

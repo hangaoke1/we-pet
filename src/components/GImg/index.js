@@ -2,7 +2,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { Image } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-
+import _ from '@/lib/lodash';
 import './index.less';
 
 class GImg extends Component {
@@ -52,9 +52,10 @@ class GImg extends Component {
   }
 
   render() {
-    const { src, mode, radius, className } = this.props;
+    let { src, mode, radius, className } = this.props;
     const { width, height, loaded } = this.state;
     const classStr = classnames('u-gimg', className);
+    src = _.url2Webp(src);
 
     return (
       <Image

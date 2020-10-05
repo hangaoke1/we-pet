@@ -4,6 +4,7 @@ import { Image } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import config from '@/config';
+import _ from '@/lib/lodash';
 
 import './index.less';
 
@@ -45,9 +46,10 @@ class GImage extends Component {
   }
 
   render() {
-    const { className, src, mode } = this.props;
+    let { className, src, mode } = this.props;
     const { loaded, errorImg } = this.state;
     const classStr = classnames('my-class g-image', loaded ? 'g-image__loaded' : '', className);
+    src = _.url2Webp(src);
 
     return (
       <Image

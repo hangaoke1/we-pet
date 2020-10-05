@@ -2,9 +2,10 @@
 import Taro, { Component } from '@tarojs/taro';
 import _ from '@/lib/lodash';
 
-import { View, Text } from '@tarojs/components';
+import { View, Text, Swiper, SwiperItem } from '@tarojs/components';
 import Iconfont from '@/components/Iconfont';
 import Divider from '@/components/Divider';
+import GImage from '@/components/GImage';
 import homeApi from '@/api/home';
 import shopApi from '@/api/shop';
 import { getCart } from '@/actions/cart';
@@ -133,13 +134,13 @@ export default class Index extends Component {
     Taro.navigateTo({
       url: '/pages/shopList/index?hotFlag=1&name=新品推荐'
     });
-  }
+  };
 
   goProductSaleMore = () => {
     Taro.navigateTo({
       url: '/pages/shopList/index?hotFlag=2&name=每日折扣'
     });
-  }
+  };
 
   goShop = () => {
     Taro.switchTab({
@@ -157,7 +158,7 @@ export default class Index extends Component {
     Taro.navigateTo({
       url: '/pages/petGrew/index'
     });
-  }
+  };
 
   todo = () => {
     Taro.showToast({
@@ -179,13 +180,14 @@ export default class Index extends Component {
     const { banners, productNewList, productSaleList } = this.state;
     return (
       <View className='u-home'>
-        <van-image
-          custom-class='u-banner animated fadeIn faster delay-300ms'
-          fit='fill'
-          src={banners[0].imgUrl}
-          lazyLoad
-          webp
-        />
+        <Swiper className='u-banner' circular autoplay>
+          {banners.map((banner) => (
+            <SwiperItem key={banner.id}>
+              <GImage my-class='u-banner' src={banner.imgUrl} />
+            </SwiperItem>
+          ))}
+        </Swiper>
+
         <View className='u-info'>
           <StoreInfo />
           <View className='px-2 pt-1'>

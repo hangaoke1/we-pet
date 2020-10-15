@@ -285,7 +285,7 @@ class UserPage extends Component {
                     <View>
                       <View className='font-s-28 mb-1 flex align-center justify-between'>
                         <Text>{p.petName}</Text>
-                        {pet.placed === 1 && <View className='u-pet__placed'>寄养中</View>}
+                        {p.placed === 1 && <View className='u-pet__placed'>寄养中</View>}
                       </View>
                       <View className='flex align-center'>
                         {p && p.sex == 0 ? (

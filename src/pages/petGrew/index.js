@@ -28,6 +28,7 @@ class PetGrew extends Component {
 
   state = {
     petId: '',
+    petItem: null,
     banners: [],
     startDate: undefined,
     endDate: undefined,
@@ -52,7 +53,8 @@ class PetGrew extends Component {
     getPet().then(() => {
       if (!this.state.petId) {
         this.setState({
-          petId: _.get(this.props, 'pet.list[0].id', '')
+          petId: _.get(this.props, 'pet.list[0].id', ''),
+          petItem: _.get(this.props, 'pet.list[0]')
         });
       }
     });
@@ -64,9 +66,10 @@ class PetGrew extends Component {
     });
   };
 
-  selectedPet = (id) => {
+  selectedPet = (petItem) => {
     this.setState({
-      petId: id
+      petId: petItem.id,
+      petItem
     });
   };
 
@@ -92,7 +95,7 @@ class PetGrew extends Component {
   };
 
   handleSubmit = () => {
-    const { startDate, endDate, petId, remark } = this.state;
+    const { startDate, endDate, petId, petItem, remark } = this.state;
     if (!petId) {
       return Taro.showToast({ title: '请选择宠物', icon: 'none' });
     }
@@ -108,10 +111,12 @@ class PetGrew extends Component {
     if (dayjs(endDate).valueOf() - dayjs(startDate).valueOf() < 24 * 3600 * 1000) {
       return Taro.showToast({ title: '寄养时间最短选择1天', icon: 'none' });
     }
+
     const params = {
       petId: petId,
+      petType: petItem.petType,
       startTime: startDate + ' 00:00:00',
-      endTime: endDate + ' 23:59:59',
+      endTime: endDate + ' 23:59:00',
       remark: remark
     };
 
@@ -159,7 +164,7 @@ class PetGrew extends Component {
         <View className='u-pet'>
           <View className='u-pet__list'>
             {petList.map((item) => (
-              <View className='u-pet__item' key={item.id} onClick={this.selectedPet.bind(this, item.id)}>
+              <View className='u-pet__item' key={item.id} onClick={this.selectedPet.bind(this, item)}>
                 <View className='u-pet__avatar'>
                   <GImage my-class='u-pet__img' src={item.avatar} />
                   {item.id == petId && (

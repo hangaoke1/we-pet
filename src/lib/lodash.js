@@ -10,7 +10,7 @@ export default {
   uniq,
   // 图片格式化webp
   url2Webp: (url) => {
-    if (!url) { return url }
+    if (!url || url.indexOf('http') === -1) { return url }
     if (url.indexOf('imageView2/format/webp') > -1) {
       return url;
     }

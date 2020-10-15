@@ -28,15 +28,12 @@ class App extends Component {
       });
   }
 
-  componentDidShow() {}
-
-  componentDidHide() {}
-
   componentDidCatchError() {}
 
   config = {
     pages: [
       "pages/index/index",
+      "pages/petGrew/list",
       "pages/orderTrack/index",
       "pages/refund/index",
       "pages/refundOrder/index",

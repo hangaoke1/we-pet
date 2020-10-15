@@ -1,6 +1,6 @@
 /* eslint-disable taro/no-spread-in-props */
 import Taro, { Component } from '@tarojs/taro';
-import { Image } from '@tarojs/components';
+import { View, Image } from '@tarojs/components';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import config from '@/config';
@@ -11,7 +11,10 @@ import './index.less';
 class GImage extends Component {
   static propTypes = {
     src: PropTypes.string,
-    errorSrc: PropTypes.string
+    errorSrc: PropTypes.string,
+    fade: PropTypes.bool,
+    showLoading: PropTypes.bool,
+    showError: PropTypes.bool,
   };
 
   static defaultProps = {};
@@ -21,20 +24,24 @@ class GImage extends Component {
   };
 
   state = {
-    loaded: false,
-    errorImg: ''
+    loading: true,
+    isError: false,
+    opacity: 0,
+    transition: 'opacity 0.3s ease-in-out'
   };
 
   handleError() {
     this.setState({
-      loaded: true,
-      errorImg: this.props.errorSrc || config.petAvatar
+      loading: false,
+      isError: true
     });
   }
 
   handleLoad(event) {
     this.setState({
-      loaded: true
+      loading: false,
+      isError: false,
+      opacity: 1
     });
     if (this.props.onLoad) {
       this.props.onLoad(event);
@@ -46,22 +53,41 @@ class GImage extends Component {
   }
 
   render() {
-    let { className, src, mode } = this.props;
-    const { loaded, errorImg } = this.state;
-    const classStr = classnames('my-class g-image', loaded ? 'g-image__loaded' : '', className);
+    let { src, mode, showLoading = true, showError = true, fade = true } = this.props;
+    const { opacity, loading, isError, transition } = this.state;
+    const classStr = classnames('my-class g-image');
+    src = src || config.petAvatar;
     src = _.url2Webp(src);
 
+    const style = {
+      opacity,
+      transition
+    };
+
+    const imageStyle = {
+      opacity: isError || loading ? 0 : 1
+    };
+
     return (
-      <Image
-        className={classStr}
-        src={errorImg || src}
-        lazyLoad
-        webp
-        mode={mode}
-        onLoad={this.handleLoad}
-        onError={this.handleError}
-        onClick={this.handleClick}
-      />
+      <View className={classStr} style={fade ? style : {}}>
+        {!isError && (
+          <Image
+            className='g-image__image'
+            src={src}
+            style={imageStyle}
+            lazyLoad
+            webp
+            mode={mode}
+            onLoad={this.handleLoad}
+            onError={this.handleError}
+            onClick={this.handleClick}
+          />
+        )}
+
+        {showLoading && loading && <View className='g-image__loading'>加载中</View>}
+
+        {showError && isError && !loading && <View className='g-image__error'>加载失败</View>}
+      </View>
     );
   }
 }

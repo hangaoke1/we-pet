@@ -78,7 +78,7 @@ export default class OrderTrack extends Component {
               </View>
             </View>
             {steps.length ? (
-              <van-steps direction='vertical' steps={steps} active={0} />
+              <van-steps activeIcon="location" activeColor="#FF7013" direction='vertical' steps={steps} active={0} />
             ) : (
               <View className='u-empty'>
                 <Image src={require('../../images/cart_empty.png')} />

@@ -9,6 +9,8 @@ const api = {
 }
 
 export default {
-  // 查询地址
+  // 寄养
   doGrew: param => api.post('/pet/grew', param),
+  // 获取寄养列表
+  queryGrew: param => api.post('/pet/queryGrew', param),
 };

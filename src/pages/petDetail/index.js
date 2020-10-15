@@ -128,7 +128,8 @@ class PetDetail extends Component {
         if (res.tapIndex === 0) {
           Taro.chooseImage({
             count: 1,
-            sourceType: [ 'camera' ]
+            sourceType: [ 'camera' ],
+            sizeType: [ 'compressed' ]
           }).then((res) => {
             uploadFile(res.tempFilePaths[0]).then((data) => {
               console.log('>>> 文件地址', data);
@@ -145,7 +146,8 @@ class PetDetail extends Component {
         if (res.tapIndex === 1) {
           Taro.chooseImage({
             count: 1,
-            sourceType: [ 'album' ]
+            sourceType: [ 'album' ],
+            sizeType: [ 'compressed' ]
           }).then((res) => {
             uploadFile(res.tempFilePaths[0]).then((data) => {
               this.setState((state) => {

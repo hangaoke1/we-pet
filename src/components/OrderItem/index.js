@@ -41,6 +41,12 @@ class OrderItem extends Component {
     });
   };
 
+  navTo = (url) => {
+    Taro.navigateTo({
+      url
+    });
+  };
+
   render() {
     const { orderInfo } = this.props;
     const order = _.get(orderInfo, 'order', {});
@@ -88,7 +94,12 @@ class OrderItem extends Component {
         )}
         {order.orderStatus == 300 && (
           <View className='u-action'>
-            <View className='u-action__btn u-action__btn-default mr-1'>查看物流</View>
+            <View
+              className='u-action__btn u-action__btn-default mr-1'
+              onClick={this.navTo.bind(this, `/pages/orderTrack/index?deliveryNo=${order.logisticsNo}`)}
+            >
+              查看物流
+            </View>
             <View className='u-action__btn' onClick={this.deliveryOrder}>
               确认收货
             </View>

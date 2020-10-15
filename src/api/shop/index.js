@@ -36,9 +36,11 @@ export default {
   // 重新支付
   againPayOrder: (params) => api.post('/pet/againPayOrder', params),
   // 确认收货
-  deliveryOrder: (params) => api.post('/pet/deliveryOrder', params),
+  deliveryOrder: (params) => api.get('/pet/deliveryOrder', params),
   // 退货
   refund: (params) => api.post('/pet/applyRefund', params),
   // 查询完整订单
-  queryOrderById: (params) => api.get('/pet/queryOrderById', params)
+  queryOrderById: (params) => api.get('/pet/queryOrderById', params),
+  // 物流查询
+  queryLogistics: (params) => api.get('/pet/queryLogistics', params),
 };

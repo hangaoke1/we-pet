@@ -1,7 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
 import { View, Text, Image } from '@tarojs/components';
 import statusText from '@/lib/statusText';
-import statusColor from '@/lib/statusColor';
 import _ from '@/lib/lodash';
 import Iconfont from '@/components/Iconfont';
 import OrderProduct from '@/components/OrderProduct';
@@ -17,7 +16,8 @@ class OrderDetail extends Component {
   };
 
   state = {
-    orderInfo: Taro.getStorageSync('order_detail')
+    orderInfo: Taro.getStorageSync('order_detail'),
+    steps: []
   };
 
   goProduct = (item) => {
@@ -26,12 +26,36 @@ class OrderDetail extends Component {
     });
   };
 
-  doCopy = () => {
+  componentDidMount() {
     const { orderInfo } = this.state;
     const order = _.get(orderInfo, 'order');
-    const orderId = order.orderId;
+    // 存在物流单号
+    if (order.logisticsNo) {
+      this.queryLogistics(order.logisticsNo);
+    }
+  }
+
+  queryLogistics(deliveryNo) {
+    Taro.showLoading();
+    shopApi
+      .queryLogistics({
+        deliveryNo
+      })
+      .then((res) => {
+        this.setState({
+          ...res,
+          steps: res.list.map((v) => ({ text: v.status, desc: v.time }))
+        });
+        Taro.hideLoading();
+      })
+      .catch(() => {
+        Taro.hideLoading();
+      });
+  }
+
+  doCopy = (text) => {
     Taro.setClipboardData({
-      data: orderId,
+      data: text,
       success: () => {
         Taro.showToast({
           title: '订单已复制',
@@ -155,30 +179,48 @@ class OrderDetail extends Component {
     });
   };
 
+  navTo = (url) => {
+    Taro.navigateTo({
+      url
+    });
+  };
+
   render() {
-    const { orderInfo } = this.state;
+    const { orderInfo, steps } = this.state;
     const order = _.get(orderInfo, 'order');
     const userAddress = _.get(orderInfo, 'userAddress');
     const orderItemList = _.get(orderInfo, 'orderItemList');
+
     return orderInfo ? (
       <View className='u-orderDetail'>
         <View
           className='u-status'
           style={{
-            color: statusColor[order.orderStatus]
+            color: '#FF7013'
           }}
         >
           <Text>{statusText[order.orderStatus]}</Text>
-          <Image className='u-status__icon' src={require('../../images/order_header.png')}></Image>
+          <Image className='u-status__icon' src={require('../../images/order_header.png')} />
         </View>
 
-        <View className='u-logistics border-bottom-divider'>
-          <View className='mr-5'>
+        <View
+          className='u-logistics border-bottom-divider'
+          onClick={this.navTo.bind(this, `/pages/orderTrack/index?deliveryNo=${order.logisticsNo}`)}
+        >
+          <View className='mr-5 flex-0'>
             <Iconfont size='20' type='iconfajian' color='#000' />
           </View>
-          <View>
-            <Text className='mr-3 ellipsis-2'>商家配送</Text>
+          <View className='flex-1'>
+            {order.logisticsNo ? (
+              <View>
+                <View className='mr-3 ellipsis-2'>{_.get(steps, '[0].text', '暂无物流动态')}</View>
+                <View className='text-hui font-s-24 mt-1'>{_.get(steps, '[0].desc')}</View>
+              </View>
+            ) : (
+              <Text className='mr-3 ellipsis-2'>商家配送</Text>
+            )}
           </View>
+          <Iconfont type='iconarrowright' size='20' color='#333' />
         </View>
 
         <View className='u-address'>
@@ -231,7 +273,7 @@ class OrderDetail extends Component {
           <View className='u-order__item px-2'>
             <View className='u-order__tag'>订单编号：</View>
             <View className='u-order__val'>{order.orderId}</View>
-            <View className='u-copy' onClick={this.doCopy}>
+            <View className='u-copy' onClick={this.doCopy.bind(this, order.orderId)}>
               复制
             </View>
           </View>

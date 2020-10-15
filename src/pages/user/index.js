@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 /* eslint-disable import/no-commonjs */
 import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
@@ -108,18 +109,20 @@ class UserPage extends Component {
     shopApi
       .queryOrderCount()
       .then((res) => {
-        const { tobePaidCount, tobeShippedCount, deliveryCount } = res;
+        const { tobePaidCount, tobeShippedCount, deliveryCount, warrantyCount } = res;
         this.setState({
           tobePaidCount,
           tobeShippedCount,
-          deliveryCount
+          deliveryCount,
+          warrantyCount
         });
       })
       .catch(() => {
         this.setState({
           tobePaidCount: 0,
           tobeShippedCount: 0,
-          deliveryCount: 0
+          deliveryCount: 0,
+          warrantyCount: 0
         });
       });
   };
@@ -222,7 +225,7 @@ class UserPage extends Component {
   render() {
     const prefixCls = 'u-user';
     const { user, pet } = this.props;
-    const { showModal, tobePaidCount, tobeShippedCount, deliveryCount, storeOrderCount } = this.state;
+    const { showModal, tobePaidCount, tobeShippedCount, deliveryCount, warrantyCount } = this.state;
     const isLogin = user.isLogin;
     const userInfo = user.userInfo;
     return (
@@ -258,7 +261,7 @@ class UserPage extends Component {
               <View className='u-order__item' onClick={this.goOrder.bind(this, 4)}>
                 <Image src={require('../../images/user/d.png')} />
                 <View className='u-order__name'>退款/售后</View>
-                {deliveryCount && <View className='u-order__count'>{deliveryCount}</View>}
+                {warrantyCount && <View className='u-order__count'>{warrantyCount}</View>}
               </View>
             </View>
 

@@ -15,9 +15,12 @@ class GImage extends Component {
     fade: PropTypes.bool,
     showLoading: PropTypes.bool,
     showError: PropTypes.bool,
+    mode: PropTypes.string
   };
 
-  static defaultProps = {};
+  static defaultProps = {
+    mode: 'cover'
+  };
 
   static options = {
     addGlobalClass: true // 支持使用全局样式

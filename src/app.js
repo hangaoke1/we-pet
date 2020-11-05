@@ -18,6 +18,12 @@ import "./styles/base.css";
 const store = configStore();
 class App extends Component {
   componentDidMount() {
+    Taro.loadFontFace({
+      global: true,
+      family: 'NumberFont',
+      source: 'url("https://hgkcdn.oss-cn-shanghai.aliyuncs.com/test/NumberMedium.2736700f.ttf")',
+      success: console.log
+    })
     // 小程序系统session检测
     Taro.checkSession()
       .then(() => {
@@ -33,6 +39,8 @@ class App extends Component {
   config = {
     pages: [
       "pages/index/index",
+      "pages/shopCenter/index",
+      "pages/subscribe/index",
       "pages/petGrew/list",
       "pages/orderTrack/index",
       "pages/refund/index",
@@ -53,7 +61,6 @@ class App extends Component {
       "pages/petRecord/index",
       "pages/pet/index",
       "pages/petDetail/index",
-      "pages/subscribe/index",
       "pages/allService/index",
       "pages/device/index",
       "pages/searchOrderResult/index",
@@ -66,7 +73,7 @@ class App extends Component {
       "pages/address/index",
       "pages/login/index",
       "pages/test/index",
-      "pages/webview/index",
+      "pages/cameraView/index",
       "pages/remark/index"
     ],
     plugins: {},

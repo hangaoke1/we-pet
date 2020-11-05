@@ -43,9 +43,10 @@ const actionList = [
   }
 ];
 
-@connect(({ user, pet }) => ({
+@connect(({ user, pet, store }) => ({
   user,
-  pet
+  pet,
+  store
 }))
 class UserPage extends Component {
   config = {
@@ -169,8 +170,9 @@ class UserPage extends Component {
     this.setState({
       showModal: false
     });
+    const { store } = this.props;
     setTimeout(() => {
-      makePhoneCall(config.tel);
+      makePhoneCall(store.currentStore.mobile);
     }, 300);
   };
 
@@ -224,7 +226,7 @@ class UserPage extends Component {
 
   render() {
     const prefixCls = 'u-user';
-    const { user, pet } = this.props;
+    const { user, pet, store } = this.props;
     const { showModal, tobePaidCount, tobeShippedCount, deliveryCount, warrantyCount } = this.state;
     const isLogin = user.isLogin;
     const userInfo = user.userInfo;
@@ -246,22 +248,22 @@ class UserPage extends Component {
               <View className='u-order__item' onClick={this.goOrder.bind(this, 1)}>
                 <Image src={require('../../images/user/a.png')} />
                 <View className='u-order__name'>待付款</View>
-                {tobePaidCount && <View className='u-order__count'>{tobePaidCount}</View>}
+                {tobePaidCount && <View className='u-order__count f-number'>{tobePaidCount}</View>}
               </View>
               <View className='u-order__item' onClick={this.goOrder.bind(this, 2)}>
                 <Image src={require('../../images/user/b.png')} />
                 <View className='u-order__name'>待发货</View>
-                {tobeShippedCount && <View className='u-order__count'>{tobeShippedCount}</View>}
+                {tobeShippedCount && <View className='u-order__count f-number'>{tobeShippedCount}</View>}
               </View>
               <View className='u-order__item' onClick={this.goOrder.bind(this, 3)}>
                 <Image src={require('../../images/user/c.png')} />
                 <View className='u-order__name'>待收货</View>
-                {deliveryCount && <View className='u-order__count'>{deliveryCount}</View>}
+                {deliveryCount && <View className='u-order__count f-number'>{deliveryCount}</View>}
               </View>
               <View className='u-order__item' onClick={this.goOrder.bind(this, 4)}>
                 <Image src={require('../../images/user/d.png')} />
                 <View className='u-order__name'>退款/售后</View>
-                {warrantyCount && <View className='u-order__count'>{warrantyCount}</View>}
+                {warrantyCount && <View className='u-order__count f-number'>{warrantyCount}</View>}
               </View>
             </View>
 
@@ -285,7 +287,8 @@ class UserPage extends Component {
                     <View>
                       <View className='font-s-28 mb-1 flex align-center justify-between'>
                         <Text>{p.petName}</Text>
-                        {p.placed === 1 && <View className='u-pet__placed'>寄养中</View>}
+                        {p.placed === 1 && <View className='u-pet__placed'>待确认</View>}
+                        {p.placed === 2 && <View className='u-pet__placed'>寄养中</View>}
                       </View>
                       <View className='flex align-center'>
                         {p && p.sex == 0 ? (
@@ -332,8 +335,8 @@ class UserPage extends Component {
         <AtModal isOpened={showModal}>
           <AtModalContent>
             <View className='u-kefu__title'>联系客服</View>
-            <View className='u-kefu__mobile'>号码：{config.tel}</View>
-            <View className='u-kefu__time'>时间：10:00 - 20:00</View>
+            <View className='u-kefu__mobile'>号码：{store.currentStore.mobile}</View>
+            <View className='u-kefu__time'>时间：{store.currentStore.workTime}</View>
           </AtModalContent>
           <AtModalAction>
             <Button onClick={this.hideModal}>取消</Button>

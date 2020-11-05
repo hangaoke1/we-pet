@@ -30,7 +30,7 @@ class Device extends Component {
     }
     Taro.setStorageSync('device', item);
     Taro.navigateTo({
-      url: '/pages/webview/index'
+      url: '/pages/cameraView/index'
     });
   };
 

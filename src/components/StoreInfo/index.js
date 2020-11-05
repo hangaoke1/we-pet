@@ -1,10 +1,14 @@
 import Taro, { Component } from "@tarojs/taro";
-import PropTypes from "prop-types";
+import { connect } from '@tarojs/redux';
 import { View, Image } from "@tarojs/components";
 import Iconfont from "@/components/Iconfont";
-import config from "@/config";
+import makePhoneCall from '@/lib/makePhoneCall';
 
 import './index.less';
+
+@connect(({ store }) => ({
+  store
+}))
 
 export default class StoreInfo extends Component {
   static options = {
@@ -15,21 +19,31 @@ export default class StoreInfo extends Component {
   state = {};
 
   openLocation = () => {
+    const { currentStore = {} } = this.props.store
     Taro.openLocation({
-      latitude: 30.206371,
-      longitude: 120.202034,
-      name: '有宠宠物生活馆',
-      address: '浙江省杭州市滨江区滨盛路1893号'
+      latitude: currentStore.lat,
+      longitude: currentStore.lon,
+      name: currentStore.storeName,
+      address: currentStore.city + currentStore.area + currentStore.detail
     });
   };
 
+  showContact = () => {
+    const { store } = this.props;
+    setTimeout(() => {
+      makePhoneCall(store.currentStore.mobile);
+    }, 300);
+  };
+
   render() {
+    const { currentStore } = this.props.store
+    const address = currentStore ? currentStore.city + currentStore.area + currentStore.detail : ''
     return (
       <View className="u-store flex">
-        <Image className="u-store__logo flex-0" src={config.logo}></Image>
+        <Image className="u-store__logo flex-0" src={currentStore.logo}></Image>
         <View className="flex-1">
           <View className="font-s-32 text-base mb-2">
-            有宠宠物生活馆(杭州滨江店)
+            {currentStore.storeName}
           </View>
           <View className="font-s-24 text-base mb-2">营业中 9:00-20:00</View>
           <View className="flex">
@@ -38,11 +52,11 @@ export default class StoreInfo extends Component {
             </View>
             <View className="flex-1" onClick={this.openLocation}>
               <View className="font-s-24 text-base mb-1">
-                浙江省杭州市滨江区滨盛路1893号
+                {address}
               </View>
-              <View className="font-s-24 text-hui">据您300m</View>
+              {/* <View className="font-s-24 text-hui">据您300m</View> */}
             </View>
-            <View className="flex-0 flex flex-column align-center">
+            <View className="flex-0 flex flex-column align-center mr-2" onClick={this.showContact}>
               <Iconfont
                 type="icondianhua1"
                 color="#FF7013"

@@ -89,7 +89,7 @@ class SubscribeConfirm extends Component {
             });
             setTimeout(() => {
               Taro.redirectTo({
-                url: '/pages/storeOrder/index'
+                url: '/pages/storeOrder/index?current=1'
               });
             }, 1000);
           })

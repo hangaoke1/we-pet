@@ -3,15 +3,11 @@ import { View, Map } from '@tarojs/components'
 
 import './index.less'
 
-class index extends Component {
+class MapPage extends Component {
 
   config = {
     navigationBarTitleText: '门店地址'
   }
-
-  componentWillMount () { }
-
-  componentDidMount () { }
 
   render () {
     return (
@@ -22,4 +18,4 @@ class index extends Component {
   }
 }
 
-export default index
+export default MapPage

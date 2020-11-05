@@ -1,11 +1,10 @@
 import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
 import { View, Text, ScrollView, Image } from '@tarojs/components';
-import { AtTabs, AtButton } from 'taro-ui';
+import { AtTabs } from 'taro-ui';
 import GLoading from '@/components/GLoading';
 import GLoadMore from '@/components/GLoadMore';
 import storeApi from '@/api/store';
-import config from '@/config';
 import { getStore } from '@/actions/store';
 import ServiceOrder from '@/components/ServiceOrder';
 import { getPet } from '@/actions/pet';
@@ -171,7 +170,11 @@ class StoreOrder extends Component {
           finished && (
             <View className='u-empty'>
               <Image className='u-empty__img' src={require('../../images/order_empty.png')} />
-              <View className='u-empty__label'>您还没有订单哦，<Text className='main-color' onClick={this.goShop}>去预约</Text></View>
+              <View className='u-empty__label'>
+                您还没有订单哦，<Text className='main-color' onClick={this.goShop}>
+                  去预约
+                </Text>
+              </View>
             </View>
           )}
           {list.length === 0 &&

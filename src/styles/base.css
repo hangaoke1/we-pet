@@ -1,3 +1,38 @@
+@font-face {
+  font-family: NumberFont;
+  src: url(https://hgkcdn.oss-cn-shanghai.aliyuncs.com/test/NumberMedium.2736700f.ttf);
+}
+
+.f-number {
+	font-family: NumberFont;
+}
+
+.mw-200 {
+	min-width: 200px;
+}
+
+.yc-btn, .yc-edit {
+	height: 80px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+  background-color: #ffdd03;
+  border: 1px solid #ffdd03;
+	color: #333336;
+	font-size: 28px;
+}
+
+.yc-del {
+  height: 80px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+  background-color: #fff;
+  border: 1px solid #ffdd03;
+	color: #333336;
+	font-size: 28px;
+}
+
 .safe-minH {
 	box-sizing: border-box;
 	min-height: 100vh;
@@ -657,4 +692,25 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* 功能 */
+.ellipsis-1 {
+	overflow: hidden;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+  word-break: break-all;
+  /* autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
+}
+
+.ellipsis-2 {
+	overflow: hidden;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  word-break: break-all;
+  /* autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
 }

@@ -46,7 +46,7 @@ class RefundOrderItem extends Component {
                 <View className='u-product__specs'>{specs}</View>
               </View>
               <View className='u-product__right'>
-                <View className='u-product__price'>¥ {item.productSku.price}</View>
+                <View className='u-product__price f-number'>¥ {item.productSku.price}</View>
                 <View className='u-product__count'>
                   <Iconfont type='iconshanchu' size='14' color='#ccc' /> {item.quantity}
                 </View>
@@ -56,11 +56,11 @@ class RefundOrderItem extends Component {
         })}
         <View className='u-total' onClick={this.goDetail}>
           {order.discountFee && (
-            <Text className='text-hui mr-1 font-s-24'>
+            <Text className='text-hui mr-1 font-s-24 f-number'>
               总价 ¥{order.totalFee.toFixed(2)}，优惠 ¥{order.discountFee.toFixed(2)}
             </Text>
           )}
-          <Text>实付 ¥ {order.paidFee && order.paidFee.toFixed(2)}</Text>
+          <Text className='f-number'>实付 ¥ {order.paidFee && order.paidFee.toFixed(2)}</Text>
         </View>
 
         <View className='pt-2 text-right main-color font-s-26'>{wText[order.warrantyStatus]}</View>

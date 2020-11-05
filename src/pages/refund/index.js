@@ -224,7 +224,7 @@ export default class Refund extends Component {
           <View className='flex align-center justify-between p-3 border-bottom-divider'>
             <View className='mr-2'>退款金额</View>
             <View className='flex-1'>
-              <Text className='text-red'>¥ {order.paidFee.toFixed(2)}</Text>
+              <Text className='text-red f-number'>¥ {order.paidFee.toFixed(2)}</Text>
             </View>
           </View>
           <View className='flex align-center justify-between p-3'>

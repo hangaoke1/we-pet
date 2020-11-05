@@ -123,7 +123,7 @@ class ServiceOrder extends Component {
               <View className='flex mb-4' key={sv.id}>
                 <Image className='flex-0 u-svOrder__info__image mr-3' src={sv.image || config.petAvatar} />
                 <View className='flex-1'>{sv.name}</View>
-                <View className='flex-0'>¥ {sv.price}</View>
+                <View className='flex-0 f-number'>¥ {sv.price}</View>
               </View>
             );
           })}
@@ -135,12 +135,12 @@ class ServiceOrder extends Component {
 
         <View className='font-s-28 pt-3 text-right'>
           <Text>订单金额：</Text>
-          <Text className='text-red'>¥ {item.totalFee}</Text>
+          <Text className='text-red f-number'>¥ {item.totalFee}</Text>
         </View>
-        <View className='font-s-28 pt-3 text-right'>
+        <View className='font-s-28 pt-3 text-right f-number'>
           {item.discountFee && <Text className='text-hui mr-4'>已优惠：{item.discountFee}元</Text>}
           <Text>实付：</Text>
-          <Text className='text-red'>¥ {item.paidFee}</Text>
+          <Text className='text-red f-number'>¥ {item.paidFee}</Text>
         </View>
 
         {item.reserveOrderStatus == 0 && (

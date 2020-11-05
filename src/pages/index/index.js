@@ -1,15 +1,16 @@
 /* eslint-disable react/no-unused-state */
 import Taro, { Component } from '@tarojs/taro';
+import { connect } from '@tarojs/redux';
 import _ from '@/lib/lodash';
 
-import { View, Text, Swiper, SwiperItem } from '@tarojs/components';
+import { View, Text, Swiper, SwiperItem, Image } from '@tarojs/components';
 import Iconfont from '@/components/Iconfont';
-import Divider from '@/components/Divider';
 import GImage from '@/components/GImage';
 import homeApi from '@/api/home';
 import shopApi from '@/api/shop';
 import { getCart } from '@/actions/cart';
 import config from '@/config';
+import { getStore } from '@/actions/store';
 
 import StoreInfo from '@/components/StoreInfo';
 import ProductSale from '@/components/ProductSale';
@@ -17,9 +18,12 @@ import ProductNew from '@/components/ProductNew';
 
 import './index.less';
 
+@connect(({ store }) => ({
+  store
+}))
 export default class Index extends Component {
   config = {
-    navigationBarTitleText: '有宠宠物',
+    navigationBarTitleText: '有宠',
     enablePullDownRefresh: true,
     backgroundTextStyle: 'dark',
     onReachBottomDistance: 50,
@@ -46,10 +50,11 @@ export default class Index extends Component {
       // 来自页面内转发按钮
       console.log(res.target);
     }
+    const { store } = this.props;
     return {
-      title: '有宠宠物生活馆',
+      title: store.currentStore.storeName,
       path: '/pages/index/index',
-      imageUrl: config.shareIcon
+      imageUrl: store.currentStore.logo
     };
   }
 
@@ -61,6 +66,7 @@ export default class Index extends Component {
   }
 
   componentDidMount() {
+    getStore();
     this.init();
   }
 
@@ -167,61 +173,54 @@ export default class Index extends Component {
     });
   };
 
-  openLocation = () => {
-    Taro.openLocation({
-      latitude: 30.206371,
-      longitude: 120.202034,
-      name: '有宠宠物生活馆',
-      address: '浙江省杭州市滨江区滨盛路1893号'
-    });
-  };
-
   render() {
     const { banners, productNewList, productSaleList } = this.state;
     return (
       <View className='u-home'>
-        <Swiper className='u-banner' circular autoplay>
-          {banners.map((banner) => (
-            <SwiperItem key={banner.id}>
-              <GImage my-class='u-banner' src={banner.imgUrl} />
-            </SwiperItem>
-          ))}
-        </Swiper>
+        <View className='bg-bai'>
+          <Swiper className='u-banner' circular autoplay>
+            {banners.map((banner) => (
+              <SwiperItem key={banner.id}>
+                <GImage my-class='u-banner' src={banner.imgUrl} />
+              </SwiperItem>
+            ))}
+          </Swiper>
 
-        <View className='u-info'>
-          <StoreInfo />
-          <View className='px-2 pt-1'>
-            <Divider color='rgba(0, 0, 0, 0.1)' />
+          <View className='u-info'>
+            <StoreInfo />
           </View>
-          <View className='flex align-center'>
-            <View className='u-home__action' onClick={this.goSubscribe}>
-              <Iconfont type='iconyuyue' size='18' color='#666666' />
-              <Text style={{ marginLeft: '4rpx' }}>预约</Text>
+
+          <View className='flex align-center justify-between p-2'>
+            <View className='u-home__action u-home__action-active' onClick={this.goSubscribe}>
+              <Image className='u-home__action-icon' src={require('../../images/subscribe.png')} />
+              <Text style={{ marginLeft: '26rpx' }}>洗护预约</Text>
             </View>
             <View className='u-home__action' onClick={this.goGrew}>
-              <Iconfont type='iconjiyang' size='18' color='#666666' />
-              <Text style={{ marginLeft: '4rpx' }}>寄养</Text>
+              <Image className='u-home__action-icon' src={require('../../images/grew.png')} />
+              <Text style={{ marginLeft: '26rpx' }}>寄养预约</Text>
+            </View>
+          </View>
+
+          <View className='bg-bai mt-2'>
+            <View className='u-home__title'>
+              <Text>每日折扣</Text>
+              <View className='u-home__subTitle' onClick={this.goProductSaleMore}>
+                <Text style={{ color: '#FF7013' }}>更多</Text>
+                <Iconfont type='iconarrowright' size='18' color='#FF7013' />
+              </View>
+            </View>
+            <View className='flex'>
+              {productSaleList.map((info) => {
+                return (
+                  <View style={{ width: '33.3%' }} key={info.id}>
+                    <ProductSale info={info} />
+                  </View>
+                );
+              })}
             </View>
           </View>
         </View>
-        <View className='bg-bai mt-4'>
-          <View className='u-home__title'>
-            <Text>每日折扣</Text>
-            <View className='u-home__subTitle' onClick={this.goProductSaleMore}>
-              <Text style={{ color: '#FF7013' }}>更多</Text>
-              <Iconfont type='iconarrowright' size='18' color='#FF7013' />
-            </View>
-          </View>
-          <van-row>
-            {productSaleList.map((info) => {
-              return (
-                <van-col span='8' key={info.id}>
-                  <ProductSale info={info} />
-                </van-col>
-              );
-            })}
-          </van-row>
-        </View>
+
         <View className='u-home__productNew mt-2'>
           <View className='u-home__title bg-bai'>
             <Text>新品推荐</Text>

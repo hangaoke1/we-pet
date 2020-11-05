@@ -42,5 +42,5 @@ export default {
   // 查询完整订单
   queryOrderById: (params) => api.get('/pet/queryOrderById', params),
   // 物流查询
-  queryLogistics: (params) => api.get('/pet/queryLogistics', params),
+  queryLogistics: (params) => api.get('/pet/queryLogistics', params)
 };

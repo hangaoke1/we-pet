@@ -181,7 +181,7 @@ class Cart extends Component {
       <View className={prefixCls}>
         {cart.items.length && (
           <View className='u-header'>
-            <View className='u-header__l'>共{cart.totalCount}件</View>
+            <View className='u-header__l f-number'>共{cart.totalCount}件</View>
             {edit ? (
               <View className='u-header__r' onClick={this.handleEditClose}>
                 完成
@@ -228,7 +228,7 @@ class Cart extends Component {
           <View className='u-action__right'>
             <View>
               <Text className='u-action__label'>合计：</Text>
-              <Text className='u-action__val text-red'>¥ {priceTotal.toFixed(2)}</Text>
+              <Text className='u-action__val text-red f-number'>¥ {priceTotal.toFixed(2)}</Text>
             </View>
             {edit ? (
               <AtButton

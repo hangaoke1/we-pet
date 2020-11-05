@@ -73,7 +73,7 @@ export default class AllService extends Component {
                 </View>
                 <View className="text-red mt-3">
                   <Text className="font-s-2 mr-1">¥</Text>
-                  <Text className="font-s-32">{v.price}</Text>
+                  <Text className="font-s-32 f-number">{v.price}</Text>
                 </View>
               </View>
             </View>

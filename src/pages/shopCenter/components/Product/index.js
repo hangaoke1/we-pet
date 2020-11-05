@@ -1,11 +1,12 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Image } from '@tarojs/components';
+import { View } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import PropTypes from 'prop-types';
 import Iconfont from '@/components/Iconfont';
 import shopApi from '@/api/shop';
 import { getCart } from '@/actions/cart';
 import gotoLogin from '@/lib/gotoLogin';
+import GImage from '@/components/GImage';
 
 import './index.less';
 
@@ -13,9 +14,15 @@ import './index.less';
   user
 }))
 class Product extends Component {
-  componentWillMount() {}
+  static options = {
+    addGlobalClass: true // 支持使用全局样式
+  };
 
-  componentDidMount() {}
+  static propTypes = {
+    item: PropTypes.object
+  };
+
+  static defaultProps = {};
 
   goProduct = () => {
     const { item } = this.props;
@@ -38,7 +45,7 @@ class Product extends Component {
         skuId: item.id,
         quantity: 1
       })
-      .then((res) => {
+      .then(() => {
         Taro.hideLoading();
         Taro.showToast({
           title: '添加成功',
@@ -46,7 +53,7 @@ class Product extends Component {
         });
         getCart();
       })
-      .catch((err) => {
+      .catch(() => {
         Taro.hideLoading();
         Taro.showToast({
           title: '添加失败',
@@ -59,28 +66,26 @@ class Product extends Component {
     const prefixCls = 'u-product';
     const { item } = this.props;
 
-    return (
+    return item ? (
       <View className={prefixCls} onClick={this.goProduct}>
-        <Image className='u-img' src={item.skuImgUrl} lazyLoad webp />
+        <GImage my-class='u-img' src={item.skuImgUrl} />
         <View className='u-info'>
-          <View className='u-name'>{item.skuName}</View>
-          <View className='u-tag'></View>
+          <View className='u-name ellipsis-2'>{item.skuName}</View>
           <View className='u-bottom'>
-            <View className='u-price f-number'>¥ {item.price}</View>
+            <View className='u-price'>
+              <View className='f-number'>¥ {item.price}</View>
+              {item && item.originPrice && item.originPrice !== item.price ? (
+                <View className='f-number font-s-2 text-hui line-through'>¥ {item.originPrice}</View>
+              ) : null}
+            </View>
             <View className='u-addcart' onClick={this.addCart}>
               <Iconfont type='icongouwuche' color='#fff' size='14' />
             </View>
           </View>
         </View>
       </View>
-    );
+    ) : null;
   }
 }
-
-Product.propTypes = {
-  item: PropTypes.object
-};
-
-Product.defaultProps = {};
 
 export default Product;

@@ -19,12 +19,7 @@ class ProductNew extends PureComponent {
     info: PropTypes.object
   };
 
-  static defaultProps = {
-    info: {
-      price: 0,
-      originPrice: 0
-    }
-  };
+  static defaultProps = {};
   static options = {
     addGlobalClass: true // 支持使用全局样式
   };
@@ -69,7 +64,7 @@ class ProductNew extends PureComponent {
 
   render() {
     const { info } = this.props;
-    return (
+    return info ? (
       <View className='u-productNew bg-bai' onClick={this.goProduct}>
         <View className='flex align-center justify-center'>
           <GImage my-class='u-productNew__img' src={info.skuImgUrl} />
@@ -80,10 +75,10 @@ class ProductNew extends PureComponent {
             <View className='u-price'>
               <View className='u-price__current font-s-28'>
                 <Text className='font-s-24'>¥</Text>
-                <Text>{info.price.toFixed(2) || '0.00'}</Text>
+                <Text className='f-number'>{info.price || '0'}</Text>
               </View>
-              <View className='u-price__origin font-s-2' style={{ opacity: info.originPrice ? 1 : 0 }}>
-                ¥{info.originPrice.toFixed(2)}
+              <View className='u-price__origin font-s-2 f-number' style={{ opacity: info.originPrice ? 1 : 0 }}>
+                ¥{info.originPrice}
               </View>
             </View>
             <View className='u-price__cart' onClick={this.addCart}>
@@ -92,7 +87,7 @@ class ProductNew extends PureComponent {
           </View>
         </View>
       </View>
-    );
+    ) : null;
   }
 }
 

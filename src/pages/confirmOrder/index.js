@@ -200,7 +200,7 @@ class ConfirmOrder extends Component {
                   <View className='u-product__info'>
                     <View className='u-product__name'>{item.productSku.skuName}</View>
                     <View className='u-product__specs mt-1 text-hui'>规格：{specs || '无'}</View>
-                    <View className='u-product__price mt-1 text-red'>¥ {item.productSku.price}</View>
+                    <View className='u-product__price mt-1 text-red f-number'>¥ {item.productSku.price}</View>
                   </View>
                   <View className='u-product__right'>
                     <View className='u-product__count'>
@@ -218,11 +218,11 @@ class ConfirmOrder extends Component {
           <View className='border-bottom-divider'>
             <View className='u-item'>
               <View className='u-label'>商品价格</View>
-              <View className='u-val text-red'>¥ {totalPriceOri.toFixed(2)}</View>
+              <View className='u-val text-red f-number'>¥ {totalPriceOri.toFixed(2)}</View>
             </View>
             <View className='u-item'>
               <View className='u-label'>运费</View>
-              <View className='u-val text-red'>¥ 0.00</View>
+              <View className='u-val text-red f-number'>¥ 0.00</View>
             </View>
             <View className='u-item'>
               <View className='u-label'>优惠券</View>
@@ -231,7 +231,7 @@ class ConfirmOrder extends Component {
                   {couponsLen > 0 ? (
                     <View className='flex-0 flex align-center' onClick={this.hanldeCouponsClick}>
                       {coupon ? (
-                        <Text className='mr-1 text-red'>-¥ {_.get(coupon, 'value', 0)}</Text>
+                        <Text className='mr-1 text-red f-number'>-¥ {_.get(coupon, 'value', 0)}</Text>
                       ) : (
                         <Text className='mr-1' style={{ color: '#C00C00' }}>
                           {couponsLen}张可用
@@ -252,7 +252,7 @@ class ConfirmOrder extends Component {
           </View>
 
           <View className='text-right py-3 font-s-28'>
-            共<Text className='text-red'>{totalCount}</Text>件商品，共计：<Text className='text-red'>¥ {totalPrice.toFixed(2)}</Text>
+            共<Text className='text-red f-number'>{totalCount}</Text>件商品，共计：<Text className='text-red f-number'>¥ {totalPrice.toFixed(2)}</Text>
           </View>
         </View>
 
@@ -273,7 +273,7 @@ class ConfirmOrder extends Component {
         <View className='u-bottom'>
           <View className='u-bottom__info font-s-24'>
             <Text>
-              实付金额：<Text className='text-red'>¥ {totalPrice.toFixed(2)}</Text>
+              实付金额：<Text className='text-red f-number'>¥ {totalPrice.toFixed(2)}</Text>
             </Text>
           </View>
           <AtButton className='u-action__btn' type='primary' circle={false} full onClick={this.handleSubmit}>

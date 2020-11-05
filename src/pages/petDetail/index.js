@@ -132,7 +132,6 @@ class PetDetail extends Component {
             sizeType: [ 'compressed' ]
           }).then((res) => {
             uploadFile(res.tempFilePaths[0]).then((data) => {
-              console.log('>>> 文件地址', data);
               this.setState((state) => {
                 const form = state.form;
                 form.avatar = data;
@@ -195,6 +194,16 @@ class PetDetail extends Component {
       };
     });
   };
+
+  handleWeightChang = (e) => {
+    this.setState((state) => {
+      const form = state.form;
+      form.petWeight = e.detail.value;
+      return {
+        form
+      };
+    });
+  }
 
   handleSubmit = () => {
     const form = this.state.form;
@@ -399,13 +408,15 @@ class PetDetail extends Component {
           </View>
           <View className='u-form__item'>
             <View className='u-form__label'>宠物体重</View>
-            <View className='u-form__value'>
+            <View className='u-form__value flex align-center'>
               <Input
                 placeholder='请输入宠物体重'
                 className='u-form__input'
                 placeholderStyle='color: #999'
                 value={form.petWeight}
+                onChange={this.handleWeightChange}
               />
+              <Text className="font-s-12 ml-1">kg</Text>
             </View>
           </View>
 

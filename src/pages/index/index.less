@@ -11,23 +11,25 @@
   }
 
   &__action {
-    position: relative;
-    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 80px;
-    font-size: 28px;
+    width: 346px;
+    height: 104px;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.13);
+    border-radius: 20px;
+    font-size: 32px;
 
-    &:nth-of-type(1)::after {
-      content: '';
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 1px;
-      height: 44px;
-      background-color: rgba(0, 0, 0, 0.1);
+    &-active {
+      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.13);
+      background: #FFF1E8;
+      border: 2px solid #FFD1B4;
+    }
+
+    &-icon {
+      width: 60px;
+      height: 60px;
     }
   }
 

@@ -26,11 +26,11 @@ class OrderProduct extends Component {
         <View className='u-product__info'>
           <View className='u-product__name ellipsis-2'>{item.productSku.skuName}</View>
           <View className='u-product__specs'>{specs}</View>
-          <View className='text-red mt-1'>¥ {item.productSku.price}</View>
+          <View className='text-red mt-1 f-number'>¥ {item.productSku.price}</View>
         </View>
         <View className='u-product__right flex align-center'>
           <Iconfont type='iconshanchu' size='12' color='#333' />
-          <Text className="ml-1 font-s-28">{item.quantity}</Text>
+          <Text className="ml-1 font-s-28 f-number">{item.quantity}</Text>
         </View>
       </View>
     ) : null;

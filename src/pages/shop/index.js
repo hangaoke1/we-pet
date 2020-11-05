@@ -81,7 +81,7 @@ export default class ShopIndex extends Component {
 
   handleCateClick = (item) => {
     Taro.navigateTo({
-      url: `/pages/shopList/index?categoryId=${item.id}&name=${item.name}`
+      url: `/pages/shopCenter/index?categoryId=${item.id}&name=${item.name}`
     });
   };
 

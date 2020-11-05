@@ -106,13 +106,14 @@ class Pet extends Component {
                           />
                         </View>
                       </View>
-                      {item.placed === 1 && <View className='u-item__placed'>寄养中</View>}
+                      {item.placed === 1 && <View className='u-item__placed'>待确认</View>}
+                      {item.placed === 2 && <View className='u-item__placed'>寄养中</View>}
                     </View>
                     <View className='flex justify-between align-center'>
                       <View className='u-petBreed'>{item.petBreed}</View>
                       <View className='flex align-center'>
-                        <View className='ml-1 mr-2 text-hui font-s-24'>生日：{item.birthday.slice(5)}</View>
-                        <View className='text-hui font-s-24'>{getPetYear(item.birthday)}</View>
+                        <View className='ml-1 mr-2 text-hui font-s-24 f-number'>生日：{item.birthday.slice(5)}</View>
+                        <View className='text-hui font-s-24 f-number'>{getPetYear(item.birthday)}</View>
                       </View>
                     </View>
                   </View>

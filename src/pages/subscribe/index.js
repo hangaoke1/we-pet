@@ -12,6 +12,7 @@ import _ from '@/lib/lodash';
 import dayjs from 'dayjs';
 import { getPet } from '@/actions/pet';
 import { getWashList } from '@/actions/washService';
+import YcSubmitbar from '@/components/YcSubmitbar';
 
 import { timeMap } from '@/enums';
 
@@ -353,18 +354,19 @@ class SubScribe extends Component {
         </View>
 
         <View className='u-action'>
-          <View className='u-action__left'>
-            预约时间：{date} {time}
-          </View>
-          <View className='u-action__right'>
-            <View>
-              <Text className='u-action__label'>合计：</Text>
-              <Text className='u-action__val'>¥ {total}</Text>
-            </View>
-            <View className='u-action__btn' onClick={this.handleSubmit}>
-              结算
-            </View>
-          </View>
+          <YcSubmitbar
+            price={total}
+            buttonText='结算'
+            renderTip={
+              <View className='u-submit__tip'>
+                <Text className='mr-2 font-s-3'>选择日期：</Text>
+                <Text className='font-weight-bold'>
+                  {date} {time}
+                </Text>
+              </View>
+            }
+            onSubmit={this.handleSubmit}
+          />
         </View>
       </View>
     );

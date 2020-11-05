@@ -320,7 +320,7 @@ class Product extends Component {
           <View className='u-header'>
             <View className='u-icon' onClick={this.goCart}>
               <Iconfont type='icongouwuche1' color='#fff' size='18' />
-              <View className='u-count__icon bg-red2'>{cart.totalCount}</View>
+              <View className='u-count__icon bg-red2 f-number'>{cart.totalCount}</View>
             </View>
             <View className='u-icon' onClick={this.setShowQuick}>
               <Iconfont type='icongengduo' color='#fff' size='18' />
@@ -336,7 +336,7 @@ class Product extends Component {
             indicatorActiveColor='#333'
             circular
             indicatorDots
-            autoplay
+            autoplay={false}
           >
             {productBannerImgList.map((image) => (
               <SwiperItem key={image.id}>
@@ -350,9 +350,9 @@ class Product extends Component {
         <View className='u-price'>
           <View className='u-price__left'>
             <Text className='u-price__unit'>¥</Text>
-            <Text className='u-price__val'>{choosedSku.price}</Text>
-            {choosedSku.originPrice && (
-              <Text className='line-through text-hui ml-2 font-s-28'>¥ {choosedSku.originPrice}</Text>
+            <Text className='u-price__val f-number'>{choosedSku.price}</Text>
+            {choosedSku && choosedSku.originPrice && (
+              <Text className='line-through text-hui ml-2 font-s-28 f-number'>¥ {choosedSku.originPrice}</Text>
             )}
           </View>
           <View className='u-price__right'>
@@ -388,7 +388,7 @@ class Product extends Component {
 
           {!productDetailImgList.length && (
             <View className='u-empty'>
-              <Image src={require('../../images/product_empty.png')} />{' '}
+              <Image src={require('../../images/product_empty.png')} />
               <View className='text-center font-s-32'>
                 <Text className='text-hui'>暂无详情</Text>
               </View>
@@ -401,7 +401,7 @@ class Product extends Component {
           <View className='flex align-center'>
             <View className='u-footer__item' onClick={this.goCart}>
               <Iconfont type='iconicon_gouwuche-xian' color='#707070' size='26' />
-              <View className='u-footer__item-count bg-red2'>{cart.totalCount}</View>
+              <View className='u-footer__item-count bg-red2 f-number'>{cart.totalCount}</View>
             </View>
           </View>
           <View className='flex align-center'>
@@ -467,8 +467,8 @@ class Product extends Component {
               <Image className='u-sku__img' src={choosedSku.skuImgUrl} lazyLoad webp />
               <View className='u-sku__info'>
                 <View className='u-sku__name'>{choosedSku.skuName}</View>
-                <View className='u-sku__stock'>库存{choosedSku.stock || 0}件</View>
-                <View className='u-sku__price'>¥ {choosedSku.price}</View>
+                <View className='u-sku__stock f-number'>库存{choosedSku.stock || 0}件</View>
+                <View className='u-sku__price f-number'>¥ {choosedSku.price}</View>
               </View>
             </View>
 

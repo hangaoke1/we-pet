@@ -173,7 +173,7 @@ class index extends Component {
               <View className='u-product__info'>
                 <View className='u-product__name'>{item.skuName}</View>
                 <View className='u-product__bottom'>
-                  <View className='u-product__price'>¥ {item.price}</View>
+                  <View className='u-product__price f-number'>¥ {item.price}</View>
                   <View className='u-product__add' onClick={this.addCart.bind(this, item)}>
                     <Iconfont type='icongouwuche' color='#fff' size='14' />
                   </View>

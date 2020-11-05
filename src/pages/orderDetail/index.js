@@ -250,21 +250,21 @@ class OrderDetail extends Component {
           <View className='border-bottom-divider font-s-24 text-hui px-2'>
             <View className='flex align-center justify-between py-2'>
               <View>商品价格</View>
-              <View>¥ {order.totalFee.toFixed(2)}</View>
+              <View className='f-number'>¥ {order.totalFee.toFixed(2)}</View>
             </View>
             <View className='flex align-center justify-between py-2'>
               <View>运费</View>
-              <View>¥ 0.00</View>
+              <View className='f-number'>¥ 0.00</View>
             </View>
             <View className='flex align-center justify-between py-2'>
               <View>优惠券</View>
-              <View>-¥ {order.discountFee.toFixed(2)}</View>
+              <View className='f-number'>-¥ {order.discountFee.toFixed(2)}</View>
             </View>
           </View>
           <View className='text-right pt-3 font-s-28 px-2'>
-            {order.discountFee && <Text className='text-hui'>已优惠¥{order.discountFee.toFixed(2)}，</Text>}
+            {order.discountFee && <Text className='text-hui f-number'>已优惠¥{order.discountFee.toFixed(2)}，</Text>}
             <Text>共计：</Text>
-            <Text className='text-red'>¥{order.paidFee.toFixed(2)}</Text>
+            <Text className='text-red f-number'>¥{order.paidFee.toFixed(2)}</Text>
           </View>
         </View>
 

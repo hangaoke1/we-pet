@@ -97,6 +97,9 @@ class ConfirmOrder extends Component {
   handleSubmit = () => {
     const { address } = this.props;
     const { orderProduct, coupon } = this.state;
+    if (_.get(address, 'id')) {
+      return Taro.showToast({ icon: 'none', title: '请选择收获地址' });
+    }
     const params = {
       skuInfoList: orderProduct.map((item) => {
         return {

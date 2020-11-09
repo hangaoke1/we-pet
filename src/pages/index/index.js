@@ -3,30 +3,32 @@ import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
 import _ from '@/lib/lodash';
 
-import { View, Text, Swiper, SwiperItem, Image } from '@tarojs/components';
+import { View, Text, Image } from '@tarojs/components';
 import Iconfont from '@/components/Iconfont';
-import GImage from '@/components/GImage';
 import homeApi from '@/api/home';
 import shopApi from '@/api/shop';
+import gotoLogin from '@/lib/gotoLogin';
 import { getCart } from '@/actions/cart';
-import config from '@/config';
 import { getStore } from '@/actions/store';
+import { getPositionPro } from '@/actions/user';
 
 import StoreInfo from '@/components/StoreInfo';
 import ProductSale from '@/components/ProductSale';
 import ProductNew from '@/components/ProductNew';
+import YcBanner from '@/components/YcBanner';
 
 import './index.less';
 
-@connect(({ store }) => ({
-  store
+@connect(({ store, user }) => ({
+  store,
+  user
 }))
 export default class Index extends Component {
   config = {
     navigationBarTitleText: '有宠',
     enablePullDownRefresh: true,
     backgroundTextStyle: 'dark',
-    onReachBottomDistance: 50,
+    onReachBottomDistance: 150,
     backgroundColor: '#f3f4f8',
     usingComponents: {
       'van-icon': '../../components/vant/dist/icon/index',
@@ -67,6 +69,7 @@ export default class Index extends Component {
 
   componentDidMount() {
     getStore();
+    getPositionPro();
     this.init();
   }
 
@@ -155,21 +158,20 @@ export default class Index extends Component {
   };
 
   goSubscribe = () => {
+    if (!this.props.user.isLogin) {
+      return gotoLogin();
+    }
     Taro.navigateTo({
       url: '/pages/subscribe/index'
     });
   };
 
   goGrew = () => {
+    if (!this.props.user.isLogin) {
+      return gotoLogin();
+    }
     Taro.navigateTo({
       url: '/pages/petGrew/index'
-    });
-  };
-
-  todo = () => {
-    Taro.showToast({
-      title: '敬请期待',
-      icon: 'none'
     });
   };
 
@@ -178,13 +180,7 @@ export default class Index extends Component {
     return (
       <View className='u-home'>
         <View className='bg-bai'>
-          <Swiper className='u-banner' circular autoplay>
-            {banners.map((banner) => (
-              <SwiperItem key={banner.id}>
-                <GImage my-class='u-banner' src={banner.imgUrl} />
-              </SwiperItem>
-            ))}
-          </Swiper>
+          <YcBanner banners={banners}></YcBanner>
 
           <View className='u-info'>
             <StoreInfo />

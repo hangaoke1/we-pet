@@ -10,7 +10,7 @@ import './index.less';
 export default class CouponList extends Component {
   config = {
     navigationBarTitleText: '红包卡券',
-    onReachBottomDistance: 50
+    onReachBottomDistance: 150
   };
 
   state = {
@@ -47,7 +47,7 @@ export default class CouponList extends Component {
           return {
             pageNo: pageNo + 1,
             loading: false,
-            finished: pageNo * pageSize > res.totalCount ? true : false,
+            finished: pageNo * pageSize >= res.totalCount ? true : false,
             list: [ ...state.list, ...res.items ]
           };
         });

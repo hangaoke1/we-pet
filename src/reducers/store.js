@@ -1,11 +1,12 @@
 import Taro from '@tarojs/taro'
-import { GET_STORE, SET_STORE } from '@/constants/store'
+import { GET_STORE, SET_STORE, STORE_DISTANCE } from '@/constants/store'
 
 // 门店信息
 const store = (
   state = {
     list: [],
-    currentStore: Taro.getStorageSync('currentStore') || null
+    currentStore: Taro.getStorageSync('currentStore') || null,
+    distance: 0 // 距离
   },
   action
 ) => {
@@ -23,6 +24,11 @@ const store = (
       return {
         ...state,
         currentStore: action.value
+      }
+    case STORE_DISTANCE:
+      return {
+        ...state,
+        distance: action.value
       }
     default:
       return state

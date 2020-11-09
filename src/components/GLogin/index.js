@@ -5,10 +5,7 @@ import config from '@/config'
 
 import './index.less'
 
-class index extends Component {
-  componentWillMount () {}
-
-  componentDidMount () {}
+class GLogin extends Component {
 
   gotoLogin = () => {
     gotoLogin()
@@ -27,4 +24,4 @@ class index extends Component {
   }
 }
 
-export default index
+export default GLogin

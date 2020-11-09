@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Input, Text, Image, Picker, Button } from '@tarojs/components';
+import { View, Input, Text, Image, Button } from '@tarojs/components';
 import { AtModal, AtModalHeader, AtModalContent, AtModalAction } from 'taro-ui';
 import { connect } from '@tarojs/redux';
 import dayjs from 'dayjs';
@@ -7,11 +7,12 @@ import classnames from 'classnames';
 import _ from '@/lib/lodash';
 import StoreInfo from '@/components/StoreInfo';
 import GImage from '@/components/GImage';
-import apiHome from '@/api/home';
 import Iconfont from '@/components/Iconfont';
+import YcBanner from '@/components/YcBanner';
+
+import apiHome from '@/api/home';
 import { getPet } from '@/actions/pet';
 import grewApi from '@/api/grew';
-
 import './index.less';
 
 @connect(({ pet, washService }) => ({
@@ -155,8 +156,8 @@ class PetGrew extends Component {
     const isActive = petId && startDate && endDate;
     return (
       <View className='u-petGrew'>
-        <GImage my-class='u-banner' src={_.get(banners[0], 'imgUrl')} />
-
+        <YcBanner banners={banners}></YcBanner>
+        
         <View className='u-info'>
           <StoreInfo />
         </View>

@@ -6,13 +6,12 @@ import Iconfont from '@/components/Iconfont';
 import StoreInfo from '@/components/StoreInfo';
 import GImage from '@/components/GImage';
 import apiHome from '@/api/home';
-import makePhoneCall from '@/lib/makePhoneCall';
-import config from '@/config';
 import _ from '@/lib/lodash';
 import dayjs from 'dayjs';
 import { getPet } from '@/actions/pet';
 import { getWashList } from '@/actions/washService';
 import YcSubmitbar from '@/components/YcSubmitbar';
+import YcBanner from '@/components/YcBanner';
 
 import { timeMap } from '@/enums';
 
@@ -126,19 +125,6 @@ class SubScribe extends Component {
     });
   }
 
-  openLocation = () => {
-    Taro.openLocation({
-      latitude: 30.206371,
-      longitude: 120.202034,
-      name: '有宠宠物生活馆',
-      address: '浙江省杭州市滨江区滨盛路1893号'
-    });
-  };
-
-  doCall = () => {
-    makePhoneCall(config.tel);
-  };
-
   goPet = () => {
     Taro.navigateTo({
       url: '/pages/pet/index'
@@ -235,7 +221,9 @@ class SubScribe extends Component {
     const total = service.reduce((t, i) => t + i.price, 0);
     return (
       <View className='u-subscribe'>
-        <GImage my-class='u-banner' src={_.get(banners[0], 'imgUrl')} />
+        {/* <GImage my-class='u-banner' src={_.get(banners[0], 'imgUrl')} /> */}
+        <YcBanner banners={banners}></YcBanner>
+
 
         <View className='u-info'>
           <StoreInfo />
@@ -356,7 +344,7 @@ class SubScribe extends Component {
         <View className='u-action'>
           <YcSubmitbar
             price={total}
-            buttonText='结算'
+            buttonText='去下单'
             renderTip={
               <View className='u-submit__tip'>
                 <Text className='mr-2 font-s-3'>选择日期：</Text>

@@ -1,6 +1,7 @@
 import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
 import { View, Swiper, SwiperItem, Image, Text } from '@tarojs/components';
+import YcBackTop from '@/components/YcBackTop';
 import classNames from 'classnames';
 import Iconfont from '@/components/Iconfont';
 import GImg from '@/components/GImg';
@@ -98,12 +99,6 @@ class Product extends Component {
   queryShoppingCart = () => {
     shopApi.queryShoppingCart().then((res) => {
       console.log('>>> 查询购物车', res);
-    });
-  };
-
-  handleBackTop = () => {
-    Taro.pageScrollTo({
-      scrollTop: 0
     });
   };
 
@@ -285,6 +280,11 @@ class Product extends Component {
 
     let choosedSku = currentSku;
 
+    let btnText = buyNow ? '立即购买' : '加入购物车';
+    if (choosedSku.stock === 0) {
+      btnText = '暂无库存';
+    }
+
     return (
       <View className={prefixCls}>
         {/* 商品头部 */}
@@ -351,7 +351,8 @@ class Product extends Component {
           <View className='u-price__left'>
             <Text className='u-price__unit'>¥</Text>
             <Text className='u-price__val f-number'>{choosedSku.price}</Text>
-            {choosedSku && choosedSku.originPrice && (
+            {choosedSku &&
+            choosedSku.originPrice && (
               <Text className='line-through text-hui ml-2 font-s-28 f-number'>¥ {choosedSku.originPrice}</Text>
             )}
           </View>
@@ -361,7 +362,7 @@ class Product extends Component {
         </View>
         <View className='u-name'>{choosedSku.skuName || product.name}</View>
         <View className='u-desc'>{product.detail}</View>
-        
+
         {/* 商品参数 */}
         <View className='u-params'>
           <View className='u-params__item' onClick={this.handleParamsOpen}>
@@ -404,38 +405,31 @@ class Product extends Component {
               <View className='u-footer__item-count bg-red2 f-number'>{cart.totalCount}</View>
             </View>
           </View>
-          <View className='flex align-center'>
-            <AtButton
-              loading={buyLoading}
-              onClick={this.handleSpecsOpen.bind(this, false)}
-              className='u-footer__btn u-footer__btn__add'
-              disabled={choosedSku.stock === 0}
-              type='primary'
-              circle
-            >
-              加入购物车
-            </AtButton>
-            <AtButton
-              className='u-footer__btn'
-              disabled={choosedSku.stock === 0}
-              type='primary'
-              circle
-              onClick={this.handleSpecsOpen.bind(this, true)}
-            >
-              立即购买
-            </AtButton>
-          </View>
-        </View>
-
-        <View
-          className={classNames({
-            'u-back': true,
-            'u-back__active': scrollTop > 100
-          })}
-          onClick={this.handleBackTop}
-        >
-          <Iconfont type='iconfanhuidingbu' color='#333' size='12' />
-          <Text>顶部</Text>
+          {currentSku.stock === 0 ? (
+            <View className='text-hui'>暂无库存</View>
+          ) : (
+            <View className='flex align-center'>
+              <AtButton
+                loading={buyLoading}
+                onClick={this.handleSpecsOpen.bind(this, false)}
+                className='u-footer__btn u-footer__btn__add'
+                disabled={choosedSku.stock === 0}
+                type='primary'
+                circle
+              >
+                加入购物车
+              </AtButton>
+              <AtButton
+                className='u-footer__btn'
+                disabled={choosedSku.stock === 0}
+                type='primary'
+                circle
+                onClick={this.handleSpecsOpen.bind(this, true)}
+              >
+                立即购买
+              </AtButton>
+            </View>
+          )}
         </View>
 
         <GFloatLayout title='产品参数' isOpened={showParams} onClose={this.handleParamsClose}>
@@ -520,10 +514,12 @@ class Product extends Component {
               type='primary'
               circle
             >
-              {buyNow ? '立即购买' : '加入购物车'}
+              {btnText}
             </AtButton>
           </View>
         </GFloatLayout>
+
+        <YcBackTop scrollTop={scrollTop} />
       </View>
     );
   }

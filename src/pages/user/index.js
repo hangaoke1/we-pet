@@ -2,8 +2,9 @@
 /* eslint-disable import/no-commonjs */
 import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { View, Image, OpenData, Text, Button } from '@tarojs/components';
+import { View, Image, OpenData, Text, Button, Block } from '@tarojs/components';
 import Iconfont from '@/components/Iconfont';
+import YcLogin from '@/components/YcLogin';
 import gotoLogin from '@/lib/gotoLogin';
 import { getUserInfo } from '@/actions/user';
 import { getPet } from '@/actions/pet';
@@ -68,10 +69,11 @@ class UserPage extends Component {
       // 来自页面内转发按钮
       console.log(res.target);
     }
+    const { store } = this.props;
     return {
-      title: '有宠宠物生活馆',
+      title: store.currentStore.storeName,
       path: '/pages/index/index',
-      imageUrl: config.shareIcon
+      imageUrl: store.currentStore.logo
     };
   }
 
@@ -274,63 +276,63 @@ class UserPage extends Component {
           </View>
         </View>
 
-        <View className='u-content'>
-          <View className='u-pet'>
-            <View className='flex align-center py-2 pr-5'>
-              <View className='u-pet__add flex-0 flex align-center justify-center mr-2' onClick={this.addPet}>
-                <Iconfont type='iconadd' color='#fff' size='24' />
-              </View>
-              {pet.list.map((p) => {
-                return (
-                  <View className='u-pet__item p-2 flex flex-0 mr-2' key={p.id} onClick={this.goPet.bind(this, p)}>
-                    <Image className='u-pet__image mr-2' src={p.avatar || config.petAvatar} />
-                    <View>
-                      <View className='font-s-28 mb-1 flex align-center justify-between'>
-                        <Text>{p.petName}</Text>
-                        {p.placed === 1 && <View className='u-pet__placed'>待确认</View>}
-                        {p.placed === 2 && <View className='u-pet__placed'>寄养中</View>}
-                      </View>
-                      <View className='flex align-center'>
-                        {p && p.sex == 0 ? (
-                          <Iconfont type='icongong' color='#2F6BFE' size='14' />
-                        ) : (
-                          <Iconfont type='iconmu' color='pink' size='14' />
-                        )}
-                        <Text className='text-hui font-s-24 ml-1 ellipsis-1'>{p.petBreed}</Text>
+        <YcLogin renderError={<Block />}>
+          <View className='u-content'>
+            <View className='u-pet'>
+              <View className='flex align-center py-2 pr-5'>
+                <View className='u-pet__add flex-0 flex align-center justify-center mr-2' onClick={this.addPet}>
+                  <Iconfont type='iconadd' color='#fff' size='24' />
+                </View>
+                {pet.list.map((p) => {
+                  return (
+                    <View className='u-pet__item p-2 flex flex-0 mr-2' key={p.id} onClick={this.goPet.bind(this, p)}>
+                      <Image className='u-pet__image mr-2' src={p.avatar || config.petAvatar} />
+                      <View>
+                        <View className='font-s-28 mb-1 flex align-center justify-between'>
+                          <Text>{p.petName}</Text>
+                          {p.placed === 1 && <View className='u-pet__placed'>待确认</View>}
+                          {p.placed === 2 && <View className='u-pet__placed'>寄养中</View>}
+                        </View>
+                        <View className='flex align-center'>
+                          {p && p.sex == 0 ? (
+                            <Iconfont type='icongong' color='#2F6BFE' size='14' />
+                          ) : (
+                            <Iconfont type='iconmu' color='pink' size='14' />
+                          )}
+                          <Text className='text-hui font-s-24 ml-1 ellipsis-1'>{p.petBreed}</Text>
+                        </View>
                       </View>
                     </View>
-                  </View>
-                );
-              })}
+                  );
+                })}
+              </View>
             </View>
-          </View>
 
-          <View className='u-tool'>
-            <View className='u-action flex flex-wrap pt-5'>
-              {actionList.map((action) => {
-                return (
-                  <View
-                    className='flex flex-column align-center justify-center mb-5'
-                    style={{ width: '33.3%' }}
-                    key={action.value}
-                    onClick={this.handleToolClick.bind(this, action)}
-                  >
-                    <Image className='u-action__icon mb-2' src={action.image} />
-                    <View>{action.value}</View>
-                  </View>
-                );
-              })}
+            <View className='u-tool'>
+              <View className='u-action flex flex-wrap pt-5'>
+                {actionList.map((action) => {
+                  return (
+                    <View
+                      className='flex flex-column align-center justify-center mb-5'
+                      style={{ width: '33.3%' }}
+                      key={action.value}
+                      onClick={this.handleToolClick.bind(this, action)}
+                    >
+                      <Image className='u-action__icon mb-2' src={action.image} />
+                      <View>{action.value}</View>
+                    </View>
+                  );
+                })}
+              </View>
             </View>
-          </View>
 
-          {isLogin && (
             <View className='u-logout'>
               <Button type='warn' onClick={this.logout}>
                 退出登录
               </Button>
             </View>
-          )}
-        </View>
+          </View>
+        </YcLogin>
 
         <AtModal isOpened={showModal}>
           <AtModalContent>

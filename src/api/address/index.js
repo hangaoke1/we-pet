@@ -16,5 +16,5 @@ export default {
   // 删除地址
   deleteUserAddress: param => api.get('/pet/deleteUserAddress', param),
   // 更新地址
-  updateUserAddress: param => api.post('/pet/updateUserAddress', param)
+  updateUserAddress: param => api.post('/pet/updateUserAddress', param),
 };

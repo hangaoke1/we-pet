@@ -13,9 +13,10 @@ import storeApi from '@/api/store';
 
 import './index.less';
 
-@connect(({ pet, user }) => ({
+@connect(({ pet, user, store }) => ({
   pet,
-  user
+  user,
+  store
 }))
 class SubscribeConfirm extends Component {
   config = {
@@ -152,10 +153,12 @@ class SubscribeConfirm extends Component {
   };
 
   render() {
-    const { user, pet } = this.props;
+    const { user, pet, store } = this.props;
+    const { currentStore } = store;
     const { petId, service, date, time, mobile, payType, showCoupons, coupon } = this.state;
     const choosePet = _.get(pet, 'list', []).filter((item) => item.id == petId)[0] || {};
     const userInfo = _.get(user, 'userInfo');
+    const address = currentStore ? currentStore.city + currentStore.area + currentStore.detail : '';
 
     const { coupons = [] } = user;
     let total = service.reduce((t, i) => t + i.price, 0);
@@ -167,7 +170,6 @@ class SubscribeConfirm extends Component {
     const couponsLen = enableCoupons.length;
 
     if (coupon) {
-      // TODO: 减去优惠券价值
       total = total - _.get(coupon, 'value', 0);
     }
     return (
@@ -179,10 +181,10 @@ class SubscribeConfirm extends Component {
 
         <View className='u-store'>
           <View className='p-2 border-bottom-divider'>
-            <View className='u-store__name'>有宠宠物生活馆(滨江店)</View>
+            <View className='u-store__name'>{currentStore.storeName}</View>
             <View className='u-store__address'>
               <Iconfont type='icondizhi01' color='#ccc' size='16' />
-              <Text style={{ marginLeft: '4px' }}>浙江省杭州市滨江区滨盛路1893号</Text>
+              <Text style={{ marginLeft: '4px' }}>{address}</Text>
             </View>
           </View>
           <View className='u-pay'>
@@ -224,7 +226,7 @@ class SubscribeConfirm extends Component {
               <View className='u-service__item border-bottom-divider' key={s.id}>
                 <Image className='u-service__icon' src={s.image || config.petAvatar} />
                 <View className='u-service__name'>{s.name}</View>
-                <View className='u-service__price'>¥ {s.price}</View>
+                <View className='u-service__price f-number'>¥ {s.price}</View>
               </View>
             );
           })}
@@ -269,12 +271,14 @@ class SubscribeConfirm extends Component {
           <View className='u-action__left' />
           <View className='u-action__right'>
             <View>
-              {coupon ? <Text className='font-s-24 text-hui mr-1'>已优惠 ¥{_.get(coupon, 'value', 0)}</Text> : null}
+              {coupon ? (
+                <Text className='font-s-24 text-hui mr-1 f-number'>已优惠 ¥{_.get(coupon, 'value', 0)}</Text>
+              ) : null}
               <Text className='u-action__label'>{payType === 0 ? '合计' : '定金'}：</Text>
-              <Text className='u-action__val text-red'>¥ {total.toFixed(2)}</Text>
+              <Text className='u-action__val text-red f-number'>¥ {total.toFixed(2)}</Text>
             </View>
             <AtButton className='u-action__btn' type='primary' circle={false} full onClick={this.handleSubmit}>
-              去下单
+              提交订单
             </AtButton>
           </View>
         </View>

@@ -31,7 +31,7 @@ export default function axios (opts) {
     // 登录状态过期
     if (res.code === 900) {
       token.clear()
-      gotoLogin()
+      // gotoLogin()
       return Promise.reject(res)
     }
     return Promise.reject(res)

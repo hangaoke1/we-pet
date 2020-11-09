@@ -7,6 +7,8 @@ import ProductNew from '@/components/ProductNew';
 import GImage from '@/components/GImage';
 import shopApi from '@/api/shop';
 import homeApi from '@/api/home';
+import GLoadMore from '@/components/GLoadMore';
+import YcBackTop from '@/components/YcBackTop';
 
 import './index.less';
 
@@ -55,16 +57,46 @@ const cateList = [
 
 export default class ShopIndex extends Component {
   config = {
-    navigationBarTitleText: '商城'
+    navigationBarTitleText: '商城',
+    enablePullDownRefresh: true,
+    backgroundTextStyle: 'dark',
+    onReachBottomDistance: 150
   };
 
   state = {
+    categoryList: [],
+    banners: [],
     productNewList: [],
-    banners: []
+    loading: false,
+    finished: false,
+    pageNo: 1,
+    pageSize: 10,
+    scrollTop: 0
   };
 
+  onReachBottom() {
+    this.getList();
+  }
+
+  onPullDownRefresh() {
+    this.setState({
+      pageNo: 1,
+      loading: false,
+      finished: false
+    });
+    setTimeout(() => {
+      this.init();
+      Taro.stopPullDownRefresh();
+    }, 1000);
+  }
+
   componentDidMount() {
-    this.getProductNew();
+    this.init();
+    this.getCategory();
+  }
+
+  init = () => {
+    this.getList(true);
     homeApi
       .queryBanners({
         bannerType: 1 // 0首页 1商城
@@ -74,9 +106,18 @@ export default class ShopIndex extends Component {
           banners: res || []
         });
       })
-      .catch((error) => {
-        console.log('>>> queryBanners异常', error);
-      });
+      .catch(() => {});
+  };
+
+  getCategory() {
+    shopApi
+      .queryProductCategory({ pageNo: 1, pageSize: 999 })
+      .then((res) => {
+        this.setState({
+          categoryList: res.slice(0, 8) || []
+        });
+      })
+      .catch(() => {});
   }
 
   handleCateClick = (item) => {
@@ -97,16 +138,29 @@ export default class ShopIndex extends Component {
     });
   };
 
-  getProductNew = () => {
+  getList = (refresh) => {
+    const { pageNo, pageSize, loading, finished } = this.state;
+    if (loading || finished) {
+      return;
+    }
+    this.setState({
+      loading: true
+    });
     shopApi
       .queryProducts({
-        pageNo: 1,
-        pageSize: 10,
+        pageNo,
+        pageSize,
         hotFlag: 1 // 1新品 2折扣
       })
       .then((res) => {
-        this.setState({
-          productNewList: _.get(res, 'items', [])
+        const list = _.get(res, 'items', []);
+        this.setState((state) => {
+          return {
+            pageNo: pageNo + 1,
+            productNewList: refresh ? list : [ ...state.productNewList, ...list ],
+            loading: false,
+            finished: pageNo * pageSize >= res.totalCount ? true : false
+          };
         });
       })
       .catch((error) => {
@@ -115,7 +169,7 @@ export default class ShopIndex extends Component {
   };
 
   render() {
-    const { productNewList, banners } = this.state;
+    const { productNewList, banners, finished, loading, scrollTop, categoryList = [] } = this.state;
     return (
       <View className='u-shop'>
         <View className='u-shop__search flex align-center p-2' onClick={this.goSearch}>
@@ -133,18 +187,18 @@ export default class ShopIndex extends Component {
         >
           {banners.map((banner) => (
             <SwiperItem key={banner.id}>
-              <GImage my-class='u-shop__banner' src={banner.imgUrl} />
+              <GImage my-class='u-shop__bannerImg' mode='fill' src={banner.imgUrl} />
             </SwiperItem>
           ))}
         </Swiper>
 
         <View className='u-shop__category'>
-          {cateList.map((item) => {
+          {categoryList.map((item) => {
             return (
               <View className='u-shop__item' key={item.id} onClick={this.handleCateClick.bind(this, item)}>
                 <View className='flex flex-column align-center justify-center'>
                   <Image className='u-shop__icon' src={item.icon} />
-                  <View className='mt-1 font-s-24'>{item.name}</View>
+                  <View className='mt-1 font-s-24'>{item.categoryName}</View>
                 </View>
               </View>
             );
@@ -167,6 +221,9 @@ export default class ShopIndex extends Component {
             })}
           </View>
         </View>
+
+        <GLoadMore onClick={this.getList} finished={finished} loading={loading} />
+        <YcBackTop scrollTop={scrollTop} />
       </View>
     );
   }

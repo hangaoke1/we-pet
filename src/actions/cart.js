@@ -13,7 +13,8 @@ export const getCart = async function () {
   dispatch({
     type: GET_CART,
     value: {
-      totalCount: _.get(data, 'totalCount', 0),
+      // totalCount: _.get(data, 'totalCount', 0),
+      totalCount: _.get(data, 'items', []).length,
       items: _.get(data, 'items', [])
     }
   })

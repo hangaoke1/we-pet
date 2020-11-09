@@ -93,7 +93,7 @@ class StoreOrder extends Component {
           return {
             pageNo: pageNo + 1,
             loading: false,
-            finished: pageNo * pageSize > res.totalCount ? true : false,
+            finished: pageNo * pageSize >= res.totalCount ? true : false,
             list: [ ...state.list, ...res.items ]
           };
         });

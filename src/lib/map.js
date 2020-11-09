@@ -1,23 +1,26 @@
 import Taro from '@tarojs/taro'
+import config from '@/config'
+import _ from '@/lib/lodash'
+import QQMapWX from './qqmap-wx-jssdk1.2/qqmap-wx-jssdk'
 
-export function goLocation () {
-  const key = 'JDZBZ-2Y2CW-V3HRN-RKL7T-WD6YS-Q4FP4' //使用在腾讯位置服务申请的key
-  const referer = '有宠宠物生活馆' //调用插件的app的名称
-  const location = JSON.stringify({
-    latitude: 30.206371,
-    longitude: 120.202034
-  })
-  const category = '生活服务,娱乐休闲'
+export const qqmapsdk = new QQMapWX({
+  key: config.mapKey
+});
 
-  Taro.navigateTo({
-    url:
-      'plugin://chooseLocation/index?key=' +
-      key +
-      '&referer=' +
-      referer +
-      '&location=' +
-      location +
-      '&category=' +
-      category
-  })
-}
+export const calcDistance = function(from, to){
+  return new Promise((resolve, reject) => {
+    qqmapsdk.calculateDistance({
+      from,
+      to: [ to ],
+      success: function(res){
+        //成功后的回调
+        console.log('>>> 位置计算', res);
+        if (res.status === 0) {
+          return resolve(_.get(res, 'result.elements[0].distance'))
+        } else {
+          reject(new Error('无法计算'))
+        }
+      }
+    });
+  });
+};

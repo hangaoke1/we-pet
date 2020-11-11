@@ -327,9 +327,9 @@ class UserPage extends Component {
             </View>
 
             <View className='u-logout'>
-              <Button type='warn' onClick={this.logout}>
+              <View className='u-logout__btn' onClick={this.logout}>
                 退出登录
-              </Button>
+              </View>
             </View>
           </View>
         </YcLogin>

@@ -1,8 +1,3 @@
-@font-face {
-  font-family: NumberFont;
-  src: url(https://hgkcdn.oss-cn-shanghai.aliyuncs.com/test/NumberMedium.2736700f.ttf);
-}
-
 .f-number {
 	font-family: NumberFont;
 }

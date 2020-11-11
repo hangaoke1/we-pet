@@ -55,7 +55,7 @@ class OrderItem extends Component {
     return (
       <View className='u-orderItem'>
         {orderItemList.map((item) => {
-          let specs = item.productSku.specs.map((s) => s.name + '/' + s.value).join('/');
+          let specs = item.productSku.specs ? item.productSku.specs.map((s) => s.name + '/' + s.value).join('/') : '';
           return (
             <View className='u-product__item' key={item.id} onClick={this.goDetail}>
               <View className='u-product__img'>

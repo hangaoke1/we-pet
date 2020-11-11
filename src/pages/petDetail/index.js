@@ -195,7 +195,7 @@ class PetDetail extends Component {
     });
   };
 
-  handleWeightChang = (e) => {
+  handleWeightChange = (e) => {
     this.setState((state) => {
       const form = state.form;
       form.petWeight = e.detail.value;

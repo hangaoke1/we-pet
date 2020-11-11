@@ -68,7 +68,7 @@ export default class AllService extends Component {
               </View>
               <View className="flex-1">
                 <View className="font-s-32">{v.name}</View>
-                <View className="font-s-24 text-hui mt-1 ellipsis-1">
+                <View className="font-s-24 text-hui mt-1 ellipsis-2">
                   {v.description}
                 </View>
                 <View className="text-red mt-3">

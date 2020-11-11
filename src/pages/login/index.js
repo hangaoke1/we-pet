@@ -1,9 +1,8 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Text, OpenData } from '@tarojs/components';
-import { AtButton } from 'taro-ui';
+import { View, Text, OpenData, Button } from '@tarojs/components';
+import { AtButton, AtModal, AtModalHeader, AtModalContent, AtModalAction } from 'taro-ui';
 import apiUser from '@/api/user';
 import token from '@/lib/token';
-import _ from '@/lib/lodash';
 
 import './index.less';
 
@@ -12,7 +11,9 @@ class Login extends Component {
     navigationBarTitleText: '快速登录'
   };
 
-  state = {};
+  state = {
+    phoneData: null
+  };
 
   componentWillMount() {
     Taro.login().then((res) => {
@@ -20,10 +21,10 @@ class Login extends Component {
     });
   }
 
-  getUserInfoNative = (phoneData) => {
+  getUserInfoNative = () => {
     Taro.getUserInfo().then((res) => {
       const userInfo = res.userInfo;
-      this.getUserInfo(userInfo, phoneData);
+      this.getUserInfo(userInfo, this.state.phoneData);
     });
   };
 
@@ -32,11 +33,12 @@ class Login extends Component {
       wechatCode: this.wechatCode,
       userInfo,
       phoneData
-    }
-    console.log('>>> 参数', params);
+    };
+    console.log('>>> 登录参数', params);
     apiUser
       .login(params)
       .then((data) => {
+        console.log('>>> 登录结果', params);
         token.set(data || '');
         Taro.navigateBack();
       })
@@ -61,11 +63,40 @@ class Login extends Component {
   };
 
   onGetPhoneNumber = (res) => {
-    this.getUserInfoNative(res.detail);
+    if (res.detail.errMsg.indexOf('fail') > -1) {
+      return;
+    }
+    const phoneData = res.detail;
+    Taro.getSetting({
+      success: res => {
+        if (!res.authSetting['scope.userInfo']) {
+          console.log('>>> 用户未经授权');
+          this.setState({
+            phoneData,
+            isOpened: true
+          })
+        } else {
+          console.log('>>> 用户已经授权');
+          this.setState({
+            phoneData
+          }, () => {
+            this.getUserInfoNative()
+          });
+        }
+      }
+    });
+  };
+
+  onGetUserInfo = (res) => {
+    if (res && res.detail.errMsg.indexOf('fail') > -1) {
+      return;
+    }
+    this.getUserInfoNative(this.state.phoneData);
   };
 
   render() {
     const prefixCls = 'u-login';
+    const { isOpened } = this.state;
 
     return (
       <View className={prefixCls}>
@@ -79,12 +110,22 @@ class Login extends Component {
         >
           微信一键登录
         </AtButton>
-        <AtButton className='u-login-other' onClick={this.otherLogin}>
-          账号密码登录
-        </AtButton>
         <View className='u-back'>
           <Text onClick={this.back}>暂不登录</Text>
         </View>
+
+        <AtModal isOpened={isOpened}>
+          <AtModalHeader>温馨提示</AtModalHeader>
+          <AtModalContent>欢迎使用宠物线上服务</AtModalContent>
+          <AtModalAction>
+            <Button
+              openType='getUserInfo'
+              onGetUserInfo={this.onGetUserInfo}
+            >
+              立即体验
+            </Button>
+          </AtModalAction>
+        </AtModal>
       </View>
     );
   }

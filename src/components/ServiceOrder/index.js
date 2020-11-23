@@ -142,22 +142,18 @@ class ServiceOrder extends Component {
           <Text>实付：</Text>
           <Text className='text-red f-number'>¥ {item.paidFee}</Text>
         </View>
-
-        {item.reserveOrderStatus == 0 && (
-          <View className='u-action'>
-            <AtButton className='u-action__btn' type='secondary' circle onClick={this.repay}>
-              重新支付
-            </AtButton>
-          </View>
-        )}
-
-        {item.reserveOrderStatus == 100 && (
-          <View className='u-action'>
+        <View className='u-action'>
+          {[ 0, 100 ].includes(item.reserveOrderStatus) && (
             <AtButton className='u-action__btn' type='secondary' circle onClick={this.cancelOrder}>
               取消订单
             </AtButton>
-          </View>
-        )}
+          )}
+          {item.reserveOrderStatus == 0 && (
+            <AtButton className='u-action__btn' type='primary' circle onClick={this.repay}>
+              重新支付
+            </AtButton>
+          )}
+        </View>
       </View>
     );
   }

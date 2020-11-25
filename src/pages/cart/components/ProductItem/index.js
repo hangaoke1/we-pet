@@ -102,7 +102,7 @@ class ProductItem extends Component {
               <RadioIcon selected={!!selected} />
             </View>
             <View className='u-content'>
-              <GImage my-class='u-img' onClick={this.goProduct} src={productSku.skuImgUrl} />
+              <GImage my-class='u-img' onClick={this.goProduct} src={productSku.skuImgUrl} resize="400" />
               <View className='u-info'>
                 <View className='u-top' onClick={this.goProduct}>
                   <View className='u-name'>{productSku.skuName}</View>

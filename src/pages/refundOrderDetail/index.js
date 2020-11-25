@@ -78,7 +78,10 @@ class RefundOrderDetail extends Component {
     const order = _.get(orderInfo, 'order');
     const userAddress = _.get(orderInfo, 'userAddress');
     const orderItemList = _.get(orderInfo, 'orderItemList');
-    return orderInfo ? (
+
+    if (!order) { return null }
+
+    return (
       <View className='u-orderDetail'>
         <View
           className='u-status'
@@ -138,7 +141,7 @@ class RefundOrderDetail extends Component {
             </View>
           </View>
           <View className='text-right pt-3 font-s-28 px-2'>
-            {order.discountFee && <Text className='text-hui'>已优惠¥{order.discountFee.toFixed(2)}，</Text>}
+            <Text className='text-hui'>已优惠¥{order.discountFee.toFixed(2)}，</Text>
             <Text>共计：</Text>
             <Text className='text-red f-number'>¥{order.paidFee.toFixed(2)}</Text>
           </View>
@@ -174,7 +177,7 @@ class RefundOrderDetail extends Component {
                 {JSON.parse(refundInfo.imgArray).map((img) => {
                   return (
                     <View key={img.url} className='u-img__wrap'>
-                      <GImage my-class='u-img' src={img.url} />
+                      <GImage my-class='u-img' src={img.url} resize="400" />
                     </View>
                   );
                 })}
@@ -202,7 +205,7 @@ class RefundOrderDetail extends Component {
           </View>
         </View>
       </View>
-    ) : null;
+    );
   }
 }
 

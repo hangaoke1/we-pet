@@ -93,7 +93,7 @@ class Pet extends Component {
                 ]}
               >
                 <View className='u-item'>
-                  <GImage my-class='u-item__img' src={item.avatar || config.petAvatar} />
+                  <GImage my-class='u-item__img' src={item.avatar || config.petAvatar} resize="200" />
                   <View className='u-item__info flex-1'>
                     <View className='u-item__name'>
                       <View className="flex align-center">

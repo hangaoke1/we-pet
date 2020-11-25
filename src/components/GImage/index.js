@@ -15,7 +15,8 @@ class GImage extends Component {
     fade: PropTypes.bool,
     showLoading: PropTypes.bool,
     showError: PropTypes.bool,
-    mode: PropTypes.string
+    mode: PropTypes.string,
+    resize: PropTypes.string
   };
 
   static defaultProps = {
@@ -56,11 +57,11 @@ class GImage extends Component {
   }
 
   render() {
-    let { src, mode, showLoading = true, showError = true, fade = true } = this.props;
+    let { src, mode, showLoading = true, showError = true, fade = true, resize } = this.props;
     const { opacity, loading, isError, transition } = this.state;
     const classStr = classnames('my-class g-image');
     src = src || config.petAvatar;
-    src = _.url2Webp(src);
+    src = _.url2Webp(src, resize);
 
     const style = {
       opacity,

@@ -190,8 +190,11 @@ class OrderDetail extends Component {
     const order = _.get(orderInfo, 'order');
     const userAddress = _.get(orderInfo, 'userAddress');
     const orderItemList = _.get(orderInfo, 'orderItemList');
+    if (!order) {
+      return null;
+    }
 
-    return orderInfo ? (
+    return (
       <View className='u-orderDetail'>
         <View
           className='u-status'
@@ -211,7 +214,7 @@ class OrderDetail extends Component {
             <Iconfont size='20' type='iconfajian' color='#000' />
           </View>
           <View className='flex-1'>
-            {order.logisticsNo ? (
+            {order && order.logisticsNo ? (
               <View>
                 <View className='mr-3 ellipsis-2'>{_.get(steps, '[0].text', '暂无物流动态')}</View>
                 <View className='text-hui font-s-24 mt-1'>{_.get(steps, '[0].desc')}</View>
@@ -262,7 +265,8 @@ class OrderDetail extends Component {
             </View>
           </View>
           <View className='text-right pt-3 font-s-28 px-2'>
-            {order.discountFee && <Text className='text-hui f-number'>已优惠¥{order.discountFee.toFixed(2)}，</Text>}
+            {order &&
+            order.discountFee && <Text className='text-hui f-number'>已优惠¥{order.discountFee.toFixed(2)}，</Text>}
             <Text>共计：</Text>
             <Text className='text-red f-number'>¥{order.paidFee.toFixed(2)}</Text>
           </View>
@@ -287,7 +291,8 @@ class OrderDetail extends Component {
           </View>
 
           {/* 待支付 */}
-          {order.orderStatus == 100 && (
+          {order &&
+          order.orderStatus == 100 && (
             <View className='u-action'>
               <AtButton className='u-action__btn' type='secondary' circle onClick={this.onCancel}>
                 取消订单
@@ -310,7 +315,7 @@ class OrderDetail extends Component {
           )}
         </View>
       </View>
-    ) : null;
+    );
   }
 }
 

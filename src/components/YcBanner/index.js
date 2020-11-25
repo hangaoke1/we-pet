@@ -12,7 +12,7 @@ export default class YcBanner extends Component {
       <Swiper className='yc-banner' circular autoplay>
         {banners.map((banner) => (
           <SwiperItem key={banner.id}>
-            <GImage my-class='yc-banner__image' src={banner.imgUrl} />
+            <GImage my-class='yc-banner__image' src={banner.imgUrl} resize="750" />
           </SwiperItem>
         ))}
       </Swiper>

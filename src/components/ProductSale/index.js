@@ -69,7 +69,7 @@ class ProductSale extends PureComponent {
     return info ? (
       <View className='u-productSale bg-bai' onClick={this.goProduct}>
         <View className='flex align-center justify-center'>
-          <GImage my-class='u-productSale__img' src={info.skuImgUrl || config.petAvatar} />
+          <GImage my-class='u-productSale__img' src={info.skuImgUrl || config.petAvatar} resize='300' />
         </View>
         <View className='p-2'>
           <View className='u-productSale__name mb-1 font-s-24 ellipsis-2'>{info.skuName || '测试商品'}</View>

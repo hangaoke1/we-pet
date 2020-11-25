@@ -187,7 +187,7 @@ export default class ShopIndex extends Component {
         >
           {banners.map((banner) => (
             <SwiperItem key={banner.id}>
-              <GImage my-class='u-shop__bannerImg' mode='fill' src={banner.imgUrl} />
+              <GImage my-class='u-shop__bannerImg' mode='fill' src={banner.imgUrl} resize="750" />
             </SwiperItem>
           ))}
         </Swiper>

@@ -44,7 +44,7 @@ export default class PetList extends Component {
         {!isEmpty && (
           <View className='u-item p-2 bg-bai'>
             <View className='u-info flex align-center border-bottom-divider pb-2 mb-2'>
-              <GImage my-class='u-image flex-0 mr-2' src={config.petAvatar} />
+              <GImage my-class='u-image flex-0 mr-2' src={config.petAvatar} resize="200" />
               <View className='u-info__content flex-1'>
                 <View className='u-info__top flex align-center justify-between mb-2'>
                   <View className='u-info__name font-s-32 flex align-center'>

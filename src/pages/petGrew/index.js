@@ -167,7 +167,7 @@ class PetGrew extends Component {
             {petList.map((item) => (
               <View className='u-pet__item' key={item.id} onClick={this.selectedPet.bind(this, item)}>
                 <View className='u-pet__avatar'>
-                  <GImage my-class='u-pet__img' src={item.avatar} />
+                  <GImage my-class='u-pet__img' src={item.avatar} resize="200" />
                   {item.id == petId && (
                     <View className='u-pet__selected'>
                       <Image className='u-pet__selected-icon' src={require('../../images/selected.png')} />

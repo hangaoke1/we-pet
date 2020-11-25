@@ -19,7 +19,8 @@ class GImg extends Component {
     lazyLoad: PropTypes.bool,
     onLoad: PropTypes.func,
     force: PropTypes.bool,
-    className: PropTypes.string
+    className: PropTypes.string,
+    resize: PropTypes.string // 格式化图片宽
   };
 
   static defaultProps = {
@@ -52,10 +53,10 @@ class GImg extends Component {
   }
 
   render() {
-    let { src, mode, radius, className } = this.props;
+    let { src, mode, radius, className, resize } = this.props;
     const { width, height, loaded } = this.state;
     const classStr = classnames('u-gimg', className);
-    src = _.url2Webp(src);
+    src = _.url2Webp(src, resize);
 
     return (
       <Image

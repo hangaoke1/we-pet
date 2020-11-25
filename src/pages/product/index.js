@@ -340,7 +340,7 @@ class Product extends Component {
           >
             {productBannerImgList.map((image) => (
               <SwiperItem key={image.id}>
-                <GImage my-class='u-item' src={image.imgUrl} />
+                <GImage my-class='u-item' src={image.imgUrl} resize="750" />
               </SwiperItem>
             ))}
           </Swiper>
@@ -384,7 +384,7 @@ class Product extends Component {
         {/* 商品详情图片 */}
         <View className='u-imgs'>
           {productDetailImgList.map((v) => {
-            return <GImg key={v.id} maxWidth={750} force mode='aspectFit' src={v.imgUrl} />;
+            return <GImg key={v.id} maxWidth={750} force mode='aspectFit' src={v.imgUrl} resize="1200" />;
           })}
 
           {!productDetailImgList.length && (

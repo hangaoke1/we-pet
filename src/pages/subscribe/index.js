@@ -234,7 +234,7 @@ class SubScribe extends Component {
             {petList.map((item) => (
               <View className='u-pet__item' key={item.id} onClick={this.selectedPet.bind(this, item.id)}>
                 <View className='u-pet__avatar'>
-                  <GImage my-class='u-pet__img' src={item.avatar} />
+                  <GImage my-class='u-pet__img' src={item.avatar} resize="400" />
                   {item.id == petId && (
                     <View className='u-pet__selected'>
                       {/* <Iconfont type='iconchenggong' color='#FF7013' size='16' /> */}
@@ -263,7 +263,7 @@ class SubScribe extends Component {
               return (
                 <View key={item.name} className='u-service__item' onClick={this.selectedService.bind(this, item)}>
                   <View className='u-service__header'>
-                    <GImage my-class='u-service__img' src={item.image} />
+                    <GImage my-class='u-service__img' src={item.image} resize="400" />
                   </View>
                   <View className='u-service__name'>
                     <Text>{item.name}</Text>

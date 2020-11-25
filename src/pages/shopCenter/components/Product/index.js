@@ -68,7 +68,7 @@ class Product extends Component {
 
     return item ? (
       <View className={prefixCls} onClick={this.goProduct}>
-        <GImage my-class='u-img' src={item.skuImgUrl} />
+        <GImage my-class='u-img' src={item.skuImgUrl} resize="200" />
         <View className='u-info'>
           <View className='u-name ellipsis-2'>{item.skuName}</View>
           <View className='u-bottom'>

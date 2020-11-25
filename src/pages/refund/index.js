@@ -175,6 +175,9 @@ export default class Refund extends Component {
     const { orderInfo } = this.state;
     const order = _.get(orderInfo, 'order');
     const orderItemList = _.get(orderInfo, 'orderItemList');
+
+    if (!order) { return null }
+
     return (
       <View className='u-refund'>
         <View className='p-2 bg-bai'>
@@ -239,7 +242,7 @@ export default class Refund extends Component {
             {images.map((url, index) => {
               return (
                 <View key={url} className='u-img__wrap'>
-                  <GImage my-class='u-img' src={url} />
+                  <GImage my-class='u-img' src={url} resize='400' />
                   <Iconfont
                     my-class='u-del'
                     type='iconquxiaozhaopian'

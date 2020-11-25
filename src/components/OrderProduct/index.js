@@ -21,7 +21,7 @@ class OrderProduct extends Component {
     return item ? (
       <View className='u-product__item' onClick={this.onClick}>
         <View className='u-product__img'>
-          <GImage my-class='u-product__img-content' src={item.productSku.skuImgUrl} />
+          <GImage my-class='u-product__img-content' src={item.productSku.skuImgUrl} resize="200" />
         </View>
         <View className='u-product__info'>
           <View className='u-product__name ellipsis-2'>{item.productSku.skuName}</View>

@@ -51,7 +51,7 @@ class OrderItem extends Component {
     const { orderInfo } = this.props;
     const order = _.get(orderInfo, 'order', {});
     const orderItemList = _.get(orderInfo, 'orderItemList', []);
-
+    if (!order) { return null }
     return (
       <View className='u-orderItem'>
         {orderItemList.map((item) => {
@@ -59,7 +59,7 @@ class OrderItem extends Component {
           return (
             <View className='u-product__item' key={item.id} onClick={this.goDetail}>
               <View className='u-product__img'>
-                <GImage my-class='u-product__img__content' src={item.productSku.skuImgUrl} />
+                <GImage my-class='u-product__img__content' src={item.productSku.skuImgUrl} resize='400' />
               </View>
               <View className='u-product__info'>
                 <View className='u-product__name'>{item.productSku.skuName}</View>

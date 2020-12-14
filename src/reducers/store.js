@@ -12,7 +12,7 @@ const store = (
 ) => {
   switch (action.type) {
     case GET_STORE:
-      // TODO: 更新门店内容
+      // TODO: ID相同则更新信息
       // const currentStore = state.currentStore ? state.currentStore : action.value[0]
       const currentStore = action.value[0]
       Taro.setStorageSync('currentStore', currentStore);

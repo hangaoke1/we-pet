@@ -215,7 +215,7 @@ export default class ShopCenter extends Component {
           </View>
           {/* 右侧列表 */}
           <ScrollView
-            className='u-shopCenter__list p-2'
+            className='u-shopCenter__list'
             scrollY
             scrollWithAnimation
             refresherEnabled

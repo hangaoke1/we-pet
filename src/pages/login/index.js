@@ -3,6 +3,7 @@ import { View, Text, OpenData, Button } from '@tarojs/components';
 import { AtButton, AtModal, AtModalHeader, AtModalContent, AtModalAction } from 'taro-ui';
 import apiUser from '@/api/user';
 import token from '@/lib/token';
+import eventBus from '@/lib/eventBus';
 
 import './index.less';
 
@@ -40,6 +41,7 @@ class Login extends Component {
       .then((data) => {
         console.log('>>> 登录结果', params);
         token.set(data || '');
+        eventBus.$emit('login')
         Taro.navigateBack();
       })
       .catch((error) => {
@@ -68,20 +70,23 @@ class Login extends Component {
     }
     const phoneData = res.detail;
     Taro.getSetting({
-      success: res => {
+      success: (res) => {
         if (!res.authSetting['scope.userInfo']) {
           console.log('>>> 用户未经授权');
           this.setState({
             phoneData,
             isOpened: true
-          })
+          });
         } else {
           console.log('>>> 用户已经授权');
-          this.setState({
-            phoneData
-          }, () => {
-            this.getUserInfoNative()
-          });
+          this.setState(
+            {
+              phoneData
+            },
+            () => {
+              this.getUserInfoNative();
+            }
+          );
         }
       }
     });
@@ -100,28 +105,34 @@ class Login extends Component {
 
     return (
       <View className={prefixCls}>
-        <OpenData className='u-logo' type='userAvatarUrl' />
-        <View className='u-tip'>登录后即注册为有宠会员</View>
-        <AtButton
-          className='u-login-wechat'
-          type='primary'
-          openType='getPhoneNumber'
-          onGetPhoneNumber={this.onGetPhoneNumber}
-        >
-          微信一键登录
-        </AtButton>
+        <View className='u-card animated fadeIn faster delay-300ms'>
+          <OpenData className='u-logo' type='userAvatarUrl' />
+          <View className='u-title'>宠小二</View>
+          <View className='u-tip'>获取你的公开信息（昵称、头像等）</View>
+          <AtButton
+            className='u-login-wechat'
+            type='primary'
+            openType='getPhoneNumber'
+            onGetPhoneNumber={this.onGetPhoneNumber}
+          >
+            授权登录
+          </AtButton>
+        </View>
+
         <View className='u-back'>
           <Text onClick={this.back}>暂不登录</Text>
+        </View>
+        <View className='u-mark'>
+          点击“微信授权登录”按钮代表你已同意<Text className='u-service'>《用户服务协议》</Text>
         </View>
 
         <AtModal isOpened={isOpened}>
           <AtModalHeader>温馨提示</AtModalHeader>
-          <AtModalContent>欢迎使用宠物线上服务</AtModalContent>
+          <AtModalContent>
+            <View className='text-center'>欢迎使用宠物线上服务</View>
+          </AtModalContent>
           <AtModalAction>
-            <Button
-              openType='getUserInfo'
-              onGetUserInfo={this.onGetUserInfo}
-            >
+            <Button openType='getUserInfo' onGetUserInfo={this.onGetUserInfo}>
               立即体验
             </Button>
           </AtModalAction>

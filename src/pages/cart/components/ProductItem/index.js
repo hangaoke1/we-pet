@@ -111,7 +111,7 @@ class ProductItem extends Component {
                 <View className='u-bottom'>
                   <View className='u-price text-red' onClick={this.goProduct}>
                     <Text className='font-s-2 mr-1'>¥</Text>
-                    <Text className='f-number'>{productSku.price}</Text>
+                    <Text className='f-number'>{productSku.memberPrice || productSku.price}</Text>
                   </View>
                   <View className='u-count'>
                     <AtInputNumber

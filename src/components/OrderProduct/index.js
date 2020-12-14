@@ -26,7 +26,7 @@ class OrderProduct extends Component {
         <View className='u-product__info'>
           <View className='u-product__name ellipsis-2'>{item.productSku.skuName}</View>
           <View className='u-product__specs'>{specs}</View>
-          <View className='text-red mt-1 f-number'>¥ {item.productSku.price}</View>
+          <View className='text-red mt-1 f-number'>¥ {item.productSku.memberPrice || item.productSku.price}</View>
         </View>
         <View className='u-product__right flex align-center'>
           <Iconfont type='iconshanchu' size='12' color='#333' />

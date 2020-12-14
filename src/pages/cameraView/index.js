@@ -5,7 +5,7 @@ import './index.less'
 
 class CameraView extends Component {
   config = {
-    navigationBarTitleText: '有宠监控'
+    navigationBarTitleText: '宝贝监控'
   }
 
   state = {

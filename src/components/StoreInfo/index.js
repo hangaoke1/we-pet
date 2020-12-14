@@ -21,12 +21,12 @@ export default class StoreInfo extends Component {
   openLocation = () => {
     const { currentStore } = this.props.store;
     if (!currentStore) {
-      return Taro.showToast({ title: '请选择门店', icon: 'none' })
+      return Taro.showToast({ title: '请选择门店', icon: 'none' });
     }
     Taro.openLocation({
       latitude: +currentStore.lat,
       longitude: +currentStore.lon,
-      name: currentStore.storeName,
+      name: currentStore.shopInfoName,
       address: currentStore.city + currentStore.area + currentStore.detail
     });
   };
@@ -52,7 +52,7 @@ export default class StoreInfo extends Component {
       <View className='u-store flex'>
         <Image className='u-store__logo flex-0' src={currentStore.logo} />
         <View className='flex-1'>
-          <View className='font-s-32 text-base mb-2'>{currentStore.storeName}</View>
+          <View className='font-s-32 text-base mb-2'>{currentStore.shopInfoName}</View>
           <View className='font-s-24 text-base mb-2'>营业中 {currentStore.workTime}</View>
           <View className='flex'>
             <View className='flex-0 mr-1'>

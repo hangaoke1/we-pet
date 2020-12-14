@@ -181,7 +181,7 @@ class SubscribeConfirm extends Component {
 
         <View className='u-store'>
           <View className='p-2 border-bottom-divider'>
-            <View className='u-store__name'>{currentStore.storeName}</View>
+            <View className='u-store__name'>{currentStore.shopInfoName}</View>
             <View className='u-store__address'>
               <Iconfont type='icondizhi01' color='#ccc' size='16' />
               <Text style={{ marginLeft: '4px' }}>{address}</Text>

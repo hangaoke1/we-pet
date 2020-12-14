@@ -1,43 +1,78 @@
-@import (reference) '../../styles/var.less';
-.u-login-wechat {
-  width: 650px;
-  height: 80px;
-  line-height: 80px;
-  margin: 0 auto;
-  font-size: 30px;
-  color: #fff;
-  margin-bottom: 20px;
-}
+.u-login {
+  box-sizing: border-box;
+  padding-top: 50px;
+  background-color: #f1f2f3;
+  min-height: 100vh;
 
-.u-login-other {
-  width: 650px;
-  height: 80px;
-  line-height: 80px;
-  margin: 0 auto;
-  margin-bottom: 20px;
-  font-size: 30px;
-}
+  .u-card {
+    position: relative;
+    width: 700px;
+    height: 500px;
+    padding-top: 20px;
+    border-radius: 20px;
+    margin: 0 auto;
+    background-color: #fff;
+    text-align: center;
+  }
 
-.u-logo {
-  display: block;
-  width: 160px;
-  height: 160px;
-  margin: 0 auto;
-  margin-top: 50px;
-  border-radius: 160px;
-  background-color: @themeColor;
-  overflow: hidden;
-}
+  .u-logo {
+    display: block;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto;
+    margin-top: 30px;
+    border-radius: 160px;
+    background-color: #ccc;
+    overflow: hidden;
+  }
 
-.u-tip {
-  margin-top: 80px;
-  margin-bottom: 80px;
-  font-size: 24px;
-  text-align: center;
-}
+  .u-title {
+    margin-top: 20px;
+    font-size: 36px;
+  }
 
-.u-back {
-  margin-top: 50px;
-  font-size: 24px;
-  text-align: center;
+  .u-tip {
+    margin-top: 80px;
+    margin-bottom: 80px;
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .u-login-wechat {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    width: 350px;
+    height: 80px;
+    line-height: 80px;
+    margin: 0 auto;
+    font-size: 30px;
+    color: #333;
+    background: #FFF1E8;
+    border: 2px solid #FFD1B4;
+    border-radius: 50px;
+  }
+
+  .u-back {
+    margin-top: 100px;
+    font-size: 24px;
+    text-align: center;
+    color: #ccc;
+  }
+
+  .u-mark {
+    position: fixed;
+    width: 100%;
+    font-size: 24px;
+    color: #ccc;
+    bottom: calc(30px + constant(safe-area-inset-bottom));
+    bottom: calc(30px + env(safe-area-inset-bottom));
+    text-align: center;
+  }
+
+  .u-service {
+    color: #2f54eb;
+  }
+
 }

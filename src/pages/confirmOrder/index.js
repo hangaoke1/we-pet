@@ -154,7 +154,7 @@ class ConfirmOrder extends Component {
     const chooseAddress = address.list.filter((item) => item.id === address.id)[0];
 
     let totalPriceOri = orderProduct.reduce((total, item) => {
-      return total + Number(item.price);
+      return total + Number(item.memberPrice || item.price);
     }, 0);
     let totalPrice = totalPriceOri;
     const totalCount = orderProduct.reduce((total, item) => {
@@ -203,7 +203,7 @@ class ConfirmOrder extends Component {
                   <View className='u-product__info'>
                     <View className='u-product__name'>{item.productSku.skuName}</View>
                     <View className='u-product__specs mt-1 text-hui'>规格：{specs || '无'}</View>
-                    <View className='u-product__price mt-1 text-red f-number'>¥ {item.productSku.price}</View>
+                    <View className='u-product__price mt-1 text-red f-number'>¥ {item.productSku.memberPrice || item.productSku.price}</View>
                   </View>
                   <View className='u-product__right'>
                     <View className='u-product__count'>

@@ -66,6 +66,8 @@ class Product extends Component {
     const prefixCls = 'u-product';
     const { item } = this.props;
 
+    if (!item) { return null }
+
     return item ? (
       <View className={prefixCls} onClick={this.goProduct}>
         <GImage my-class='u-img' src={item.skuImgUrl} resize="200" />
@@ -73,9 +75,9 @@ class Product extends Component {
           <View className='u-name ellipsis-2'>{item.skuName}</View>
           <View className='u-bottom'>
             <View className='u-price'>
-              <View className='f-number'>¥ {item.price}</View>
-              {item && item.originPrice && item.originPrice !== item.price ? (
-                <View className='f-number font-s-2 text-hui line-through'>¥ {item.originPrice}</View>
+              <View className='f-number'>¥ {item.memberPrice || item.price}</View>
+              {item.memberPrice ? (
+                <View className='f-number font-s-2 text-hui line-through'>¥ {item.price}</View>
               ) : null}
             </View>
             <View className='u-addcart' onClick={this.addCart}>

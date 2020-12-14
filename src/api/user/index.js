@@ -16,5 +16,9 @@ export default {
   // 查询我的设备
   queryMyCameraList: param => api.get('/pet/queryMyCameraList', param),
   // 查询优惠券
-  queryCoupons: param => api.post('/pet/coupons', param)
+  queryCoupons: param => api.post('/pet/coupons', param),
+  // 添加用户至当前店铺会员
+  userShopAdd: param => api.get('/pet/user/shopAdd', param),
+  // 查询用户在所有店铺的资金信息
+  queryAllBalance: param => api.get('/pet/full/balance', param),
 };

@@ -51,7 +51,9 @@ class OrderItem extends Component {
     const { orderInfo } = this.props;
     const order = _.get(orderInfo, 'order', {});
     const orderItemList = _.get(orderInfo, 'orderItemList', []);
-    if (!order) { return null }
+    if (!order) {
+      return null;
+    }
     return (
       <View className='u-orderItem'>
         {orderItemList.map((item) => {
@@ -66,7 +68,7 @@ class OrderItem extends Component {
                 <View className='u-product__specs'>{specs}</View>
               </View>
               <View className='u-product__right'>
-                <View className='u-product__price f-number'>¥ {item.productSku.price}</View>
+                <View className='u-product__price f-number'>¥ {item.productSku.memberPrice || item.productSku.price}</View>
                 <View className='u-product__count'>
                   <Iconfont type='iconshanchu' size='14' color='#ccc' /> {item.quantity}
                 </View>

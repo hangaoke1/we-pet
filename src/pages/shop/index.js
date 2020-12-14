@@ -9,51 +9,9 @@ import shopApi from '@/api/shop';
 import homeApi from '@/api/home';
 import GLoadMore from '@/components/GLoadMore';
 import YcBackTop from '@/components/YcBackTop';
+import eventBus from '@/lib/eventBus';
 
 import './index.less';
-
-const cateList = [
-  {
-    id: 1,
-    name: '主粮',
-    icon: require('../../images/zhuliang.png')
-  },
-  {
-    id: 2,
-    name: '罐头',
-    icon: require('../../images/guantou.png')
-  },
-  {
-    id: 3,
-    name: '零食',
-    icon: require('../../images/lingshi.png')
-  },
-  {
-    id: 4,
-    name: '日用',
-    icon: require('../../images/riyong.png')
-  },
-  {
-    id: 5,
-    name: '玩具',
-    icon: require('../../images/wanju.png')
-  },
-  {
-    id: 6,
-    name: '保健品',
-    icon: require('../../images/baojianpin.png')
-  },
-  {
-    id: 7,
-    name: '服饰',
-    icon: require('../../images/fushi.png')
-  },
-  {
-    id: 8,
-    name: '特惠',
-    icon: require('../../images/tehui.png')
-  }
-];
 
 export default class ShopIndex extends Component {
   config = {
@@ -92,10 +50,15 @@ export default class ShopIndex extends Component {
 
   componentDidMount() {
     this.init();
-    this.getCategory();
+    eventBus.$on('changeShop', this.init);
+  }
+
+  componentWillUnmount() {
+    eventBus.$off('changeShop', this.init);
   }
 
   init = () => {
+    this.getCategory();
     this.getList(true);
     homeApi
       .queryBanners({
@@ -187,7 +150,7 @@ export default class ShopIndex extends Component {
         >
           {banners.map((banner) => (
             <SwiperItem key={banner.id}>
-              <GImage my-class='u-shop__bannerImg' mode='fill' src={banner.imgUrl} resize="750" />
+              <GImage my-class='u-shop__bannerImg' mode='fill' src={banner.imgUrl} resize='750' />
             </SwiperItem>
           ))}
         </Swiper>

@@ -4,6 +4,7 @@ import shopApi from '@/api/shop'
 import gc from '@/global_config'
 import { GET_CART } from '@/constants/cart'
 
+// 获取购物车信息
 export const getCart = async function () {
   const dispatch = gc.get('store').dispatch
   const data = await shopApi.queryShoppingCart({
@@ -13,7 +14,6 @@ export const getCart = async function () {
   dispatch({
     type: GET_CART,
     value: {
-      // totalCount: _.get(data, 'totalCount', 0),
       totalCount: _.get(data, 'items', []).length,
       items: _.get(data, 'items', [])
     }

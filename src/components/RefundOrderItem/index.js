@@ -48,7 +48,7 @@ class RefundOrderItem extends Component {
                 <View className='u-product__specs'>{specs}</View>
               </View>
               <View className='u-product__right'>
-                <View className='u-product__price f-number'>¥ {item.productSku.price}</View>
+                <View className='u-product__price f-number'>¥ {item.productSku.memberPrice || item.productSku.price}</View>
                 <View className='u-product__count'>
                   <Iconfont type='iconshanchu' size='14' color='#ccc' /> {item.quantity}
                 </View>

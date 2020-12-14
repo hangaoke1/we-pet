@@ -1,7 +1,8 @@
 import Taro from '@tarojs/taro'
 import config from '@/config'
+import _ from '@/lib/lodash'
 import token from '@/lib/token'
-import gotoLogin from '@/lib/gotoLogin'
+
 // 请求拦截
 const requestInterceptors = (opts) => {
   const apiPrefix = config.server
@@ -9,9 +10,18 @@ const requestInterceptors = (opts) => {
   if (!/http/.test(opts.url)) {
     opts.url = apiPrefix + opts.url
   }
-  opts.header = {
-    Authorization: token.get() || ''
+
+  // 默认参数
+  const ShopId = _.get(Taro.getStorageSync('currentStore'), 'id');
+  const Authorization = token.get() || ''
+  const header = {}
+  if (Authorization) {
+    header.Authorization = Authorization
   }
+  if (ShopId) {
+    header.ShopId = ShopId
+  }
+  opts.header = header
   return opts
 }
 
@@ -31,7 +41,6 @@ export default function axios (opts) {
     // 登录状态过期
     if (res.code === 900) {
       token.clear()
-      // gotoLogin()
       return Promise.reject(res)
     }
     return Promise.reject(res)

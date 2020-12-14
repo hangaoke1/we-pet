@@ -66,7 +66,7 @@ class Product extends Component {
           <View className='u-name'>{item.skuName}</View>
           <View className='u-tag'></View>
           <View className='u-bottom'>
-            <View className='u-price f-number'>¥ {item.price}</View>
+            <View className='u-price f-number'>¥ {item.memberPrice || item.price}</View>
             <View className='u-addcart' onClick={this.addCart}>
               <Iconfont type='icongouwuche' color='#fff' size='14' />
             </View>

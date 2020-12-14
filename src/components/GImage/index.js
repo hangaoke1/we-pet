@@ -20,7 +20,7 @@ class GImage extends Component {
   };
 
   static defaultProps = {
-    mode: 'cover'
+    mode: 'aspectFit'
   };
 
   static options = {

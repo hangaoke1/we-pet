@@ -3,6 +3,7 @@ import storeApi from '@/api/store'
 import gc from '@/global_config'
 import { SET_WASH_LIST } from '@/constants/washService'
 
+// 获取服务列表
 export const getWashList = async function() {
   const dispatch = gc.get('store').dispatch
   try {

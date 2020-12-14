@@ -4,7 +4,6 @@ import { View, Swiper, SwiperItem, Image, Text } from '@tarojs/components';
 import YcBackTop from '@/components/YcBackTop';
 import classNames from 'classnames';
 import Iconfont from '@/components/Iconfont';
-import GImg from '@/components/GImg';
 import GImage from '@/components/GImage';
 import GFloatLayout from '@/components/GFloatLayout';
 import { AtInputNumber, AtButton } from 'taro-ui';
@@ -214,7 +213,7 @@ class Product extends Component {
       Taro.setStorageSync('order_product', [
         {
           quantity: this.state.count,
-          price: this.state.currentSku.price * this.state.count,
+          price: (this.state.currentSku.memberPrice || this.state.currentSku.price) * this.state.count,
           productSku: this.state.currentSku,
           id: this.state.currentSku.id
         }
@@ -340,7 +339,7 @@ class Product extends Component {
           >
             {productBannerImgList.map((image) => (
               <SwiperItem key={image.id}>
-                <GImage my-class='u-item' src={image.imgUrl} resize="750" />
+                <GImage my-class='u-item' src={image.imgUrl} resize='750' />
               </SwiperItem>
             ))}
           </Swiper>
@@ -350,10 +349,9 @@ class Product extends Component {
         <View className='u-price'>
           <View className='u-price__left'>
             <Text className='u-price__unit'>¥</Text>
-            <Text className='u-price__val f-number'>{choosedSku.price}</Text>
-            {choosedSku &&
-            choosedSku.originPrice && (
-              <Text className='line-through text-hui ml-2 font-s-28 f-number'>¥ {choosedSku.originPrice}</Text>
+            <Text className='u-price__val f-number'>{choosedSku.memberPrice || choosedSku.price}</Text>
+            {choosedSku.memberPrice && (
+              <Text className='line-through text-hui ml-2 font-s-28 f-number'>¥ {choosedSku.price}</Text>
             )}
           </View>
           <View className='u-price__right'>
@@ -384,7 +382,7 @@ class Product extends Component {
         {/* 商品详情图片 */}
         <View className='u-imgs'>
           {productDetailImgList.map((v) => {
-            return <GImg key={v.id} maxWidth={750} force mode='aspectFit' src={v.imgUrl} resize="1200" />;
+            return <GImage key={v.id} mode='widthFix' src={v.imgUrl} resize='750'></GImage>
           })}
 
           {!productDetailImgList.length && (
@@ -462,7 +460,7 @@ class Product extends Component {
               <View className='u-sku__info'>
                 <View className='u-sku__name'>{choosedSku.skuName}</View>
                 <View className='u-sku__stock f-number'>库存{choosedSku.stock || 0}件</View>
-                <View className='u-sku__price f-number'>¥ {choosedSku.price}</View>
+                <View className='u-sku__price f-number'>¥ {choosedSku.memberPrice || choosedSku.price}</View>
               </View>
             </View>
 

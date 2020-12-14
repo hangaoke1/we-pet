@@ -2,6 +2,7 @@
 import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
 import _ from '@/lib/lodash';
+import eventBus from '@/lib/eventBus';
 
 import { View, Text, Image } from '@tarojs/components';
 import Iconfont from '@/components/Iconfont';
@@ -25,7 +26,7 @@ import './index.less';
 }))
 export default class Index extends Component {
   config = {
-    navigationBarTitleText: '有宠',
+    navigationBarTitleText: '宠小二',
     enablePullDownRefresh: true,
     backgroundTextStyle: 'dark',
     onReachBottomDistance: 150,
@@ -54,7 +55,7 @@ export default class Index extends Component {
     }
     const { store } = this.props;
     return {
-      title: store.currentStore.storeName,
+      title: store.currentStore.shopInfoName,
       path: '/pages/index/index',
       imageUrl: store.currentStore.logo
     };
@@ -69,8 +70,16 @@ export default class Index extends Component {
 
   componentDidMount() {
     getStore();
-    getPositionPro();
     this.init();
+    eventBus.$on('login', this.init)
+    eventBus.$on('changeShop', this.init)
+    eventBus.$on('changeShop', getPositionPro)
+  }
+
+  componentWillUnmount() {
+    eventBus.$off('login', this.init)
+    eventBus.$off('changeShop', this.init)
+    eventBus.$off('changeShop', getPositionPro)
   }
 
   componentDidShow() {
@@ -78,7 +87,9 @@ export default class Index extends Component {
   }
 
   init = () => {
+    // 获取购物车
     getCart();
+    // 获取轮播
     homeApi
       .queryBanners({
         bannerType: 0 // 0首页 1商城
@@ -91,16 +102,7 @@ export default class Index extends Component {
       .catch((error) => {
         console.log('>>> queryBanners异常', error);
       });
-    homeApi
-      .queryNotice()
-      .then((res) => {
-        this.setState({
-          notice: _.get(res, '[0].title', '暂无公告')
-        });
-      })
-      .catch((error) => {
-        console.log('>>> queryNotice异常', error);
-      });
+    // 获取商品
     shopApi
       .queryProducts({
         pageNo: 1,
@@ -116,6 +118,7 @@ export default class Index extends Component {
       .catch((error) => {
         console.log('>>> queryNewProducts异常', error);
       });
+    // 获取商品
     shopApi
       .queryProducts({
         pageNo: 1,

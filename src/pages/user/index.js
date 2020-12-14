@@ -71,7 +71,7 @@ class UserPage extends Component {
     }
     const { store } = this.props;
     return {
-      title: store.currentStore.storeName,
+      title: store.currentStore.shopInfoName || '宠小二',
       path: '/pages/index/index',
       imageUrl: store.currentStore.logo
     };

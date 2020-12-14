@@ -19,10 +19,10 @@ export default {
 
     // 已经通过webp压缩
     if (url.indexOf('imageView2/format/webp') > -1) {
-      return url + `${size ? `/w/${size}` : ''}`;
+      return url + `${size ? `/h/${size}` : ''}` + '/q/80';
     }
 
     // 常规压缩
-    return url + `?imageView2/format/webp${size ? `/w/${size}` : ''}`;
+    return url + `?imageView2/format/webp${size ? `/h/${size}` : ''}` + '/q/80';
   }
 };

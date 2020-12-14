@@ -174,7 +174,7 @@ class Cart extends Component {
     const priceTotal = _.get(cart, 'items', [])
       .filter((item) => choosed.includes(item.productSku.id))
       .reduce((total, item) => {
-        return total + Number(item.price);
+        return total + Number(item.memberPrice || item.price);
       }, 0);
     const isLogin = user.isLogin;
     return isLogin ? (

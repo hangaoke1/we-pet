@@ -2,7 +2,10 @@
 import Taro, { Component } from "@tarojs/taro";
 import { Provider } from "@tarojs/redux";
 import "./styles/custom-theme.scss";
+import _ from "@/lib/lodash";
 import token from "@/lib/token";
+import eventBus from "@/lib/eventBus";
+import userApi from "@/api/user";
 import configStore from "./store";
 import Index from "./pages/index";
 
@@ -20,19 +23,45 @@ class App extends Component {
   componentDidMount() {
     Taro.loadFontFace({
       global: true,
-      family: 'NumberFont',
-      source: 'url("https://hgkcdn.oss-cn-shanghai.aliyuncs.com/test/NumberMedium.2736700f.ttf")',
+      family: "NumberFont",
+      source:
+        'url("https://hgkcdn.oss-cn-shanghai.aliyuncs.com/test/NumberMedium.2736700f.ttf")',
       success: console.log
-    })
+    });
     // 小程序系统session检测
     Taro.checkSession()
       .then(() => {
-        console.log(">>> 小程序session有效");
+        console.log("业务提示：小程序session有效！");
       })
       .catch(() => {
         token.clear();
       });
+    // 店铺会员绑定
+    eventBus.$on("login", this.bindShop);
+    eventBus.$on("changeShop", this.bindShop);
   }
+
+  componentWillUnmount() {
+    eventBus.$off("login", this.bindShop);
+    eventBus.$off("changeShop", this.bindShop);
+  }
+
+  bindShop = () => {
+    // 已经登录 && ShopId存在
+    const isLogin = token.isLogin();
+    const ShopId = _.get(Taro.getStorageSync("currentStore"), "id");
+    console.log("业务提示：用户进店", isLogin, ShopId);
+    if (isLogin && ShopId) {
+      userApi
+        .userShopAdd()
+        .then(() => {
+          console.log("业务提示：用户进店成功");
+        })
+        .catch(err => {
+          console.log("业务提示：用户进店失败", err);
+        });
+    }
+  };
 
   componentDidCatchError() {}
 
@@ -72,7 +101,6 @@ class App extends Component {
       "pages/addressAdd/index",
       "pages/address/index",
       "pages/login/index",
-      "pages/test/index",
       "pages/cameraView/index",
       "pages/remark/index"
     ],
@@ -91,7 +119,7 @@ class App extends Component {
     tabBar: {
       color: "#333333",
       selectedColor: "#FF7013",
-      borderStyle: 'white',
+      borderStyle: "white",
       list: [
         {
           pagePath: "pages/index/index",
